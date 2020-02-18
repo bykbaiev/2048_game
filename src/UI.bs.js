@@ -6,9 +6,7 @@ var Curry = require("bs-platform/lib/js/curry.js");
 var Rx_Observable = require("@ambientlight/bs-rx/src/internal/Rx_Observable.bs.js");
 var Operators = require("rxjs/operators");
 
-var keyDownStream = new Rxjs.BehaviorSubject({
-      keyCode: 0
-    });
+var keyDownStream = new Rxjs.Subject();
 
 var domDocument = document;
 

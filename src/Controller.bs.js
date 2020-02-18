@@ -2,12 +2,12 @@
 'use strict';
 
 var Curry = require("bs-platform/lib/js/curry.js");
+var Rx_Subject = require("@ambientlight/bs-rx/src/internal/Rx_Subject.bs.js");
 var UI$FeedbackLoop = require("./UI.bs.js");
-var Rx_BehaviorSubject = require("@ambientlight/bs-rx/src/internal/Rx_BehaviorSubject.bs.js");
 
 console.log("Controller is loaded");
 
-var arg = Curry._1(Rx_BehaviorSubject.subscribe, (function (x) {
+var arg = Curry._1(Rx_Subject.subscribe, (function (x) {
         console.log(x);
         return /* () */0;
       }));

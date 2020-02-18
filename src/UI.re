@@ -6,7 +6,7 @@ module UI = {
     };
     type handler = unit => Rx.Subscription.t;
     
-    let keyDownStream = Rx.BehaviorSubject.create({ keyCode: 0 });
+    let keyDownStream: Rx.Subject.t(keyEvent) = Rx.Subject.create();
 
     let domDocument : document = [%bs.raw {| document |}];
     [@bs.send] external getElementById : (document, string) => htmlElement = "getElementById";
@@ -43,12 +43,8 @@ module UI = {
             )
             |> Rx.Observable.subscribe(
                 ~next = value => {
-                    keyDownStream |> Rx.BehaviorSubject.next({ keyCode: value.keyCode })
+                    keyDownStream |> Rx.Subject.next({ keyCode: value.keyCode })
                 }
             );
     });
-
-
-    
 }
-
