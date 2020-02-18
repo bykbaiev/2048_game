@@ -1,0 +1,14 @@
+<html>
+
+<head>
+    <link rel="stylesheet" href="<%=htmlWebpackPlugin.files.chunks.main.css %>">
+</head>
+
+<body>
+    <div id="app">
+        <canvas id="gameField" width="200" height="100"></canvas>
+    </div>
+    <script src="<%= htmlWebpackPlugin.files.chunks.main.entry %>"></script>
+</body>
+
+</html>
