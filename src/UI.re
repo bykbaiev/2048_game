@@ -1,50 +1,37 @@
 module UI = {
-    type document;
-    type htmlElement;
-    type keyEvent = {
-        keyCode: int
-    };
-    type handler = unit => Rx.Subscription.t;
+    type keyEvent = UP | RIGHT | LEFT | DOWN;
     
     let keyDownStream: Rx.Subject.t(keyEvent) = Rx.Subject.create();
 
-    let domDocument : document = [%bs.raw {| document |}];
-    [@bs.send] external getElementById : (document, string) => htmlElement = "getElementById";
+    HtmlDom.onDOMContentLoaded(() => {
+        HtmlDom.updateUI(HtmlDom.getUIMessage("Have fun"));
 
-    let onDOMContentLoaded : (handler) => unit = [%bs.raw
-        {|
-            function(handler) {
-                document.addEventListener('DOMContentLoaded', handler, false);
-            }
-        |}
-    ];
-
-    let getUIMessage : string => list(string) = text => <>{text}</>;
-
-    let updateUI : (list(string)) => unit = [%bs.raw
-        {|
-            function(jsx) {
-                document.querySelector('#app').innerHTML = jsx;
-            }
-        |}
-    ];
-
-    onDOMContentLoaded(() => {
-        updateUI(getUIMessage("Have fun"));
-
-        Rx.fromEvent(~target = domDocument, ~eventName = "keydown")
+        Rx.fromEvent(~target = HtmlDom.document, ~eventName = "keydown")
+            |> Rx.Operators.map(
+                (value, _) => HtmlDom.keyboardEventToJsObj(value)
+            )
             |> Rx.Operators.filter(
                 (value, _) => {
-                    switch (value.keyCode) {
+                    switch (value##keyCode) {
                         | 37 | 38 | 39 | 40 => true
                         | _ => false
                     }
                 }
             )
+            |> Rx.Operators.map(
+                (value, _) => {
+                    switch (value##keyCode) {
+                        | 37 => LEFT
+                        | 38 => UP
+                        | 39 => RIGHT
+                        | _ => DOWN
+                    }
+                }
+            )
             |> Rx.Observable.subscribe(
-                ~next = value => {
-                    keyDownStream |> Rx.Subject.next({ keyCode: value.keyCode })
+                ~next = (value: keyEvent) => {
+                    keyDownStream |> Rx.Subject.next(value);
                 }
             );
     });
-}
+};

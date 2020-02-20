@@ -5,35 +5,14 @@ var Rxjs = require("rxjs");
 var Curry = require("bs-platform/lib/js/curry.js");
 var Rx_Observable = require("@ambientlight/bs-rx/src/internal/Rx_Observable.bs.js");
 var Operators = require("rxjs/operators");
+var HtmlDom$FeedbackLoop = require("./HtmlDom.bs.js");
 
 var keyDownStream = new Rxjs.Subject();
 
-var domDocument = document;
-
-var onDOMContentLoaded = (function(handler) {
-                document.addEventListener('DOMContentLoaded', handler, false);
-            });
-
-function getUIMessage(text) {
-  return /* :: */[
-          text,
-          /* [] */0
-        ];
-}
-
-var updateUI = (function(jsx) {
-                document.querySelector('#app').innerHTML = jsx;
-            });
-
-onDOMContentLoaded((function (param) {
-        updateUI(/* :: */[
-              "Have fun",
-              /* [] */0
-            ]);
+HtmlDom$FeedbackLoop.onDOMContentLoaded((function (param) {
+        HtmlDom$FeedbackLoop.updateUI(HtmlDom$FeedbackLoop.getUIMessage("Have fun"));
         var partial_arg = (function (value) {
-            keyDownStream.next({
-                  keyCode: value.keyCode
-                });
+            keyDownStream.next(value);
             return /* () */0;
           });
         return (function (eta) {
@@ -41,18 +20,28 @@ onDOMContentLoaded((function (param) {
                     var param$1 = undefined;
                     var param$2 = eta;
                     return Rx_Observable.Observable.subscribe(partial_arg, param, param$1, param$2);
-                  })(Curry._1(Operators.filter((function (value, param) {
+                  })(Curry._1(Operators.map((function (value, param) {
                               var match = value.keyCode;
-                              return !(match > 40 || match < 37);
-                            })), Rxjs.fromEvent(domDocument, "keydown")));
+                              switch (match) {
+                                case 37 :
+                                    return /* LEFT */2;
+                                case 38 :
+                                    return /* UP */0;
+                                case 39 :
+                                    return /* RIGHT */1;
+                                default:
+                                  return /* DOWN */3;
+                              }
+                            })), Curry._1(Operators.filter((function (value, param) {
+                                  var match = value.keyCode;
+                                  return !(match > 40 || match < 37);
+                                })), Curry._1(Operators.map((function (value, param) {
+                                      return value;
+                                    })), Rxjs.fromEvent(document, "keydown")))));
       }));
 
 var UI = {
-  keyDownStream: keyDownStream,
-  domDocument: domDocument,
-  onDOMContentLoaded: onDOMContentLoaded,
-  getUIMessage: getUIMessage,
-  updateUI: updateUI
+  keyDownStream: keyDownStream
 };
 
 exports.UI = UI;
