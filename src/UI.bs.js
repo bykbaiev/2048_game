@@ -5,6 +5,8 @@ var Rxjs = require("rxjs");
 var Curry = require("bs-platform/lib/js/curry.js");
 var Rx_Observable = require("@ambientlight/bs-rx/src/internal/Rx_Observable.bs.js");
 var Operators = require("rxjs/operators");
+var Rx_BehaviorSubject = require("@ambientlight/bs-rx/src/internal/Rx_BehaviorSubject.bs.js");
+var State$FeedbackLoop = require("./State.bs.js");
 var HtmlDom$FeedbackLoop = require("./HtmlDom.bs.js");
 
 var keyDownStream = new Rxjs.Subject();
@@ -39,6 +41,15 @@ HtmlDom$FeedbackLoop.onDOMContentLoaded((function (param) {
                                       return value;
                                     })), Rxjs.fromEvent(document, "keydown")))));
       }));
+
+var arg = Curry._1(Rx_BehaviorSubject.subscribe, (function (value) {
+        console.log(State$FeedbackLoop.GameState.mapBoardToJs(value));
+        return /* () */0;
+      }));
+
+((function (eta) {
+        return Curry._3(arg, undefined, undefined, eta);
+      })(State$FeedbackLoop.GameState.board));
 
 var UI = {
   keyDownStream: keyDownStream

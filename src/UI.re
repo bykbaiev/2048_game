@@ -34,4 +34,10 @@ module UI = {
                 }
             );
     });
+
+    State.GameState.board |> Rx.BehaviorSubject.subscribe(
+        ~next = (value: State.GameState.gameBoard) => {
+            value |> State.GameState.mapBoardToJs |> Js.log;
+        }
+    )
 };
