@@ -13,5 +13,7 @@
   "devDependencies": {
     "rescript": "^9.1.4"
   },
-  "dependencies": {}
+  "dependencies": {
+    "@rescript/react": "^0.10.3"
+  }
 }
