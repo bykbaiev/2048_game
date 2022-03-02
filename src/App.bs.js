@@ -4,13 +4,13 @@ import * as React from "react";
 
 var element = React.createElement("div", undefined, "Hello World");
 
-var heading = React.createElement("h1", undefined, "Overview");
+var heading = React.createElement("h1", undefined, "Overview 123");
 
-function Test(Props) {
+function App(Props) {
   return React.createElement("div", undefined, heading, element);
 }
 
-var make = Test;
+var make = App;
 
 export {
   element ,
