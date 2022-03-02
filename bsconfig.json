@@ -4,6 +4,11 @@
     {
       "dir": "src",
       "subdirs": true
+    },
+    {
+      "dir": "tests",
+      "subdirs": true,
+      "type": "dev"
     }
   ],
   "package-specs": [
@@ -12,9 +17,10 @@
       "in-source": true
     }
   ],
-  "suffix": ".bs.js",
+  "suffix": ".mjs",
   "reason": { "react-jsx": 3 },
   "bs-dependencies": ["@rescript/react"],
+  "bs-dev-dependencies": ["rescript-test"],
   "warnings": {
     "error": "+101"
   }

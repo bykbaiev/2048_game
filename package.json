@@ -8,7 +8,8 @@
     "re:build:deps": "rescript build -with-deps",
     "re:clean": "rescript clean -with-deps",
     "start": "vite",
-    "release": "vite build"
+    "release": "vite build",
+    "test": "npm run re:clean && npm run re:build && retest tests/**/*.mjs"
   },
   "keywords": [
     "BuckleScript"
