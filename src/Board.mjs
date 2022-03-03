@@ -64,7 +64,7 @@ function viewRow(rowId) {
 function viewTile(param) {
   var pos = param.pos;
   var val = param.val;
-  var valName = "tile-" + val;
+  var valName = val > 2048 ? "tileSuper" : "tile-" + val;
   var y = pos.y;
   var x = pos.x;
   var posName = "tilePosition-" + (x + 1 | 0).toString() + "-" + (y + 1 | 0).toString();
@@ -88,6 +88,8 @@ function Board(Props) {
 
 var gridSize = 4;
 
+var winningValue = 2048;
+
 var fstTile = {
   val: 2,
   pos: {
@@ -101,6 +103,7 @@ var make = Board;
 export {
   styles ,
   gridSize ,
+  winningValue ,
   indexes ,
   fstTile ,
   tiles ,

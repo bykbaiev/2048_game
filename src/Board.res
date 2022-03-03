@@ -2,6 +2,8 @@
 
 let gridSize = 4
 
+let winningValue = 2048
+
 let indexes = Belt.Array.makeBy(gridSize, idx => idx)
 
 type position = {
@@ -42,7 +44,7 @@ let viewRow = (rowId) => {
 }
 
 let viewTile = ({ val, pos }: tile) => {
-  let valName = j`tile-$val`
+  let valName = val > winningValue ? "tileSuper" : j`tile-$val`
   let { x, y } = pos
   let posName = `tilePosition-${Js.Int.toString(x + 1)}-${Js.Int.toString(y + 1)}`
   <div key={j`$val-$x-$y-tile`} className={`${getClassName("tile")} ${getClassName(valName)} ${getClassName(posName)}`}>
