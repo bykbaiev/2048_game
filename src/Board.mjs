@@ -8,29 +8,9 @@ import * as BoardModuleCss from "./Board.module.css";
 
 var styles = BoardModuleCss;
 
-var indexes = Belt_Array.makeBy(4, (function (idx) {
+var indexes = Belt_Array.makeBy(Utils.gridSize, (function (idx) {
         return idx;
       }));
-
-var tiles = {
-  hd: {
-    val: 2,
-    pos: {
-      x: 2,
-      y: 2
-    }
-  },
-  tl: {
-    hd: {
-      val: 1024,
-      pos: {
-        x: 0,
-        y: 3
-      }
-    },
-    tl: /* [] */0
-  }
-};
 
 function getClassName(param) {
   return Utils.getCls(styles, param);
@@ -61,7 +41,7 @@ function viewRow(rowId) {
 function viewTile(param) {
   var pos = param.pos;
   var val = param.val;
-  var valName = val > 2048 ? "tileSuper" : "tile-" + val;
+  var valName = val > Utils.winningValue ? "tileSuper" : "tile-" + val;
   var y = pos.y;
   var x = pos.x;
   var posName = "tilePosition-" + (x + 1 | 0).toString() + "-" + (y + 1 | 0).toString();
@@ -74,25 +54,45 @@ function viewTile(param) {
 }
 
 function Board(Props) {
+  var match = React.useState(function () {
+        return {
+                hd: Utils.createNewTile(/* [] */0),
+                tl: /* [] */0
+              };
+      });
   return React.createElement("div", {
               className: Utils.getCls(styles, "root")
             }, React.createElement("div", {
                   className: Utils.getCls(styles, "gridContainer")
                 }, Belt_Array.map(indexes, viewRow)), React.createElement("div", {
                   className: Utils.getCls(styles, "tileContainer")
-                }, Belt_Array.map(Belt_List.toArray(tiles), viewTile)));
+                }, Belt_Array.map(Belt_List.toArray(match[0]), viewTile)));
 }
 
-var gridSize = 4;
-
-var winningValue = 2048;
+var tiles = {
+  hd: {
+    val: 2,
+    pos: {
+      x: 2,
+      y: 2
+    }
+  },
+  tl: {
+    hd: {
+      val: 1024,
+      pos: {
+        x: 0,
+        y: 3
+      }
+    },
+    tl: /* [] */0
+  }
+};
 
 var make = Board;
 
 export {
   styles ,
-  gridSize ,
-  winningValue ,
   indexes ,
   tiles ,
   getClassName ,

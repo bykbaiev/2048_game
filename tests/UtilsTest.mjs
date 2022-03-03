@@ -3,6 +3,8 @@
 import * as Test from "../node_modules/rescript-test/src/Test.mjs";
 import * as Utils from "../src/Utils.mjs";
 import * as Js_dict from "../node_modules/rescript/lib/es6/js_dict.js";
+import * as Caml_obj from "../node_modules/rescript/lib/es6/caml_obj.js";
+import * as Caml_array from "../node_modules/rescript/lib/es6/caml_array.js";
 
 var styles = Js_dict.fromArray([[
         "default",
@@ -36,9 +38,164 @@ Test.test("#Utils.getCls", (function (param) {
         return checkCls("kebab-cased strings are processed correctly", "test-1", "test-1-cls");
       }));
 
+function checkPairs(max, idx, expected) {
+  return Test.assertion("check pairs for equality: " + max.toString() + " " + idx.toString(), "getPair", Caml_obj.caml_equal, Utils.getPair(max, idx), expected);
+}
+
+var pairs2 = [
+  [
+    0,
+    0
+  ],
+  [
+    0,
+    1
+  ],
+  [
+    1,
+    0
+  ],
+  [
+    1,
+    1
+  ]
+];
+
+var pairs4 = [
+  [
+    0,
+    0
+  ],
+  [
+    0,
+    1
+  ],
+  [
+    0,
+    2
+  ],
+  [
+    0,
+    3
+  ],
+  [
+    1,
+    0
+  ],
+  [
+    1,
+    1
+  ],
+  [
+    1,
+    2
+  ],
+  [
+    1,
+    3
+  ],
+  [
+    2,
+    0
+  ],
+  [
+    2,
+    1
+  ],
+  [
+    2,
+    2
+  ],
+  [
+    2,
+    3
+  ],
+  [
+    3,
+    0
+  ],
+  [
+    3,
+    1
+  ],
+  [
+    3,
+    2
+  ],
+  [
+    3,
+    3
+  ]
+];
+
+Test.test("#Utils.getPair: should return correct pair from cortesian product by max value and index of this pair", (function (param) {
+        checkPairs(2, 0, Caml_array.get(pairs2, 0));
+        checkPairs(2, 1, Caml_array.get(pairs2, 1));
+        checkPairs(2, 2, Caml_array.get(pairs2, 2));
+        checkPairs(2, 3, Caml_array.get(pairs2, 3));
+        checkPairs(4, 0, Caml_array.get(pairs4, 0));
+        checkPairs(4, 1, Caml_array.get(pairs4, 1));
+        checkPairs(4, 2, Caml_array.get(pairs4, 2));
+        checkPairs(4, 3, Caml_array.get(pairs4, 3));
+        checkPairs(4, 4, Caml_array.get(pairs4, 4));
+        checkPairs(4, 5, Caml_array.get(pairs4, 5));
+        checkPairs(4, 6, Caml_array.get(pairs4, 6));
+        checkPairs(4, 7, Caml_array.get(pairs4, 7));
+        checkPairs(4, 8, Caml_array.get(pairs4, 8));
+        checkPairs(4, 9, Caml_array.get(pairs4, 9));
+        checkPairs(4, 10, Caml_array.get(pairs4, 10));
+        return checkPairs(4, 15, Caml_array.get(pairs4, 15));
+      }));
+
+Test.test("#Utils.getPair: should return Nothing in case there is no such pair", (function (param) {
+        return checkPairs(4, 20, undefined);
+      }));
+
+Test.test("#Utils.positionFilterPred: should verify that pair is valid & there is no such tile", (function (param) {
+        Test.assertion("Nothing won't come through me!", "positionFilterPred", (function (a, b) {
+                return a === b;
+              }), Utils.positionFilterPred(/* [] */0, [
+                  -1,
+                  -1
+                ]), false);
+        Test.assertion("Existing tile won't come through me!", "positionFilterPred", (function (a, b) {
+                return a === b;
+              }), Utils.positionFilterPred({
+                  hd: {
+                    val: 2,
+                    pos: {
+                      x: 0,
+                      y: 0
+                    }
+                  },
+                  tl: /* [] */0
+                }, [
+                  0,
+                  0
+                ]), false);
+        return Test.assertion("In other cases let's keep it", "positionFilterPred", (function (a, b) {
+                      return a === b;
+                    }), Utils.positionFilterPred({
+                        hd: {
+                          val: 2,
+                          pos: {
+                            x: 0,
+                            y: 0
+                          }
+                        },
+                        tl: /* [] */0
+                      }, [
+                        1,
+                        1
+                      ]), true);
+      }));
+
 export {
   styles ,
   checkCls ,
+  checkPairs ,
+  pairs2 ,
+  pairs4 ,
   
 }
 /* styles Not a pure module */
