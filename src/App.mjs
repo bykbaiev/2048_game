@@ -6,6 +6,9 @@ import * as React from "react";
 import './reset.css'
 ;
 
+import './styles.css'
+;
+
 function App(Props) {
   return React.createElement("div", undefined, React.createElement(Board.make, {}));
 }
