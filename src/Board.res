@@ -16,18 +16,12 @@ type tile = {
   pos: position
 }
 
-let fstTile = { val: 2, pos: { x: 2, y: 2 }}
-
 let tiles = list{
   { val: 2,    pos: { x: 2, y: 2 } },
   { val: 1024, pos: { x: 0, y: 3 } }
 }
 
-let getClassName = (name: string): string =>
-  styles
-  -> Js.Dict.get("default")
-  -> Belt.Option.flatMap(defaults => Js.Dict.get(defaults, name))
-  -> Belt.Option.getWithDefault("")
+let getClassName = Utils.getCls(styles)
 
 let viewList = (items, render) => items -> Belt.Array.map(render) -> React.array
 
