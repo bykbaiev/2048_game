@@ -16,7 +16,10 @@ type tile = {
 
 let fstTile = { val: 2, pos: { x: 2, y: 2 }}
 
-let tiles = list{fstTile}
+let tiles = list{
+  { val: 2,    pos: { x: 2, y: 2 } },
+  { val: 1024, pos: { x: 0, y: 3 } }
+}
 
 let getClassName = (name: string): string =>
   styles

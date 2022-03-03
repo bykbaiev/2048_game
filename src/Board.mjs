@@ -13,17 +13,24 @@ var indexes = Belt_Array.makeBy(4, (function (idx) {
         return idx;
       }));
 
-var fstTile = {
-  val: 2,
-  pos: {
-    x: 2,
-    y: 2
-  }
-};
-
 var tiles = {
-  hd: fstTile,
-  tl: /* [] */0
+  hd: {
+    val: 2,
+    pos: {
+      x: 2,
+      y: 2
+    }
+  },
+  tl: {
+    hd: {
+      val: 1024,
+      pos: {
+        x: 0,
+        y: 3
+      }
+    },
+    tl: /* [] */0
+  }
 };
 
 function getClassName(name) {
@@ -80,6 +87,14 @@ function Board(Props) {
 }
 
 var gridSize = 4;
+
+var fstTile = {
+  val: 2,
+  pos: {
+    x: 2,
+    y: 2
+  }
+};
 
 var make = Board;
 
