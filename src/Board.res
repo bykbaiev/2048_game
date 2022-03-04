@@ -36,9 +36,7 @@ let viewTile = ({ val, pos }: Utils.tile) => {
 
 @react.component
 let make = () => {
-  let (tiles, _) = React.useState(_ => list{
-    Utils.createNewTile(list{})
-  });
+  let (tiles, _) = Recoil.useRecoilState(State.tilesState);
 
   <div className={getClassName("root")}>
     <div className={getClassName("gridContainer")}>

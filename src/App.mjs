@@ -2,6 +2,7 @@
 
 import * as Board from "./Board.mjs";
 import * as React from "react";
+import * as Recoil from "recoil";
 
 import './reset.css'
 ;
@@ -10,7 +11,9 @@ import './styles.css'
 ;
 
 function App(Props) {
-  return React.createElement("div", undefined, React.createElement(Board.make, {}));
+  return React.createElement(Recoil.RecoilRoot, {
+              children: React.createElement("div", undefined, React.createElement(Board.make, {}))
+            });
 }
 
 var make = App;
