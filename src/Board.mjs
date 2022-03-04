@@ -66,32 +66,11 @@ function Board(Props) {
                 }, Belt_Array.map(Belt_List.toArray(match[0]), viewTile)));
 }
 
-var tiles = {
-  hd: {
-    val: 2,
-    pos: {
-      x: 2,
-      y: 2
-    }
-  },
-  tl: {
-    hd: {
-      val: 1024,
-      pos: {
-        x: 0,
-        y: 3
-      }
-    },
-    tl: /* [] */0
-  }
-};
-
 var make = Board;
 
 export {
   styles ,
   indexes ,
-  tiles ,
   getClassName ,
   viewList ,
   viewGridSizedList ,

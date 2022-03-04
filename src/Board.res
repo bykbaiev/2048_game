@@ -2,11 +2,6 @@
 
 let indexes = Belt.Array.makeBy(Utils.gridSize, idx => idx)
 
-let tiles: list<Utils.tile> = list{
-  { val: 2,    pos: { x: 2, y: 2 } },
-  { val: 1024, pos: { x: 0, y: 3 } }
-}
-
 let getClassName = Utils.getCls(styles)
 
 let viewList = (items, render) => items -> Belt.Array.map(render) -> React.array
