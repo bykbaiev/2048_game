@@ -610,3 +610,63 @@ test("#Utils.isMoveToRightPossible: should check if it's possible to move tiles 
     true
   )
 })
+
+test("#Utils.sortTilesByColumn: should sort all tiles in one row by column number in ascending order", () => {
+  assertion(
+    ~message = "should sort",
+    ~operator = "sortTilesByColumn",
+    (a, b) => a == b,
+    Utils.sortTilesByColumn(list{
+      { val: 2,  pos: { x: 2, y: 0 } },
+      { val: 16, pos: { x: 0, y: 2 } },
+      { val: 4,  pos: { x: 1, y: 0 } },
+      { val: 32, pos: { x: 1, y: 1 } },
+      { val: 8,  pos: { x: 0, y: 0 } },
+    }),
+    list{
+      { val: 8,  pos: { x: 0, y: 0 } },
+      { val: 4,  pos: { x: 1, y: 0 } },
+      { val: 2,  pos: { x: 2, y: 0 } },
+      { val: 32, pos: { x: 1, y: 1 } },
+      { val: 16, pos: { x: 0, y: 2 } },
+    }
+  )
+})
+
+let compareTiles = (xs, ys) => {
+  Belt.List.size(xs) === Belt.List.size(ys) && Belt.List.every(xs, tile => Belt.Option.mapWithDefault(
+    Belt.List.getBy(ys, t => t == tile),
+    false,
+    _ => true
+  ))
+}
+
+test("#Utils.moveRight: should move all tiles to right where it's possible", () => {
+  assertion(
+    ~message = "In case nothing can be moved nothing should be changed",
+    ~operator = "moveRight",
+    compareTiles,
+    Utils.moveRight(2, list{
+      { val: 2, pos: { x: 0, y: 0 } },
+      { val: 4, pos: { x: 1, y: 0 } },
+    }),
+    list{
+      { val: 2, pos: { x: 0, y: 0 } },
+      { val: 4, pos: { x: 1, y: 0 } },
+    }
+  )
+
+  assertion(
+    ~message = "In case some tiles can be moved they should be moved",
+    ~operator = "moveRight",
+    compareTiles,
+    Utils.moveRight(2, list{
+      { val: 2, pos: { x: 0, y: 0 } },
+      { val: 4, pos: { x: 0, y: 1 } },
+    }),
+    list{
+      { val: 2, pos: { x: 1, y: 0 } },
+      { val: 4, pos: { x: 1, y: 1 } },
+    }
+  )
+})

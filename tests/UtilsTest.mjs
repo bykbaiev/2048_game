@@ -4,7 +4,9 @@ import * as Test from "../node_modules/rescript-test/src/Test.mjs";
 import * as Utils from "../src/Utils.mjs";
 import * as Js_dict from "../node_modules/rescript/lib/es6/js_dict.js";
 import * as Caml_obj from "../node_modules/rescript/lib/es6/caml_obj.js";
+import * as Belt_List from "../node_modules/rescript/lib/es6/belt_List.js";
 import * as Caml_array from "../node_modules/rescript/lib/es6/caml_array.js";
+import * as Belt_Option from "../node_modules/rescript/lib/es6/belt_Option.js";
 
 var styles = Js_dict.fromArray([[
         "default",
@@ -1234,12 +1236,198 @@ Test.test("#Utils.isMoveToRightPossible: should check if it's possible to move t
                       }, 3), true);
       }));
 
+Test.test("#Utils.sortTilesByColumn: should sort all tiles in one row by column number in ascending order", (function (param) {
+        return Test.assertion("should sort", "sortTilesByColumn", Caml_obj.caml_equal, Utils.sortTilesByColumn({
+                        hd: {
+                          val: 2,
+                          pos: {
+                            x: 2,
+                            y: 0
+                          }
+                        },
+                        tl: {
+                          hd: {
+                            val: 16,
+                            pos: {
+                              x: 0,
+                              y: 2
+                            }
+                          },
+                          tl: {
+                            hd: {
+                              val: 4,
+                              pos: {
+                                x: 1,
+                                y: 0
+                              }
+                            },
+                            tl: {
+                              hd: {
+                                val: 32,
+                                pos: {
+                                  x: 1,
+                                  y: 1
+                                }
+                              },
+                              tl: {
+                                hd: {
+                                  val: 8,
+                                  pos: {
+                                    x: 0,
+                                    y: 0
+                                  }
+                                },
+                                tl: /* [] */0
+                              }
+                            }
+                          }
+                        }
+                      }), {
+                    hd: {
+                      val: 8,
+                      pos: {
+                        x: 0,
+                        y: 0
+                      }
+                    },
+                    tl: {
+                      hd: {
+                        val: 4,
+                        pos: {
+                          x: 1,
+                          y: 0
+                        }
+                      },
+                      tl: {
+                        hd: {
+                          val: 2,
+                          pos: {
+                            x: 2,
+                            y: 0
+                          }
+                        },
+                        tl: {
+                          hd: {
+                            val: 32,
+                            pos: {
+                              x: 1,
+                              y: 1
+                            }
+                          },
+                          tl: {
+                            hd: {
+                              val: 16,
+                              pos: {
+                                x: 0,
+                                y: 2
+                              }
+                            },
+                            tl: /* [] */0
+                          }
+                        }
+                      }
+                    }
+                  });
+      }));
+
+function compareTiles(xs, ys) {
+  if (Belt_List.size(xs) === Belt_List.size(ys)) {
+    return Belt_List.every(xs, (function (tile) {
+                  return Belt_Option.mapWithDefault(Belt_List.getBy(ys, (function (t) {
+                                    return Caml_obj.caml_equal(t, tile);
+                                  })), false, (function (param) {
+                                return true;
+                              }));
+                }));
+  } else {
+    return false;
+  }
+}
+
+Test.test("#Utils.moveRight: should move all tiles to right where it's possible", (function (param) {
+        Test.assertion("In case nothing can be moved nothing should be changed", "moveRight", compareTiles, Utils.moveRight(2, {
+                  hd: {
+                    val: 2,
+                    pos: {
+                      x: 0,
+                      y: 0
+                    }
+                  },
+                  tl: {
+                    hd: {
+                      val: 4,
+                      pos: {
+                        x: 1,
+                        y: 0
+                      }
+                    },
+                    tl: /* [] */0
+                  }
+                }), {
+              hd: {
+                val: 2,
+                pos: {
+                  x: 0,
+                  y: 0
+                }
+              },
+              tl: {
+                hd: {
+                  val: 4,
+                  pos: {
+                    x: 1,
+                    y: 0
+                  }
+                },
+                tl: /* [] */0
+              }
+            });
+        return Test.assertion("In case some tiles can be moved they should be moved", "moveRight", compareTiles, Utils.moveRight(2, {
+                        hd: {
+                          val: 2,
+                          pos: {
+                            x: 0,
+                            y: 0
+                          }
+                        },
+                        tl: {
+                          hd: {
+                            val: 4,
+                            pos: {
+                              x: 0,
+                              y: 1
+                            }
+                          },
+                          tl: /* [] */0
+                        }
+                      }), {
+                    hd: {
+                      val: 2,
+                      pos: {
+                        x: 1,
+                        y: 0
+                      }
+                    },
+                    tl: {
+                      hd: {
+                        val: 4,
+                        pos: {
+                          x: 1,
+                          y: 1
+                        }
+                      },
+                      tl: /* [] */0
+                    }
+                  });
+      }));
+
 export {
   styles ,
   checkCls ,
   checkPairs ,
   pairs2 ,
   pairs4 ,
+  compareTiles ,
   
 }
 /* styles Not a pure module */

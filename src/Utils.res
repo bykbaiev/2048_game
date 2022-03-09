@@ -139,8 +139,44 @@ let isLoss = (size: int, tiles: list<tile>): bool => {
   !isPossibleToMoveSomewhere(Left)
 }
 
-let moveRight = (tiles: list<tile>): list<tile> => {
+let sortTilesByColumn = (tiles: list<tile>): list<tile> => {
+  Belt.List.sort(tiles, (a, b) => a.pos.y === b.pos.y ? a.pos.x - b.pos.x : a.pos.y - b.pos.y)
+}
+
+let makeFirstInARow = tile => { val: tile.val, pos: { x: 0, y: tile.pos.y } }
+
+let moveRight = (size: int, tiles: list<tile>): list<tile> => {
   tiles
+  -> reverseRow(size)
+  -> sortTilesByColumn
+  -> Belt.List.reduce(
+    list{},
+    (ts, tile) => {
+      let prev = Belt.List.head(ts)
+
+      Belt.Option.mapWithDefault(
+        prev,
+        Belt.List.add(
+          ts,
+          makeFirstInARow(tile)
+        ),
+        t => {
+          if (t.pos.y === tile.pos.y) {
+            Belt.List.add(
+              ts,
+              { val: tile.val, pos: { x: t.pos.x + 1, y: tile.pos.y } }
+            )
+          } else {
+            Belt.List.add(
+              ts,
+              makeFirstInARow(tile)
+            )
+          }
+        }
+      )
+    }
+  )
+  -> reverseRow(size)
 }
 
 // * transform the tiles that move is always to right !
@@ -156,7 +192,7 @@ let move = (dir: direction, tiles: list<tile>) => {
   let rotated = rotateToMoveToRight(size, dir, tiles)
 
   if isMoveToRightPossible(rotated, size) {
-    let moved = moveRight(rotated)
+    let moved = moveRight(size, rotated)
 
     if isWin(moved) || isLoss(size, moved) {
       rotateBack(size, dir, moved)

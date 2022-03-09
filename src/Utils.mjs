@@ -201,8 +201,43 @@ function isLoss(size, tiles) {
   }
 }
 
-function moveRight(tiles) {
-  return tiles;
+function sortTilesByColumn(tiles) {
+  return Belt_List.sort(tiles, (function (a, b) {
+                if (a.pos.y === b.pos.y) {
+                  return a.pos.x - b.pos.x | 0;
+                } else {
+                  return a.pos.y - b.pos.y | 0;
+                }
+              }));
+}
+
+function makeFirstInARow(tile) {
+  return {
+          val: tile.val,
+          pos: {
+            x: 0,
+            y: tile.pos.y
+          }
+        };
+}
+
+function moveRight(size, tiles) {
+  return reverseRow(Belt_List.reduce(sortTilesByColumn(reverseRow(tiles, size)), /* [] */0, (function (ts, tile) {
+                    var prev = Belt_List.head(ts);
+                    return Belt_Option.mapWithDefault(prev, Belt_List.add(ts, makeFirstInARow(tile)), (function (t) {
+                                  if (t.pos.y === tile.pos.y) {
+                                    return Belt_List.add(ts, {
+                                                val: tile.val,
+                                                pos: {
+                                                  x: t.pos.x + 1 | 0,
+                                                  y: tile.pos.y
+                                                }
+                                              });
+                                  } else {
+                                    return Belt_List.add(ts, makeFirstInARow(tile));
+                                  }
+                                }));
+                  })), size);
 }
 
 function move(dir, tiles) {
@@ -210,10 +245,11 @@ function move(dir, tiles) {
   if (!isMoveToRightPossible(rotated, 4)) {
     return tiles;
   }
-  if (Belt_List.some(rotated, isWinningValue) || isLoss(4, rotated)) {
-    return rotateBack(4, dir, rotated);
+  var moved = moveRight(4, rotated);
+  if (Belt_List.some(moved, isWinningValue) || isLoss(4, moved)) {
+    return rotateBack(4, dir, moved);
   }
-  var updated = Belt_List.add(rotated, createNewTile(rotated));
+  var updated = Belt_List.add(moved, createNewTile(moved));
   Belt_List.some(updated, isWinningValue) || isLoss(4, updated);
   return rotateBack(4, dir, updated);
 }
@@ -243,6 +279,8 @@ export {
   isMovePossible ,
   isWin ,
   isLoss ,
+  sortTilesByColumn ,
+  makeFirstInARow ,
   moveRight ,
   move ,
   
