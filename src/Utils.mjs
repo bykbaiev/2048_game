@@ -211,33 +211,31 @@ function sortTilesByColumn(tiles) {
               }));
 }
 
-function makeFirstInARow(tile) {
+function setColumn(tile, x) {
   return {
           val: tile.val,
           pos: {
-            x: 0,
+            x: x,
             y: tile.pos.y
           }
         };
 }
 
+function movementReducer(ts, tile) {
+  var addTile = function (x) {
+    return Belt_List.add(ts, setColumn(tile, x));
+  };
+  return Belt_Option.mapWithDefault(Belt_List.head(ts), addTile(0), (function (t) {
+                if (t.pos.y === tile.pos.y) {
+                  return addTile(t.pos.x + 1 | 0);
+                } else {
+                  return addTile(0);
+                }
+              }));
+}
+
 function moveRight(size, tiles) {
-  return reverseRow(Belt_List.reduce(sortTilesByColumn(reverseRow(tiles, size)), /* [] */0, (function (ts, tile) {
-                    var prev = Belt_List.head(ts);
-                    return Belt_Option.mapWithDefault(prev, Belt_List.add(ts, makeFirstInARow(tile)), (function (t) {
-                                  if (t.pos.y === tile.pos.y) {
-                                    return Belt_List.add(ts, {
-                                                val: tile.val,
-                                                pos: {
-                                                  x: t.pos.x + 1 | 0,
-                                                  y: tile.pos.y
-                                                }
-                                              });
-                                  } else {
-                                    return Belt_List.add(ts, makeFirstInARow(tile));
-                                  }
-                                }));
-                  })), size);
+  return reverseRow(Belt_List.reduce(sortTilesByColumn(reverseRow(tiles, size)), /* [] */0, movementReducer), size);
 }
 
 function move(dir, tiles) {
@@ -280,7 +278,8 @@ export {
   isWin ,
   isLoss ,
   sortTilesByColumn ,
-  makeFirstInARow ,
+  setColumn ,
+  movementReducer ,
   moveRight ,
   move ,
   

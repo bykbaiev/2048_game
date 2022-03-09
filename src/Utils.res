@@ -143,39 +143,29 @@ let sortTilesByColumn = (tiles: list<tile>): list<tile> => {
   Belt.List.sort(tiles, (a, b) => a.pos.y === b.pos.y ? a.pos.x - b.pos.x : a.pos.y - b.pos.y)
 }
 
-let makeFirstInARow = tile => { val: tile.val, pos: { x: 0, y: tile.pos.y } }
+let setColumn = (tile: tile, x: int) => { val: tile.val, pos: { x: x, y: tile.pos.y } } 
+
+let movementReducer = (ts, tile) => {
+  let addTile = x => Belt.List.add(ts, setColumn(tile, x))
+
+  Belt.Option.mapWithDefault(
+    Belt.List.head(ts),
+    addTile(0),
+    t => {
+      if (t.pos.y === tile.pos.y) {
+        addTile(t.pos.x + 1)
+      } else {
+        addTile(0)
+      }
+    }
+  )
+}
 
 let moveRight = (size: int, tiles: list<tile>): list<tile> => {
   tiles
   -> reverseRow(size)
   -> sortTilesByColumn
-  -> Belt.List.reduce(
-    list{},
-    (ts, tile) => {
-      let prev = Belt.List.head(ts)
-
-      Belt.Option.mapWithDefault(
-        prev,
-        Belt.List.add(
-          ts,
-          makeFirstInARow(tile)
-        ),
-        t => {
-          if (t.pos.y === tile.pos.y) {
-            Belt.List.add(
-              ts,
-              { val: tile.val, pos: { x: t.pos.x + 1, y: tile.pos.y } }
-            )
-          } else {
-            Belt.List.add(
-              ts,
-              makeFirstInARow(tile)
-            )
-          }
-        }
-      )
-    }
-  )
+  -> Belt.List.reduce(list{}, movementReducer)
   -> reverseRow(size)
 }
 
