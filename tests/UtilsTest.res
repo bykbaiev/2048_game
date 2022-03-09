@@ -147,6 +147,131 @@ test("#Utils.getPair: should return Nothing in case there is no such pair", () =
   )
 })
 
+test("#Utils.transpose: should transpose matrix", () => {
+  assertion(
+    ~message = "Transpose once",
+    ~operator = "transpose",
+    (a, b) => a == b,
+    Utils.transpose(list{
+      { val: 2, pos: { x: 0, y: 0 } },
+      { val: 4, pos: { x: 0, y: 1 } }
+    }),
+    list{
+      { val: 2, pos: { x: 0, y: 0 } },
+      { val: 4, pos: { x: 1, y: 0 } }
+    }
+  )
+
+  assertion(
+    ~message = "Transpose two times => nothing changes",
+    ~operator = "transpose",
+    (a, b) => a == b,
+    Utils.transpose(
+      Utils.transpose(list{
+        { val: 2, pos: { x: 0, y: 0 } },
+        { val: 4, pos: { x: 0, y: 1 } }
+      })
+    ),
+    list{
+      { val: 2, pos: { x: 0, y: 0 } },
+      { val: 4, pos: { x: 0, y: 1 } }
+    }
+  )
+})
+
+test("#Utils.reverseRow: should map all tiles in a row in reverse order", () => {
+  assertion(
+    ~message = "Reverse once",
+    ~operator = "reverseRow",
+    (a, b) => a == b,
+    Utils.reverseRow(list{
+      { val: 2, pos: { x: 0, y: 0 } },
+      { val: 4, pos: { x: 1, y: 1 } }
+    }, 2),
+    list{
+      { val: 2, pos: { x: 1, y: 0 } },
+      { val: 4, pos: { x: 0, y: 1 } }
+    }
+  )
+
+  assertion(
+    ~message = "reverse two times => nothing changes",
+    ~operator = "reverseRow",
+    (a, b) => a == b,
+    Utils.reverseRow(
+      Utils.reverseRow(list{
+        { val: 2, pos: { x: 0, y: 0 } },
+        { val: 4, pos: { x: 1, y: 1 } }
+      }, 2),
+      2
+    ),
+    list{
+      { val: 2, pos: { x: 0, y: 0 } },
+      { val: 4, pos: { x: 1, y: 1 } }
+    }
+  )
+})
+
+test("#Utils.rotateClockwise: should rotate tiles (to handle all moves at once: move top is like to rotate anti clockwise and then move left)", () => {
+  assertion(
+    ~message = "Rotate once",
+    ~operator = "rotateClockwise",
+    (a, b) => a == b,
+    Utils.rotateClockwise(list{
+      { val: 2, pos: { x: 0, y: 0 } },
+      { val: 4, pos: { x: 1, y: 1 } }
+    }, 2),
+    list{
+      { val: 2, pos: { x: 1, y: 0 } },
+      { val: 4, pos: { x: 0, y: 1 } }
+    }
+  )
+
+  assertion(
+    ~message = "Rotate 4 times => nothing changes",
+    ~operator = "rotateClockwise",
+    (a, b) => a == b,
+    list{
+      { val: 2, pos: { x: 0, y: 0 } },
+      { val: 4, pos: { x: 1, y: 1 } }
+    } -> Utils.rotateClockwise(2) -> Utils.rotateClockwise(2) -> Utils.rotateClockwise(2) -> Utils.rotateClockwise(2),
+    list{
+      { val: 2, pos: { x: 0, y: 0 } },
+      { val: 4, pos: { x: 1, y: 1 } }
+    }
+  )
+})
+
+test("#Utils.rotateClockwise: should rotate tiles anti clockwise (to handle all moves at once: move top is like to rotate anti clockwise and then move left)", () => {
+  assertion(
+    ~message = "Rotate once",
+    ~operator = "rotateAntiClockwise",
+    (a, b) => a == b,
+    Utils.rotateAntiClockwise(list{
+      { val: 2, pos: { x: 0, y: 0 } },
+      { val: 4, pos: { x: 1, y: 1 } }
+    }, 2),
+    list{
+      { val: 2, pos: { x: 0, y: 1 } },
+      { val: 4, pos: { x: 1, y: 0 } }
+    }
+  )
+
+  assertion(
+    ~message = "Rotate 4 times => nothing changes",
+    ~operator = "rotateAntiClockwise",
+    (a, b) => a == b,
+    list{
+      { val: 2, pos: { x: 0, y: 0 } },
+      { val: 4, pos: { x: 1, y: 1 } }
+    } -> Utils.rotateAntiClockwise(2) -> Utils.rotateAntiClockwise(2) -> Utils.rotateAntiClockwise(2) -> Utils.rotateAntiClockwise(2),
+    list{
+      { val: 2, pos: { x: 0, y: 0 } },
+      { val: 4, pos: { x: 1, y: 1 } }
+    }
+  )
+})
+
 test("#Utils.positionFilterPred: should verify that pair is valid & there is no such tile", () => {
   assertion(
     ~message = "Nothing won't come through me!",
@@ -169,6 +294,188 @@ test("#Utils.positionFilterPred: should verify that pair is valid & there is no 
     ~operator = "positionFilterPred",
     (a, b) => a == b,
     Utils.positionFilterPred(list{{val: 2, pos: { x: 0, y: 0 } }}, (1, 1)),
+    true
+  )
+})
+
+test("#Utils.keyCodeToDirection: should map integer code to direction constructor", () => {
+  assertion(
+    ~message = "Invalid code won't come through me!",
+    ~operator = "keyCodeToDirection",
+    (a, b) => a == b,
+    Utils.keyCodeToDirection(123),
+    None
+  )
+
+  assertion(
+    ~message = "Direction will be greated!",
+    ~operator = "keyCodeToDirection",
+    (a, b) => a == b,
+    Utils.keyCodeToDirection(40),
+    Some(Down)
+  )
+})
+
+test("#Utils.isWin: should check if user won", () => {
+  assertion(
+    ~message = "For win there should be at least one tile",
+    ~operator = "isWin",
+    (a, b) => a == b,
+    Utils.isWin(list{}),
+    false
+  )
+
+  assertion(
+    ~message = "Win is when there is one tile with value 2048",
+    ~operator = "isWin",
+    (a, b) => a == b,
+    Utils.isWin(list{{ val: 2048, pos: { x: 0, y: 0 } }}),
+    true
+  )
+
+  assertion(
+    ~message = "In case there is no 2048 tile the game is either lost or continuing",
+    ~operator = "isWin",
+    (a, b) => a == b,
+    Utils.isWin(list{{ val: 1024, pos: { x: 0, y: 0 } }}),
+    false
+  )
+})
+
+test("#Utils.isLoss: should check if user loss", () => {
+  assertion(
+    ~message = "For loss tiles should not be empty",
+    ~operator = "isLoss",
+    (a, b) => a == b,
+    Utils.isLoss(2, list{}),
+    false
+  )
+
+  assertion(
+    ~message = "Loss is when the number of tiles is the same as max size and there is no 2048 tile",
+    ~operator = "isLoss",
+    (a, b) => a == b,
+    Utils.isLoss(2, list{
+      { val: 2, pos: { x: 0, y: 0 } },
+      { val: 1024, pos: { x: 0, y: 0 } }
+    }),
+    true
+  )
+
+  assertion(
+    ~message = "In case there is no 2048 tile the game is either lost or continuing",
+    ~operator = "isLoss",
+    (a, b) => a == b,
+    Utils.isLoss(2, list{{ val: 1024, pos: { x: 0, y: 0 } }}),
+    false
+  )
+})
+
+test("#Utils.tilesToBoard: should map tiles to board", () => {
+  assertion(
+    ~message = "tilesToBoard",
+    ~operator = "tilesToBoard",
+    (a, b) => a == b,
+    Utils.tilesToBoard(2, list{
+      { val: 2, pos: { x: 0, y: 0 } },
+      { val: 2, pos: { x: 0, y: 1 } },
+    }),
+    list{
+      list{Some(2), None},
+      list{Some(2), None}
+    }
+  )
+
+  assertion(
+    ~message = "tilesToBoard",
+    ~operator = "tilesToBoard",
+    (a, b) => a == b,
+    Utils.tilesToBoard(2, list{
+      { val: 2, pos: { x: 0, y: 0 } },
+      { val: 2, pos: { x: 1, y: 1 } },
+    }),
+    list{
+      list{Some(2), None},
+      list{None,    Some(2)}
+    }
+  )
+
+  assertion(
+    ~message = "tilesToBoard",
+    ~operator = "tilesToBoard",
+    (a, b) => a == b,
+    Utils.tilesToBoard(3, list{
+      { val: 2, pos: { x: 0, y: 0 } },
+      { val: 2, pos: { x: 1, y: 1 } },
+      { val: 4, pos: { x: 2, y: 2 } }
+    }),
+    list{
+      list{Some(2), None,    None   },
+      list{None,    Some(2), None   },
+      list{None,    None,    Some(4)}
+    }
+  )
+})
+
+test("#Utils.isMoveToRightPossible: should check if it's possible to move tiles to the right", () => {
+  assertion(
+    ~message = "One row is empty and other is full",
+    ~operator = "isMoveToRightPossible",
+    (a, b) => a == b,
+    Utils.isMoveToRightPossible(list{
+      { val: 2, pos: { x: 0, y: 0 } },
+      { val: 4, pos: { x: 1, y: 0 } },
+    }, 2),
+    false
+  )
+
+  assertion(
+    ~message = "Possible",
+    ~operator = "isMoveToRightPossible",
+    (a, b) => a == b,
+    Utils.isMoveToRightPossible(list{
+      { val: 2, pos: { x: 0, y: 0 } },
+      { val: 2, pos: { x: 0, y: 1 } },
+    }, 2),
+    true
+  )
+
+  assertion(
+    ~message = "Possible (with collapsing)",
+    ~operator = "isMoveToRightPossible",
+    (a, b) => a == b,
+    Utils.isMoveToRightPossible(list{
+      { val: 2, pos: { x: 0, y: 0 } },
+      { val: 2, pos: { x: 1, y: 0 } },
+    }, 2),
+    true
+  )
+
+  assertion(
+    ~message = "Impossible (3 * 3)",
+    ~operator = "isMoveToRightPossible",
+    (a, b) => a == b,
+    Utils.isMoveToRightPossible(list{
+      { val: 2, pos: { x: 0, y: 0 } },
+      { val: 4, pos: { x: 1, y: 0 } },
+      { val: 2, pos: { x: 2, y: 0 } },
+      { val: 2, pos: { x: 1, y: 1 } },
+      { val: 4, pos: { x: 2, y: 1 } },
+    }, 3),
+    false
+  )
+
+  assertion(
+    ~message = "Possible (3 * 3)",
+    ~operator = "isMoveToRightPossible",
+    (a, b) => a == b,
+    Utils.isMoveToRightPossible(list{
+      { val: 2, pos: { x: 0, y: 0 } },
+      { val: 4, pos: { x: 1, y: 0 } },
+      { val: 2, pos: { x: 2, y: 0 } },
+      { val: 2, pos: { x: 1, y: 1 } },
+      { val: 2, pos: { x: 2, y: 1 } },
+    }, 3),
     true
   )
 })

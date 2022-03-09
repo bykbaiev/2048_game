@@ -151,6 +151,314 @@ Test.test("#Utils.getPair: should return Nothing in case there is no such pair",
         return checkPairs(4, 20, undefined);
       }));
 
+Test.test("#Utils.transpose: should transpose matrix", (function (param) {
+        Test.assertion("Transpose once", "transpose", Caml_obj.caml_equal, Utils.transpose({
+                  hd: {
+                    val: 2,
+                    pos: {
+                      x: 0,
+                      y: 0
+                    }
+                  },
+                  tl: {
+                    hd: {
+                      val: 4,
+                      pos: {
+                        x: 0,
+                        y: 1
+                      }
+                    },
+                    tl: /* [] */0
+                  }
+                }), {
+              hd: {
+                val: 2,
+                pos: {
+                  x: 0,
+                  y: 0
+                }
+              },
+              tl: {
+                hd: {
+                  val: 4,
+                  pos: {
+                    x: 1,
+                    y: 0
+                  }
+                },
+                tl: /* [] */0
+              }
+            });
+        return Test.assertion("Transpose two times => nothing changes", "transpose", Caml_obj.caml_equal, Utils.transpose(Utils.transpose({
+                            hd: {
+                              val: 2,
+                              pos: {
+                                x: 0,
+                                y: 0
+                              }
+                            },
+                            tl: {
+                              hd: {
+                                val: 4,
+                                pos: {
+                                  x: 0,
+                                  y: 1
+                                }
+                              },
+                              tl: /* [] */0
+                            }
+                          })), {
+                    hd: {
+                      val: 2,
+                      pos: {
+                        x: 0,
+                        y: 0
+                      }
+                    },
+                    tl: {
+                      hd: {
+                        val: 4,
+                        pos: {
+                          x: 0,
+                          y: 1
+                        }
+                      },
+                      tl: /* [] */0
+                    }
+                  });
+      }));
+
+Test.test("#Utils.reverseRow: should map all tiles in a row in reverse order", (function (param) {
+        Test.assertion("Reverse once", "reverseRow", Caml_obj.caml_equal, Utils.reverseRow({
+                  hd: {
+                    val: 2,
+                    pos: {
+                      x: 0,
+                      y: 0
+                    }
+                  },
+                  tl: {
+                    hd: {
+                      val: 4,
+                      pos: {
+                        x: 1,
+                        y: 1
+                      }
+                    },
+                    tl: /* [] */0
+                  }
+                }, 2), {
+              hd: {
+                val: 2,
+                pos: {
+                  x: 1,
+                  y: 0
+                }
+              },
+              tl: {
+                hd: {
+                  val: 4,
+                  pos: {
+                    x: 0,
+                    y: 1
+                  }
+                },
+                tl: /* [] */0
+              }
+            });
+        return Test.assertion("reverse two times => nothing changes", "reverseRow", Caml_obj.caml_equal, Utils.reverseRow(Utils.reverseRow({
+                            hd: {
+                              val: 2,
+                              pos: {
+                                x: 0,
+                                y: 0
+                              }
+                            },
+                            tl: {
+                              hd: {
+                                val: 4,
+                                pos: {
+                                  x: 1,
+                                  y: 1
+                                }
+                              },
+                              tl: /* [] */0
+                            }
+                          }, 2), 2), {
+                    hd: {
+                      val: 2,
+                      pos: {
+                        x: 0,
+                        y: 0
+                      }
+                    },
+                    tl: {
+                      hd: {
+                        val: 4,
+                        pos: {
+                          x: 1,
+                          y: 1
+                        }
+                      },
+                      tl: /* [] */0
+                    }
+                  });
+      }));
+
+Test.test("#Utils.rotateClockwise: should rotate tiles (to handle all moves at once: move top is like to rotate anti clockwise and then move left)", (function (param) {
+        Test.assertion("Rotate once", "rotateClockwise", Caml_obj.caml_equal, Utils.rotateClockwise({
+                  hd: {
+                    val: 2,
+                    pos: {
+                      x: 0,
+                      y: 0
+                    }
+                  },
+                  tl: {
+                    hd: {
+                      val: 4,
+                      pos: {
+                        x: 1,
+                        y: 1
+                      }
+                    },
+                    tl: /* [] */0
+                  }
+                }, 2), {
+              hd: {
+                val: 2,
+                pos: {
+                  x: 1,
+                  y: 0
+                }
+              },
+              tl: {
+                hd: {
+                  val: 4,
+                  pos: {
+                    x: 0,
+                    y: 1
+                  }
+                },
+                tl: /* [] */0
+              }
+            });
+        return Test.assertion("Rotate 4 times => nothing changes", "rotateClockwise", Caml_obj.caml_equal, Utils.rotateClockwise(Utils.rotateClockwise(Utils.rotateClockwise(Utils.rotateClockwise({
+                                    hd: {
+                                      val: 2,
+                                      pos: {
+                                        x: 0,
+                                        y: 0
+                                      }
+                                    },
+                                    tl: {
+                                      hd: {
+                                        val: 4,
+                                        pos: {
+                                          x: 1,
+                                          y: 1
+                                        }
+                                      },
+                                      tl: /* [] */0
+                                    }
+                                  }, 2), 2), 2), 2), {
+                    hd: {
+                      val: 2,
+                      pos: {
+                        x: 0,
+                        y: 0
+                      }
+                    },
+                    tl: {
+                      hd: {
+                        val: 4,
+                        pos: {
+                          x: 1,
+                          y: 1
+                        }
+                      },
+                      tl: /* [] */0
+                    }
+                  });
+      }));
+
+Test.test("#Utils.rotateClockwise: should rotate tiles anti clockwise (to handle all moves at once: move top is like to rotate anti clockwise and then move left)", (function (param) {
+        Test.assertion("Rotate once", "rotateAntiClockwise", Caml_obj.caml_equal, Utils.rotateAntiClockwise({
+                  hd: {
+                    val: 2,
+                    pos: {
+                      x: 0,
+                      y: 0
+                    }
+                  },
+                  tl: {
+                    hd: {
+                      val: 4,
+                      pos: {
+                        x: 1,
+                        y: 1
+                      }
+                    },
+                    tl: /* [] */0
+                  }
+                }, 2), {
+              hd: {
+                val: 2,
+                pos: {
+                  x: 0,
+                  y: 1
+                }
+              },
+              tl: {
+                hd: {
+                  val: 4,
+                  pos: {
+                    x: 1,
+                    y: 0
+                  }
+                },
+                tl: /* [] */0
+              }
+            });
+        return Test.assertion("Rotate 4 times => nothing changes", "rotateAntiClockwise", Caml_obj.caml_equal, Utils.rotateAntiClockwise(Utils.rotateAntiClockwise(Utils.rotateAntiClockwise(Utils.rotateAntiClockwise({
+                                    hd: {
+                                      val: 2,
+                                      pos: {
+                                        x: 0,
+                                        y: 0
+                                      }
+                                    },
+                                    tl: {
+                                      hd: {
+                                        val: 4,
+                                        pos: {
+                                          x: 1,
+                                          y: 1
+                                        }
+                                      },
+                                      tl: /* [] */0
+                                    }
+                                  }, 2), 2), 2), 2), {
+                    hd: {
+                      val: 2,
+                      pos: {
+                        x: 0,
+                        y: 0
+                      }
+                    },
+                    tl: {
+                      hd: {
+                        val: 4,
+                        pos: {
+                          x: 1,
+                          y: 1
+                        }
+                      },
+                      tl: /* [] */0
+                    }
+                  });
+      }));
+
 Test.test("#Utils.positionFilterPred: should verify that pair is valid & there is no such tile", (function (param) {
         Test.assertion("Nothing won't come through me!", "positionFilterPred", (function (a, b) {
                 return a === b;
@@ -188,6 +496,383 @@ Test.test("#Utils.positionFilterPred: should verify that pair is valid & there i
                         1,
                         1
                       ]), true);
+      }));
+
+Test.test("#Utils.keyCodeToDirection: should map integer code to direction constructor", (function (param) {
+        Test.assertion("Invalid code won't come through me!", "keyCodeToDirection", Caml_obj.caml_equal, Utils.keyCodeToDirection(123), undefined);
+        return Test.assertion("Direction will be greated!", "keyCodeToDirection", Caml_obj.caml_equal, Utils.keyCodeToDirection(40), /* Down */2);
+      }));
+
+Test.test("#Utils.isWin: should check if user won", (function (param) {
+        Test.assertion("For win there should be at least one tile", "isWin", (function (a, b) {
+                return a === b;
+              }), Utils.isWin(/* [] */0), false);
+        Test.assertion("Win is when there is one tile with value 2048", "isWin", (function (a, b) {
+                return a === b;
+              }), Utils.isWin({
+                  hd: {
+                    val: 2048,
+                    pos: {
+                      x: 0,
+                      y: 0
+                    }
+                  },
+                  tl: /* [] */0
+                }), true);
+        return Test.assertion("In case there is no 2048 tile the game is either lost or continuing", "isWin", (function (a, b) {
+                      return a === b;
+                    }), Utils.isWin({
+                        hd: {
+                          val: 1024,
+                          pos: {
+                            x: 0,
+                            y: 0
+                          }
+                        },
+                        tl: /* [] */0
+                      }), false);
+      }));
+
+Test.test("#Utils.isLoss: should check if user loss", (function (param) {
+        Test.assertion("For loss tiles should not be empty", "isLoss", (function (a, b) {
+                return a === b;
+              }), Utils.isLoss(2, /* [] */0), false);
+        Test.assertion("Loss is when the number of tiles is the same as max size and there is no 2048 tile", "isLoss", (function (a, b) {
+                return a === b;
+              }), Utils.isLoss(2, {
+                  hd: {
+                    val: 2,
+                    pos: {
+                      x: 0,
+                      y: 0
+                    }
+                  },
+                  tl: {
+                    hd: {
+                      val: 1024,
+                      pos: {
+                        x: 0,
+                        y: 0
+                      }
+                    },
+                    tl: /* [] */0
+                  }
+                }), true);
+        return Test.assertion("In case there is no 2048 tile the game is either lost or continuing", "isLoss", (function (a, b) {
+                      return a === b;
+                    }), Utils.isLoss(2, {
+                        hd: {
+                          val: 1024,
+                          pos: {
+                            x: 0,
+                            y: 0
+                          }
+                        },
+                        tl: /* [] */0
+                      }), false);
+      }));
+
+Test.test("#Utils.tilesToBoard: should map tiles to board", (function (param) {
+        Test.assertion("tilesToBoard", "tilesToBoard", Caml_obj.caml_equal, Utils.tilesToBoard(2, {
+                  hd: {
+                    val: 2,
+                    pos: {
+                      x: 0,
+                      y: 0
+                    }
+                  },
+                  tl: {
+                    hd: {
+                      val: 2,
+                      pos: {
+                        x: 0,
+                        y: 1
+                      }
+                    },
+                    tl: /* [] */0
+                  }
+                }), {
+              hd: {
+                hd: 2,
+                tl: {
+                  hd: undefined,
+                  tl: /* [] */0
+                }
+              },
+              tl: {
+                hd: {
+                  hd: 2,
+                  tl: {
+                    hd: undefined,
+                    tl: /* [] */0
+                  }
+                },
+                tl: /* [] */0
+              }
+            });
+        Test.assertion("tilesToBoard", "tilesToBoard", Caml_obj.caml_equal, Utils.tilesToBoard(2, {
+                  hd: {
+                    val: 2,
+                    pos: {
+                      x: 0,
+                      y: 0
+                    }
+                  },
+                  tl: {
+                    hd: {
+                      val: 2,
+                      pos: {
+                        x: 1,
+                        y: 1
+                      }
+                    },
+                    tl: /* [] */0
+                  }
+                }), {
+              hd: {
+                hd: 2,
+                tl: {
+                  hd: undefined,
+                  tl: /* [] */0
+                }
+              },
+              tl: {
+                hd: {
+                  hd: undefined,
+                  tl: {
+                    hd: 2,
+                    tl: /* [] */0
+                  }
+                },
+                tl: /* [] */0
+              }
+            });
+        return Test.assertion("tilesToBoard", "tilesToBoard", Caml_obj.caml_equal, Utils.tilesToBoard(3, {
+                        hd: {
+                          val: 2,
+                          pos: {
+                            x: 0,
+                            y: 0
+                          }
+                        },
+                        tl: {
+                          hd: {
+                            val: 2,
+                            pos: {
+                              x: 1,
+                              y: 1
+                            }
+                          },
+                          tl: {
+                            hd: {
+                              val: 4,
+                              pos: {
+                                x: 2,
+                                y: 2
+                              }
+                            },
+                            tl: /* [] */0
+                          }
+                        }
+                      }), {
+                    hd: {
+                      hd: 2,
+                      tl: {
+                        hd: undefined,
+                        tl: {
+                          hd: undefined,
+                          tl: /* [] */0
+                        }
+                      }
+                    },
+                    tl: {
+                      hd: {
+                        hd: undefined,
+                        tl: {
+                          hd: 2,
+                          tl: {
+                            hd: undefined,
+                            tl: /* [] */0
+                          }
+                        }
+                      },
+                      tl: {
+                        hd: {
+                          hd: undefined,
+                          tl: {
+                            hd: undefined,
+                            tl: {
+                              hd: 4,
+                              tl: /* [] */0
+                            }
+                          }
+                        },
+                        tl: /* [] */0
+                      }
+                    }
+                  });
+      }));
+
+Test.test("#Utils.isMoveToRightPossible: should check if it's possible to move tiles to the right", (function (param) {
+        Test.assertion("One row is empty and other is full", "isMoveToRightPossible", (function (a, b) {
+                return a === b;
+              }), Utils.isMoveToRightPossible({
+                  hd: {
+                    val: 2,
+                    pos: {
+                      x: 0,
+                      y: 0
+                    }
+                  },
+                  tl: {
+                    hd: {
+                      val: 4,
+                      pos: {
+                        x: 1,
+                        y: 0
+                      }
+                    },
+                    tl: /* [] */0
+                  }
+                }, 2), false);
+        Test.assertion("Possible", "isMoveToRightPossible", (function (a, b) {
+                return a === b;
+              }), Utils.isMoveToRightPossible({
+                  hd: {
+                    val: 2,
+                    pos: {
+                      x: 0,
+                      y: 0
+                    }
+                  },
+                  tl: {
+                    hd: {
+                      val: 2,
+                      pos: {
+                        x: 0,
+                        y: 1
+                      }
+                    },
+                    tl: /* [] */0
+                  }
+                }, 2), true);
+        Test.assertion("Possible (with collapsing)", "isMoveToRightPossible", (function (a, b) {
+                return a === b;
+              }), Utils.isMoveToRightPossible({
+                  hd: {
+                    val: 2,
+                    pos: {
+                      x: 0,
+                      y: 0
+                    }
+                  },
+                  tl: {
+                    hd: {
+                      val: 2,
+                      pos: {
+                        x: 1,
+                        y: 0
+                      }
+                    },
+                    tl: /* [] */0
+                  }
+                }, 2), true);
+        Test.assertion("Impossible (3 * 3)", "isMoveToRightPossible", (function (a, b) {
+                return a === b;
+              }), Utils.isMoveToRightPossible({
+                  hd: {
+                    val: 2,
+                    pos: {
+                      x: 0,
+                      y: 0
+                    }
+                  },
+                  tl: {
+                    hd: {
+                      val: 4,
+                      pos: {
+                        x: 1,
+                        y: 0
+                      }
+                    },
+                    tl: {
+                      hd: {
+                        val: 2,
+                        pos: {
+                          x: 2,
+                          y: 0
+                        }
+                      },
+                      tl: {
+                        hd: {
+                          val: 2,
+                          pos: {
+                            x: 1,
+                            y: 1
+                          }
+                        },
+                        tl: {
+                          hd: {
+                            val: 4,
+                            pos: {
+                              x: 2,
+                              y: 1
+                            }
+                          },
+                          tl: /* [] */0
+                        }
+                      }
+                    }
+                  }
+                }, 3), false);
+        return Test.assertion("Possible (3 * 3)", "isMoveToRightPossible", (function (a, b) {
+                      return a === b;
+                    }), Utils.isMoveToRightPossible({
+                        hd: {
+                          val: 2,
+                          pos: {
+                            x: 0,
+                            y: 0
+                          }
+                        },
+                        tl: {
+                          hd: {
+                            val: 4,
+                            pos: {
+                              x: 1,
+                              y: 0
+                            }
+                          },
+                          tl: {
+                            hd: {
+                              val: 2,
+                              pos: {
+                                x: 2,
+                                y: 0
+                              }
+                            },
+                            tl: {
+                              hd: {
+                                val: 2,
+                                pos: {
+                                  x: 1,
+                                  y: 1
+                                }
+                              },
+                              tl: {
+                                hd: {
+                                  val: 2,
+                                  pos: {
+                                    x: 2,
+                                    y: 1
+                                  }
+                                },
+                                tl: /* [] */0
+                              }
+                            }
+                          }
+                        }
+                      }, 3), true);
       }));
 
 export {

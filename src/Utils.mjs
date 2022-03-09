@@ -12,6 +12,22 @@ function getCls(styles, name) {
                   })), "");
 }
 
+function tilesToBoard(size, tiles) {
+  return Belt_List.makeBy(size, (function (y) {
+                return Belt_List.makeBy(size, (function (x) {
+                              return Belt_Option.map(Belt_List.getBy(tiles, (function (tile) {
+                                                if (tile.pos.x === x) {
+                                                  return tile.pos.y === y;
+                                                } else {
+                                                  return false;
+                                                }
+                                              })), (function (tile) {
+                                            return tile.val;
+                                          }));
+                            }));
+              }));
+}
+
 function createTile(val, x, y) {
   return {
           val: val,
@@ -69,6 +85,92 @@ function createNewTile(tiles) {
   return createTile(2, match[0], match[1]);
 }
 
+function keyCodeToDirection(code) {
+  switch (code) {
+    case 37 :
+        return /* Left */3;
+    case 38 :
+        return /* Up */0;
+    case 39 :
+        return /* Right */1;
+    case 40 :
+        return /* Down */2;
+    default:
+      return ;
+  }
+}
+
+function isWinningValue(tile) {
+  return tile.val === 2048;
+}
+
+function transpose(tiles) {
+  return Belt_List.map(tiles, (function (tile) {
+                return {
+                        val: tile.val,
+                        pos: {
+                          x: tile.pos.y,
+                          y: tile.pos.x
+                        }
+                      };
+              }));
+}
+
+function reverseRow(tiles, size) {
+  return Belt_List.map(tiles, (function (tile) {
+                return {
+                        val: tile.val,
+                        pos: {
+                          x: (size - 1 | 0) - tile.pos.x | 0,
+                          y: tile.pos.y
+                        }
+                      };
+              }));
+}
+
+function rotateClockwise(tiles, size) {
+  return reverseRow(transpose(tiles), size);
+}
+
+function rotateAntiClockwise(tiles, size) {
+  return transpose(reverseRow(tiles, size));
+}
+
+function isMoveToRightPossible(tiles, size) {
+  return Belt_List.some(tiles, (function (tile) {
+                var neighbour = Belt_List.getBy(tiles, (function (t) {
+                        if (t.pos.y === tile.pos.y) {
+                          return t.pos.x === (tile.pos.x + 1 | 0);
+                        } else {
+                          return false;
+                        }
+                      }));
+                if (tile.pos.x < (size - 1 | 0)) {
+                  return Belt_Option.mapWithDefault(neighbour, true, (function (t) {
+                                return t.val === tile.val;
+                              }));
+                } else {
+                  return false;
+                }
+              }));
+}
+
+function isWin(tiles) {
+  return Belt_List.some(tiles, isWinningValue);
+}
+
+function isLoss(size, tiles) {
+  if (size === Belt_List.size(tiles)) {
+    return !Belt_List.some(tiles, isWinningValue);
+  } else {
+    return false;
+  }
+}
+
+function move(dir, tiles) {
+  return tiles;
+}
+
 var gridSize = 4;
 
 var winningValue = 2048;
@@ -77,10 +179,21 @@ export {
   gridSize ,
   winningValue ,
   getCls ,
+  tilesToBoard ,
   createTile ,
   getPair ,
   positionFilterPred ,
   createNewTile ,
+  keyCodeToDirection ,
+  isWinningValue ,
+  transpose ,
+  reverseRow ,
+  rotateClockwise ,
+  rotateAntiClockwise ,
+  isMoveToRightPossible ,
+  isWin ,
+  isLoss ,
+  move ,
   
 }
 /* No side effect */
