@@ -14,6 +14,12 @@ type tile = {
   pos: position
 }
 
+type extendedTile = {
+  val: int,
+  pos: position,
+  collapsed: bool,
+}
+
 type board = list<list<option<int>>>
 
 let gridSize = 4
@@ -77,7 +83,7 @@ let keyCodeToDirection = (code: int): option<direction> => {
   }
 }
 
-let isWinningValue = tile => tile.val === winningValue
+let isWinningValue = (tile: tile) => tile.val === winningValue
 
 let transpose = (tiles: list<tile>): list<tile> => {
   Belt.List.map(tiles, tile => { val: tile.val, pos: { x: tile.pos.y, y: tile.pos.x } })
@@ -143,19 +149,30 @@ let sortTilesByColumn = (tiles: list<tile>): list<tile> => {
   Belt.List.sort(tiles, (a, b) => a.pos.y === b.pos.y ? a.pos.x - b.pos.x : a.pos.y - b.pos.y)
 }
 
-let setColumn = (tile: tile, x: int) => { val: tile.val, pos: { x: x, y: tile.pos.y } } 
+let setColumn = (tile: tile, x: int) => { ...tile, pos: { x: x, y: tile.pos.y } }
+
+let setCollapsed = (tile: tile, collapsed: bool): extendedTile => { val: tile.val, pos: tile.pos, collapsed: collapsed }
+
+let collapsedTileToTile = (tile: extendedTile): tile => { val: tile.val, pos: tile.pos }
 
 let movementReducer = (ts, tile) => {
-  let addTile = x => Belt.List.add(ts, setColumn(tile, x))
+  let addTile = (x, collapsed) => Belt.List.add(ts, tile -> setColumn(x) -> setCollapsed(collapsed))
 
   Belt.Option.mapWithDefault(
     Belt.List.head(ts),
-    addTile(0),
+    addTile(0, false),
     t => {
       if (t.pos.y === tile.pos.y) {
-        addTile(t.pos.x + 1)
+        if (t.val === tile.val && !t.collapsed) {
+          Belt.List.add(
+            Belt.Option.getWithDefault(Belt.List.drop(ts, 1), list{}),
+            { val: t.val * 2, pos: t.pos, collapsed: true }
+          )
+        } else {
+          addTile(t.pos.x + 1, false)  
+        }
       } else {
-        addTile(0)
+        addTile(0, false)
       }
     }
   )
@@ -166,6 +183,7 @@ let moveRight = (size: int, tiles: list<tile>): list<tile> => {
   -> reverseRow(size)
   -> sortTilesByColumn
   -> Belt.List.reduce(list{}, movementReducer)
+  -> Belt.List.map(collapsedTileToTile)
   -> reverseRow(size)
 }
 

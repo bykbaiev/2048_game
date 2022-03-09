@@ -689,4 +689,61 @@ test("#Utils.moveRight: should move all tiles to right where it's possible", () 
       { val: 32, pos: { x: 2, y: 2 } },
     }
   )
+
+  assertion(
+    ~message = "In case some tiles can be collapsed they should be collapsed",
+    ~operator = "moveRight",
+    compareTiles,
+    Utils.moveRight(2, list{
+      { val: 2, pos: { x: 0, y: 0 } },
+      { val: 2, pos: { x: 1, y: 0 } },
+    }),
+    list{
+      { val: 4, pos: { x: 1, y: 0 } },
+    }
+  )
+
+  assertion(
+    ~message = "In case some tiles can be collapsed they should be collapsed (3 * 3)",
+    ~operator = "moveRight",
+    compareTiles,
+    Utils.moveRight(3, list{
+      { val: 2,  pos: { x: 1, y: 1 } },
+      { val: 4,  pos: { x: 0, y: 0 } },
+      { val: 8,  pos: { x: 0, y: 1 } },
+      { val: 4, pos: { x: 2, y: 0 } },
+      { val: 32, pos: { x: 2, y: 2 } },
+    }),
+    list{
+      { val: 2,  pos: { x: 2, y: 1 } },
+      { val: 8,  pos: { x: 2, y: 0 } },
+      { val: 8,  pos: { x: 1, y: 1 } },
+      { val: 32, pos: { x: 2, y: 2 } },
+    }
+  )
+
+  assertion(
+    ~message = "In case some tiles can be collapsed they should be collapsed (4 * 4)",
+    ~operator = "moveRight",
+    compareTiles,
+    Utils.moveRight(4, list{
+      { val: 2,  pos: { x: 1, y: 1 } },
+      { val: 4,  pos: { x: 0, y: 0 } },
+      { val: 8,  pos: { x: 0, y: 1 } },
+      { val: 4,  pos: { x: 2, y: 0 } },
+      { val: 32, pos: { x: 2, y: 2 } },
+      { val: 4,  pos: { x: 0, y: 3 } },
+      { val: 4,  pos: { x: 1, y: 3 } },
+      { val: 4,  pos: { x: 2, y: 3 } },
+      { val: 4,  pos: { x: 3, y: 3 } },
+    }),
+    list{
+      { val: 2,  pos: { x: 3, y: 1 } },
+      { val: 8,  pos: { x: 3, y: 0 } },
+      { val: 8,  pos: { x: 2, y: 1 } },
+      { val: 32, pos: { x: 3, y: 2 } },
+      { val: 8,  pos: { x: 2, y: 3 } },
+      { val: 8,  pos: { x: 3, y: 3 } },
+    }
+  )
 })

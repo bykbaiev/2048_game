@@ -1419,7 +1419,208 @@ Test.test("#Utils.moveRight: should move all tiles to right where it's possible"
                 tl: /* [] */0
               }
             });
-        return Test.assertion("In case some tiles can be moved they should be moved (3 * 3)", "moveRight", compareTiles, Utils.moveRight(3, {
+        Test.assertion("In case some tiles can be moved they should be moved (3 * 3)", "moveRight", compareTiles, Utils.moveRight(3, {
+                  hd: {
+                    val: 2,
+                    pos: {
+                      x: 1,
+                      y: 1
+                    }
+                  },
+                  tl: {
+                    hd: {
+                      val: 4,
+                      pos: {
+                        x: 0,
+                        y: 0
+                      }
+                    },
+                    tl: {
+                      hd: {
+                        val: 8,
+                        pos: {
+                          x: 0,
+                          y: 1
+                        }
+                      },
+                      tl: {
+                        hd: {
+                          val: 16,
+                          pos: {
+                            x: 2,
+                            y: 0
+                          }
+                        },
+                        tl: {
+                          hd: {
+                            val: 32,
+                            pos: {
+                              x: 2,
+                              y: 2
+                            }
+                          },
+                          tl: /* [] */0
+                        }
+                      }
+                    }
+                  }
+                }), {
+              hd: {
+                val: 2,
+                pos: {
+                  x: 2,
+                  y: 1
+                }
+              },
+              tl: {
+                hd: {
+                  val: 4,
+                  pos: {
+                    x: 1,
+                    y: 0
+                  }
+                },
+                tl: {
+                  hd: {
+                    val: 8,
+                    pos: {
+                      x: 1,
+                      y: 1
+                    }
+                  },
+                  tl: {
+                    hd: {
+                      val: 16,
+                      pos: {
+                        x: 2,
+                        y: 0
+                      }
+                    },
+                    tl: {
+                      hd: {
+                        val: 32,
+                        pos: {
+                          x: 2,
+                          y: 2
+                        }
+                      },
+                      tl: /* [] */0
+                    }
+                  }
+                }
+              }
+            });
+        Test.assertion("In case some tiles can be collapsed they should be collapsed", "moveRight", compareTiles, Utils.moveRight(2, {
+                  hd: {
+                    val: 2,
+                    pos: {
+                      x: 0,
+                      y: 0
+                    }
+                  },
+                  tl: {
+                    hd: {
+                      val: 2,
+                      pos: {
+                        x: 1,
+                        y: 0
+                      }
+                    },
+                    tl: /* [] */0
+                  }
+                }), {
+              hd: {
+                val: 4,
+                pos: {
+                  x: 1,
+                  y: 0
+                }
+              },
+              tl: /* [] */0
+            });
+        Test.assertion("In case some tiles can be collapsed they should be collapsed (3 * 3)", "moveRight", compareTiles, Utils.moveRight(3, {
+                  hd: {
+                    val: 2,
+                    pos: {
+                      x: 1,
+                      y: 1
+                    }
+                  },
+                  tl: {
+                    hd: {
+                      val: 4,
+                      pos: {
+                        x: 0,
+                        y: 0
+                      }
+                    },
+                    tl: {
+                      hd: {
+                        val: 8,
+                        pos: {
+                          x: 0,
+                          y: 1
+                        }
+                      },
+                      tl: {
+                        hd: {
+                          val: 4,
+                          pos: {
+                            x: 2,
+                            y: 0
+                          }
+                        },
+                        tl: {
+                          hd: {
+                            val: 32,
+                            pos: {
+                              x: 2,
+                              y: 2
+                            }
+                          },
+                          tl: /* [] */0
+                        }
+                      }
+                    }
+                  }
+                }), {
+              hd: {
+                val: 2,
+                pos: {
+                  x: 2,
+                  y: 1
+                }
+              },
+              tl: {
+                hd: {
+                  val: 8,
+                  pos: {
+                    x: 2,
+                    y: 0
+                  }
+                },
+                tl: {
+                  hd: {
+                    val: 8,
+                    pos: {
+                      x: 1,
+                      y: 1
+                    }
+                  },
+                  tl: {
+                    hd: {
+                      val: 32,
+                      pos: {
+                        x: 2,
+                        y: 2
+                      }
+                    },
+                    tl: /* [] */0
+                  }
+                }
+              }
+            });
+        return Test.assertion("In case some tiles can be collapsed they should be collapsed (4 * 4)", "moveRight", compareTiles, Utils.moveRight(4, {
                         hd: {
                           val: 2,
                           pos: {
@@ -1445,7 +1646,7 @@ Test.test("#Utils.moveRight: should move all tiles to right where it's possible"
                             },
                             tl: {
                               hd: {
-                                val: 16,
+                                val: 4,
                                 pos: {
                                   x: 2,
                                   y: 0
@@ -1459,7 +1660,43 @@ Test.test("#Utils.moveRight: should move all tiles to right where it's possible"
                                     y: 2
                                   }
                                 },
-                                tl: /* [] */0
+                                tl: {
+                                  hd: {
+                                    val: 4,
+                                    pos: {
+                                      x: 0,
+                                      y: 3
+                                    }
+                                  },
+                                  tl: {
+                                    hd: {
+                                      val: 4,
+                                      pos: {
+                                        x: 1,
+                                        y: 3
+                                      }
+                                    },
+                                    tl: {
+                                      hd: {
+                                        val: 4,
+                                        pos: {
+                                          x: 2,
+                                          y: 3
+                                        }
+                                      },
+                                      tl: {
+                                        hd: {
+                                          val: 4,
+                                          pos: {
+                                            x: 3,
+                                            y: 3
+                                          }
+                                        },
+                                        tl: /* [] */0
+                                      }
+                                    }
+                                  }
+                                }
                               }
                             }
                           }
@@ -1468,15 +1705,15 @@ Test.test("#Utils.moveRight: should move all tiles to right where it's possible"
                     hd: {
                       val: 2,
                       pos: {
-                        x: 2,
+                        x: 3,
                         y: 1
                       }
                     },
                     tl: {
                       hd: {
-                        val: 4,
+                        val: 8,
                         pos: {
-                          x: 1,
+                          x: 3,
                           y: 0
                         }
                       },
@@ -1484,27 +1721,36 @@ Test.test("#Utils.moveRight: should move all tiles to right where it's possible"
                         hd: {
                           val: 8,
                           pos: {
-                            x: 1,
+                            x: 2,
                             y: 1
                           }
                         },
                         tl: {
                           hd: {
-                            val: 16,
+                            val: 32,
                             pos: {
-                              x: 2,
-                              y: 0
+                              x: 3,
+                              y: 2
                             }
                           },
                           tl: {
                             hd: {
-                              val: 32,
+                              val: 8,
                               pos: {
                                 x: 2,
-                                y: 2
+                                y: 3
                               }
                             },
-                            tl: /* [] */0
+                            tl: {
+                              hd: {
+                                val: 8,
+                                pos: {
+                                  x: 3,
+                                  y: 3
+                                }
+                              },
+                              tl: /* [] */0
+                            }
                           }
                         }
                       }
