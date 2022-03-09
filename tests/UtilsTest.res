@@ -468,14 +468,29 @@ test("#Utils.isLoss: should check if user loss", () => {
   )
 
   assertion(
-    ~message = "Loss is when the number of tiles is the same as max size and there is no 2048 tile",
+    ~message = "Loss is when the number of tiles is the same as max size and there are no 2048 tile or collapsed tiles",
     ~operator = "isLoss",
     (a, b) => a == b,
     Utils.isLoss(2, list{
       { val: 2, pos: { x: 0, y: 0 } },
-      { val: 1024, pos: { x: 0, y: 0 } }
+      { val: 1024, pos: { x: 1, y: 0 } },
+      { val: 1024, pos: { x: 0, y: 1 } },
+      { val: 2, pos: { x: 1, y: 1 } }
     }),
     true
+  )
+
+  assertion(
+    ~message = "If there are all possible tiles are used but they can still be collapsed the game is not lost yet",
+    ~operator = "isLoss",
+    (a, b) => a == b,
+    Utils.isLoss(2, list{
+      { val: 2, pos: { x: 0, y: 0 } },
+      { val: 2, pos: { x: 1, y: 0 } },
+      { val: 1024, pos: { x: 0, y: 1 } },
+      { val: 2, pos: { x: 1, y: 1 } }
+    }),
+    false
   )
 
   assertion(

@@ -155,18 +155,6 @@ function isMoveToRightPossible(tiles, size) {
               }));
 }
 
-function isWin(tiles) {
-  return Belt_List.some(tiles, isWinningValue);
-}
-
-function isLoss(size, tiles) {
-  if (size === Belt_List.size(tiles)) {
-    return !Belt_List.some(tiles, isWinningValue);
-  } else {
-    return false;
-  }
-}
-
 function rotateToMoveToRight(size, dir, tiles) {
   switch (dir) {
     case /* Up */0 :
@@ -194,6 +182,22 @@ function rotateBack(size, dir, tiles) {
         var tiles$1 = reverseRow(transpose(tiles), size);
         return reverseRow(transpose(tiles$1), size);
     
+  }
+}
+
+function isMovePossible(tiles, size, dir) {
+  return isMoveToRightPossible(rotateToMoveToRight(size, dir, tiles), size);
+}
+
+function isWin(tiles) {
+  return Belt_List.some(tiles, isWinningValue);
+}
+
+function isLoss(size, tiles) {
+  if (Math.imul(size, size) === Belt_List.size(tiles) && !Belt_List.some(tiles, isWinningValue) && !isMovePossible(tiles, size, /* Up */0) && !isMovePossible(tiles, size, /* Right */1) && !isMovePossible(tiles, size, /* Down */2)) {
+    return !isMovePossible(tiles, size, /* Left */3);
+  } else {
+    return false;
   }
 }
 
@@ -234,10 +238,11 @@ export {
   rotateClockwise ,
   rotateAntiClockwise ,
   isMoveToRightPossible ,
-  isWin ,
-  isLoss ,
   rotateToMoveToRight ,
   rotateBack ,
+  isMovePossible ,
+  isWin ,
+  isLoss ,
   moveRight ,
   move ,
   

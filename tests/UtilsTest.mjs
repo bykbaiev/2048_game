@@ -839,7 +839,7 @@ Test.test("#Utils.isLoss: should check if user loss", (function (param) {
         Test.assertion("For loss tiles should not be empty", "isLoss", (function (a, b) {
                 return a === b;
               }), Utils.isLoss(2, /* [] */0), false);
-        Test.assertion("Loss is when the number of tiles is the same as max size and there is no 2048 tile", "isLoss", (function (a, b) {
+        Test.assertion("Loss is when the number of tiles is the same as max size and there are no 2048 tile or collapsed tiles", "isLoss", (function (a, b) {
                 return a === b;
               }), Utils.isLoss(2, {
                   hd: {
@@ -853,13 +853,70 @@ Test.test("#Utils.isLoss: should check if user loss", (function (param) {
                     hd: {
                       val: 1024,
                       pos: {
-                        x: 0,
+                        x: 1,
                         y: 0
                       }
                     },
-                    tl: /* [] */0
+                    tl: {
+                      hd: {
+                        val: 1024,
+                        pos: {
+                          x: 0,
+                          y: 1
+                        }
+                      },
+                      tl: {
+                        hd: {
+                          val: 2,
+                          pos: {
+                            x: 1,
+                            y: 1
+                          }
+                        },
+                        tl: /* [] */0
+                      }
+                    }
                   }
                 }), true);
+        Test.assertion("If there are all possible tiles are used but they can still be collapsed the game is not lost yet", "isLoss", (function (a, b) {
+                return a === b;
+              }), Utils.isLoss(2, {
+                  hd: {
+                    val: 2,
+                    pos: {
+                      x: 0,
+                      y: 0
+                    }
+                  },
+                  tl: {
+                    hd: {
+                      val: 2,
+                      pos: {
+                        x: 1,
+                        y: 0
+                      }
+                    },
+                    tl: {
+                      hd: {
+                        val: 1024,
+                        pos: {
+                          x: 0,
+                          y: 1
+                        }
+                      },
+                      tl: {
+                        hd: {
+                          val: 2,
+                          pos: {
+                            x: 1,
+                            y: 1
+                          }
+                        },
+                        tl: /* [] */0
+                      }
+                    }
+                  }
+                }), false);
         return Test.assertion("In case there is no 2048 tile the game is either lost or continuing", "isLoss", (function (a, b) {
                       return a === b;
                     }), Utils.isLoss(2, {

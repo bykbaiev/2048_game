@@ -102,14 +102,6 @@ let isMoveToRightPossible = (tiles: list<tile>, size: int): bool => {
   })
 }
 
-let isWin = (tiles: list<tile>): bool => {
-  Belt.List.some(tiles, isWinningValue)
-}
-
-let isLoss = (size: int, tiles: list<tile>): bool => {
-  size === Belt.List.size(tiles) && !Belt.List.some(tiles, isWinningValue) // TODO: add check if move is possible
-}
-
 let rotateToMoveToRight = (size: int, dir: direction, tiles: list<tile>) => {
   switch dir {
   | Up    => rotateClockwise(tiles, size)
@@ -126,6 +118,25 @@ let rotateBack = (size: int, dir: direction, tiles: list<tile>) => {
   | Down  => rotateClockwise(tiles, size)
   | Left  => tiles -> rotateClockwise(size) -> rotateClockwise(size)
   }
+}
+
+let isMovePossible = (tiles: list<tile>, size: int, dir: direction) => {
+  isMoveToRightPossible(rotateToMoveToRight(size, dir, tiles), size)
+}
+
+let isWin = (tiles: list<tile>): bool => {
+  Belt.List.some(tiles, isWinningValue)
+}
+
+let isLoss = (size: int, tiles: list<tile>): bool => {
+  let isPossibleToMoveSomewhere = isMovePossible(tiles, size)
+
+  size * size === Belt.List.size(tiles)  &&
+  !Belt.List.some(tiles, isWinningValue) &&
+  !isPossibleToMoveSomewhere(Up)         &&
+  !isPossibleToMoveSomewhere(Right)      &&
+  !isPossibleToMoveSomewhere(Down)       &&
+  !isPossibleToMoveSomewhere(Left)
 }
 
 let moveRight = (tiles: list<tile>): list<tile> => {
