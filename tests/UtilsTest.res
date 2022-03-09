@@ -669,4 +669,24 @@ test("#Utils.moveRight: should move all tiles to right where it's possible", () 
       { val: 4, pos: { x: 1, y: 1 } },
     }
   )
+
+  assertion(
+    ~message = "In case some tiles can be moved they should be moved (3 * 3)",
+    ~operator = "moveRight",
+    compareTiles,
+    Utils.moveRight(3, list{
+      { val: 2,  pos: { x: 1, y: 1 } },
+      { val: 4,  pos: { x: 0, y: 0 } },
+      { val: 8,  pos: { x: 0, y: 1 } },
+      { val: 16, pos: { x: 2, y: 0 } },
+      { val: 32, pos: { x: 2, y: 2 } },
+    }),
+    list{
+      { val: 2,  pos: { x: 2, y: 1 } },
+      { val: 4,  pos: { x: 1, y: 0 } },
+      { val: 8,  pos: { x: 1, y: 1 } },
+      { val: 16, pos: { x: 2, y: 0 } },
+      { val: 32, pos: { x: 2, y: 2 } },
+    }
+  )
 })
