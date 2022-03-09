@@ -242,7 +242,7 @@ test("#Utils.rotateClockwise: should rotate tiles (to handle all moves at once: 
   )
 })
 
-test("#Utils.rotateClockwise: should rotate tiles anti clockwise (to handle all moves at once: move top is like to rotate anti clockwise and then move left)", () => {
+test("#Utils.rotateAntiClockwise: should rotate tiles anti clockwise (to handle all moves at once: move top is like to rotate anti clockwise and then move left)", () => {
   assertion(
     ~message = "Rotate once",
     ~operator = "rotateAntiClockwise",
@@ -268,6 +268,122 @@ test("#Utils.rotateClockwise: should rotate tiles anti clockwise (to handle all 
     list{
       { val: 2, pos: { x: 0, y: 0 } },
       { val: 4, pos: { x: 1, y: 1 } }
+    }
+  )
+})
+
+test("#Utils.rotateToMoveToRight: should rotate tiles to make each movement as movement to right (ease the algo)", () => {
+  assertion(
+    ~message = "Right (nothing changes)",
+    ~operator = "rotateToMoveToRight",
+    (a, b) => a == b,
+    Utils.rotateToMoveToRight(2, Utils.Right, list{
+      { val: 2, pos: { x: 0, y: 0 } },
+      { val: 4, pos: { x: 1, y: 1 } }
+    }),
+    list{
+      { val: 2, pos: { x: 0, y: 0 } },
+      { val: 4, pos: { x: 1, y: 1 } }
+    }
+  )
+
+  assertion(
+    ~message = "Up",
+    ~operator = "rotateToMoveToRight",
+    (a, b) => a == b,
+    Utils.rotateToMoveToRight(2, Utils.Up, list{
+      { val: 2, pos: { x: 0, y: 0 } },
+      { val: 4, pos: { x: 1, y: 1 } }
+    }),
+    list{
+      { val: 2, pos: { x: 1, y: 0 } },
+      { val: 4, pos: { x: 0, y: 1 } }
+    }
+  )
+
+  assertion(
+    ~message = "Down",
+    ~operator = "rotateToMoveToRight",
+    (a, b) => a == b,
+    Utils.rotateToMoveToRight(2, Utils.Down, list{
+      { val: 2, pos: { x: 0, y: 0 } },
+      { val: 4, pos: { x: 1, y: 1 } }
+    }),
+    list{
+      { val: 2, pos: { x: 0, y: 1 } },
+      { val: 4, pos: { x: 1, y: 0 } }
+    }
+  )
+
+  assertion(
+    ~message = "Left",
+    ~operator = "rotateToMoveToRight",
+    (a, b) => a == b,
+    Utils.rotateToMoveToRight(2, Utils.Left, list{
+      { val: 2, pos: { x: 0, y: 0 } },
+      { val: 4, pos: { x: 1, y: 1 } }
+    }),
+    list{
+      { val: 2, pos: { x: 1, y: 1 } },
+      { val: 4, pos: { x: 0, y: 0 } }
+    }
+  )
+})
+
+test("#Utils.rotateBack: should rotate tiles back after rotatement to move them in specific direction", () => {
+  assertion(
+    ~message = "Right (nothing changes)",
+    ~operator = "rotateBack",
+    (a, b) => a == b,
+    Utils.rotateBack(2, Utils.Right, list{
+      { val: 2, pos: { x: 0, y: 0 } },
+      { val: 4, pos: { x: 1, y: 1 } }
+    }),
+    list{
+      { val: 2, pos: { x: 0, y: 0 } },
+      { val: 4, pos: { x: 1, y: 1 } }
+    }
+  )
+
+  assertion(
+    ~message = "Up",
+    ~operator = "rotateBack",
+    (a, b) => a == b,
+    Utils.rotateBack(2, Utils.Up, list{
+      { val: 2, pos: { x: 0, y: 0 } },
+      { val: 4, pos: { x: 1, y: 1 } }
+    }),
+    list{
+      { val: 2, pos: { x: 0, y: 1 } },
+      { val: 4, pos: { x: 1, y: 0 } }
+    }
+  )
+
+  assertion(
+    ~message = "Down",
+    ~operator = "rotateBack",
+    (a, b) => a == b,
+    Utils.rotateBack(2, Utils.Down, list{
+      { val: 2, pos: { x: 0, y: 0 } },
+      { val: 4, pos: { x: 1, y: 1 } }
+    }),
+    list{
+      { val: 2, pos: { x: 1, y: 0 } },
+      { val: 4, pos: { x: 0, y: 1 } }
+    }
+  )
+
+  assertion(
+    ~message = "Left",
+    ~operator = "rotateBack",
+    (a, b) => a == b,
+    Utils.rotateBack(2, Utils.Left, list{
+      { val: 2, pos: { x: 0, y: 0 } },
+      { val: 4, pos: { x: 1, y: 1 } }
+    }),
+    list{
+      { val: 2, pos: { x: 1, y: 1 } },
+      { val: 4, pos: { x: 0, y: 0 } }
     }
   )
 })

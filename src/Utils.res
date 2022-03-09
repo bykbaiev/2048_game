@@ -64,7 +64,7 @@ let createNewTile = (tiles: list<tile>): tile => {
     -> Belt.List.keep(positionFilterPred(tiles))
   let idx = Js.Math.random_int(0, Belt.List.size(availablePositions))
   let (x, y) = availablePositions -> Belt.List.get(idx) -> Belt.Option.getWithDefault((0, 0))
-  createTile(~val = 2, ~x = x, ~y = y)
+  createTile(~val = 2, ~x = x, ~y = y) // TODO: sometimes it's 4
 }
 
 let keyCodeToDirection = (code: int): option<direction> => {
@@ -110,6 +110,28 @@ let isLoss = (size: int, tiles: list<tile>): bool => {
   size === Belt.List.size(tiles) && !Belt.List.some(tiles, isWinningValue) // TODO: add check if move is possible
 }
 
+let rotateToMoveToRight = (size: int, dir: direction, tiles: list<tile>) => {
+  switch dir {
+  | Up    => rotateClockwise(tiles, size)
+  | Right => tiles
+  | Down  => rotateAntiClockwise(tiles, size)
+  | Left  => tiles -> rotateClockwise(size) -> rotateClockwise(size)
+  }
+}
+
+let rotateBack = (size: int, dir: direction, tiles: list<tile>) => {
+  switch dir {
+  | Up    => rotateAntiClockwise(tiles, size)
+  | Right => tiles
+  | Down  => rotateClockwise(tiles, size)
+  | Left  => tiles -> rotateClockwise(size) -> rotateClockwise(size)
+  }
+}
+
+let moveRight = (tiles: list<tile>): list<tile> => {
+  tiles
+}
+
 // * transform the tiles that move is always to right !
 // * check if move is possible
 // * move tiles (if possible)
@@ -119,5 +141,24 @@ let isLoss = (size: int, tiles: list<tile>): bool => {
 // * check if it's a loss
 // * transform back
 let move = (dir: direction, tiles: list<tile>) => {
-  tiles
+  let size = gridSize
+  let rotated = rotateToMoveToRight(size, dir, tiles)
+
+  if isMoveToRightPossible(rotated, size) {
+    let moved = moveRight(rotated)
+
+    if isWin(moved) || isLoss(size, moved) {
+      rotateBack(size, dir, moved)
+    } else {
+      let updated = Belt.List.add(moved, createNewTile(moved))
+
+      if isWin(updated) || isLoss(size, updated) {
+        rotateBack(size, dir, updated) // TODO add handling for Win | Loss | Play
+      } else {
+        rotateBack(size, dir, updated)
+      }
+    }
+  } else {
+    tiles
+  }
 }

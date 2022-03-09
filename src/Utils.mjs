@@ -167,8 +167,51 @@ function isLoss(size, tiles) {
   }
 }
 
-function move(dir, tiles) {
+function rotateToMoveToRight(size, dir, tiles) {
+  switch (dir) {
+    case /* Up */0 :
+        return reverseRow(transpose(tiles), size);
+    case /* Right */1 :
+        return tiles;
+    case /* Down */2 :
+        return transpose(reverseRow(tiles, size));
+    case /* Left */3 :
+        var tiles$1 = reverseRow(transpose(tiles), size);
+        return reverseRow(transpose(tiles$1), size);
+    
+  }
+}
+
+function rotateBack(size, dir, tiles) {
+  switch (dir) {
+    case /* Up */0 :
+        return transpose(reverseRow(tiles, size));
+    case /* Right */1 :
+        return tiles;
+    case /* Down */2 :
+        return reverseRow(transpose(tiles), size);
+    case /* Left */3 :
+        var tiles$1 = reverseRow(transpose(tiles), size);
+        return reverseRow(transpose(tiles$1), size);
+    
+  }
+}
+
+function moveRight(tiles) {
   return tiles;
+}
+
+function move(dir, tiles) {
+  var rotated = rotateToMoveToRight(4, dir, tiles);
+  if (!isMoveToRightPossible(rotated, 4)) {
+    return tiles;
+  }
+  if (Belt_List.some(rotated, isWinningValue) || isLoss(4, rotated)) {
+    return rotateBack(4, dir, rotated);
+  }
+  var updated = Belt_List.add(rotated, createNewTile(rotated));
+  Belt_List.some(updated, isWinningValue) || isLoss(4, updated);
+  return rotateBack(4, dir, updated);
 }
 
 var gridSize = 4;
@@ -193,6 +236,9 @@ export {
   isMoveToRightPossible ,
   isWin ,
   isLoss ,
+  rotateToMoveToRight ,
+  rotateBack ,
+  moveRight ,
   move ,
   
 }

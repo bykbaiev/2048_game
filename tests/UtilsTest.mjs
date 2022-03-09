@@ -382,7 +382,7 @@ Test.test("#Utils.rotateClockwise: should rotate tiles (to handle all moves at o
                   });
       }));
 
-Test.test("#Utils.rotateClockwise: should rotate tiles anti clockwise (to handle all moves at once: move top is like to rotate anti clockwise and then move left)", (function (param) {
+Test.test("#Utils.rotateAntiClockwise: should rotate tiles anti clockwise (to handle all moves at once: move top is like to rotate anti clockwise and then move left)", (function (param) {
         Test.assertion("Rotate once", "rotateAntiClockwise", Caml_obj.caml_equal, Utils.rotateAntiClockwise({
                   hd: {
                     val: 2,
@@ -452,6 +452,308 @@ Test.test("#Utils.rotateClockwise: should rotate tiles anti clockwise (to handle
                         pos: {
                           x: 1,
                           y: 1
+                        }
+                      },
+                      tl: /* [] */0
+                    }
+                  });
+      }));
+
+Test.test("#Utils.rotateToMoveToRight: should rotate tiles to make each movement as movement to right (ease the algo)", (function (param) {
+        Test.assertion("Right (nothing changes)", "rotateToMoveToRight", Caml_obj.caml_equal, Utils.rotateToMoveToRight(2, /* Right */1, {
+                  hd: {
+                    val: 2,
+                    pos: {
+                      x: 0,
+                      y: 0
+                    }
+                  },
+                  tl: {
+                    hd: {
+                      val: 4,
+                      pos: {
+                        x: 1,
+                        y: 1
+                      }
+                    },
+                    tl: /* [] */0
+                  }
+                }), {
+              hd: {
+                val: 2,
+                pos: {
+                  x: 0,
+                  y: 0
+                }
+              },
+              tl: {
+                hd: {
+                  val: 4,
+                  pos: {
+                    x: 1,
+                    y: 1
+                  }
+                },
+                tl: /* [] */0
+              }
+            });
+        Test.assertion("Up", "rotateToMoveToRight", Caml_obj.caml_equal, Utils.rotateToMoveToRight(2, /* Up */0, {
+                  hd: {
+                    val: 2,
+                    pos: {
+                      x: 0,
+                      y: 0
+                    }
+                  },
+                  tl: {
+                    hd: {
+                      val: 4,
+                      pos: {
+                        x: 1,
+                        y: 1
+                      }
+                    },
+                    tl: /* [] */0
+                  }
+                }), {
+              hd: {
+                val: 2,
+                pos: {
+                  x: 1,
+                  y: 0
+                }
+              },
+              tl: {
+                hd: {
+                  val: 4,
+                  pos: {
+                    x: 0,
+                    y: 1
+                  }
+                },
+                tl: /* [] */0
+              }
+            });
+        Test.assertion("Down", "rotateToMoveToRight", Caml_obj.caml_equal, Utils.rotateToMoveToRight(2, /* Down */2, {
+                  hd: {
+                    val: 2,
+                    pos: {
+                      x: 0,
+                      y: 0
+                    }
+                  },
+                  tl: {
+                    hd: {
+                      val: 4,
+                      pos: {
+                        x: 1,
+                        y: 1
+                      }
+                    },
+                    tl: /* [] */0
+                  }
+                }), {
+              hd: {
+                val: 2,
+                pos: {
+                  x: 0,
+                  y: 1
+                }
+              },
+              tl: {
+                hd: {
+                  val: 4,
+                  pos: {
+                    x: 1,
+                    y: 0
+                  }
+                },
+                tl: /* [] */0
+              }
+            });
+        return Test.assertion("Left", "rotateToMoveToRight", Caml_obj.caml_equal, Utils.rotateToMoveToRight(2, /* Left */3, {
+                        hd: {
+                          val: 2,
+                          pos: {
+                            x: 0,
+                            y: 0
+                          }
+                        },
+                        tl: {
+                          hd: {
+                            val: 4,
+                            pos: {
+                              x: 1,
+                              y: 1
+                            }
+                          },
+                          tl: /* [] */0
+                        }
+                      }), {
+                    hd: {
+                      val: 2,
+                      pos: {
+                        x: 1,
+                        y: 1
+                      }
+                    },
+                    tl: {
+                      hd: {
+                        val: 4,
+                        pos: {
+                          x: 0,
+                          y: 0
+                        }
+                      },
+                      tl: /* [] */0
+                    }
+                  });
+      }));
+
+Test.test("#Utils.rotateBack: should rotate tiles back after rotatement to move them in specific direction", (function (param) {
+        Test.assertion("Right (nothing changes)", "rotateBack", Caml_obj.caml_equal, Utils.rotateBack(2, /* Right */1, {
+                  hd: {
+                    val: 2,
+                    pos: {
+                      x: 0,
+                      y: 0
+                    }
+                  },
+                  tl: {
+                    hd: {
+                      val: 4,
+                      pos: {
+                        x: 1,
+                        y: 1
+                      }
+                    },
+                    tl: /* [] */0
+                  }
+                }), {
+              hd: {
+                val: 2,
+                pos: {
+                  x: 0,
+                  y: 0
+                }
+              },
+              tl: {
+                hd: {
+                  val: 4,
+                  pos: {
+                    x: 1,
+                    y: 1
+                  }
+                },
+                tl: /* [] */0
+              }
+            });
+        Test.assertion("Up", "rotateBack", Caml_obj.caml_equal, Utils.rotateBack(2, /* Up */0, {
+                  hd: {
+                    val: 2,
+                    pos: {
+                      x: 0,
+                      y: 0
+                    }
+                  },
+                  tl: {
+                    hd: {
+                      val: 4,
+                      pos: {
+                        x: 1,
+                        y: 1
+                      }
+                    },
+                    tl: /* [] */0
+                  }
+                }), {
+              hd: {
+                val: 2,
+                pos: {
+                  x: 0,
+                  y: 1
+                }
+              },
+              tl: {
+                hd: {
+                  val: 4,
+                  pos: {
+                    x: 1,
+                    y: 0
+                  }
+                },
+                tl: /* [] */0
+              }
+            });
+        Test.assertion("Down", "rotateBack", Caml_obj.caml_equal, Utils.rotateBack(2, /* Down */2, {
+                  hd: {
+                    val: 2,
+                    pos: {
+                      x: 0,
+                      y: 0
+                    }
+                  },
+                  tl: {
+                    hd: {
+                      val: 4,
+                      pos: {
+                        x: 1,
+                        y: 1
+                      }
+                    },
+                    tl: /* [] */0
+                  }
+                }), {
+              hd: {
+                val: 2,
+                pos: {
+                  x: 1,
+                  y: 0
+                }
+              },
+              tl: {
+                hd: {
+                  val: 4,
+                  pos: {
+                    x: 0,
+                    y: 1
+                  }
+                },
+                tl: /* [] */0
+              }
+            });
+        return Test.assertion("Left", "rotateBack", Caml_obj.caml_equal, Utils.rotateBack(2, /* Left */3, {
+                        hd: {
+                          val: 2,
+                          pos: {
+                            x: 0,
+                            y: 0
+                          }
+                        },
+                        tl: {
+                          hd: {
+                            val: 4,
+                            pos: {
+                              x: 1,
+                              y: 1
+                            }
+                          },
+                          tl: /* [] */0
+                        }
+                      }), {
+                    hd: {
+                      val: 2,
+                      pos: {
+                        x: 1,
+                        y: 1
+                      }
+                    },
+                    tl: {
+                      hd: {
+                        val: 4,
+                        pos: {
+                          x: 0,
+                          y: 0
                         }
                       },
                       tl: /* [] */0
