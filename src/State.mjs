@@ -3,11 +3,21 @@
 import * as Utils from "./Utils.mjs";
 import * as Recoil from "recoil";
 
+var fst = Utils.createNewTile(/* [] */0);
+
+var snd = Utils.createNewTile({
+      hd: fst,
+      tl: /* [] */0
+    });
+
 var tilesState = Recoil.atom({
       key: "tilesState",
       default: {
-        hd: Utils.createNewTile(/* [] */0),
-        tl: /* [] */0
+        hd: fst,
+        tl: {
+          hd: snd,
+          tl: /* [] */0
+        }
       }
     });
 
