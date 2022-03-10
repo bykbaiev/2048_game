@@ -28,8 +28,9 @@ function tilesToBoard(size, tiles) {
               }));
 }
 
-function createTile(val, x, y) {
+function createTile(id, val, x, y) {
   return {
+          id: id,
           val: val,
           pos: {
             x: x,
@@ -83,7 +84,8 @@ function createNewTile(tiles) {
         0
       ]);
   var randTileIndicator = Js_math.random_int(0, 4);
-  return createTile(randTileIndicator === 3 ? 4 : 2, match[0], match[1]);
+  var id = "tile-" + String(Math.random());
+  return createTile(id, randTileIndicator === 3 ? 4 : 2, match[0], match[1]);
 }
 
 function keyCodeToDirection(code) {
@@ -108,6 +110,7 @@ function isWinningValue(tile) {
 function transpose(tiles) {
   return Belt_List.map(tiles, (function (tile) {
                 return {
+                        id: tile.id,
                         val: tile.val,
                         pos: {
                           x: tile.pos.y,
@@ -120,6 +123,7 @@ function transpose(tiles) {
 function reverseRow(tiles, size) {
   return Belt_List.map(tiles, (function (tile) {
                 return {
+                        id: tile.id,
                         val: tile.val,
                         pos: {
                           x: (size - 1 | 0) - tile.pos.x | 0,
@@ -214,6 +218,7 @@ function sortTilesByColumn(tiles) {
 
 function setColumn(tile, x) {
   return {
+          id: tile.id,
           val: tile.val,
           pos: {
             x: x,
@@ -224,6 +229,7 @@ function setColumn(tile, x) {
 
 function setCollapsed(tile, collapsed) {
   return {
+          id: tile.id,
           val: tile.val,
           pos: tile.pos,
           collapsed: collapsed
@@ -232,6 +238,7 @@ function setCollapsed(tile, collapsed) {
 
 function collapsedTileToTile(tile) {
   return {
+          id: tile.id,
           val: tile.val,
           pos: tile.pos
         };
@@ -245,6 +252,7 @@ function movementReducer(ts, tile) {
                 if (t.pos.y === tile.pos.y) {
                   if (t.val === tile.val && !t.collapsed) {
                     return Belt_List.add(Belt_Option.getWithDefault(Belt_List.drop(ts, 1), /* [] */0), {
+                                id: tile.id,
                                 val: (t.val << 1),
                                 pos: t.pos,
                                 collapsed: true

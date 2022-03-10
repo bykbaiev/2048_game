@@ -10,11 +10,13 @@ type position = {
 }
 
 type tile = {
+  id: string,
   val: int,
   pos: position
 }
 
 type extendedTile = {
+  id: string,
   val: int,
   pos: position,
   collapsed: bool,
@@ -46,7 +48,7 @@ let tilesToBoard = (size: int, tiles: list<tile>): board => {
   })
 }
 
-let createTile = (~val, ~x, ~y): tile => { val: val, pos: { x: x, y: y } }
+let createTile = (~id, ~val, ~x, ~y): tile => { id: id, val: val, pos: { x: x, y: y } }
 
 let getPair = (max: int, idx: int): option<(int, int)> => {
   if idx >= max * max {
@@ -71,7 +73,13 @@ let createNewTile = (tiles: list<tile>): tile => {
   let idx = Js.Math.random_int(0, Belt.List.size(availablePositions))
   let (x, y) = availablePositions -> Belt.List.get(idx) -> Belt.Option.getWithDefault((0, 0))
   let randTileIndicator = Js.Math.random_int(0, 4)
-  createTile(~val = randTileIndicator === 3 ? 4 : 2, ~x = x, ~y = y)
+  let id = `tile-${Belt.Float.toString(Js.Math.random())}`
+  createTile(
+    ~id = id,
+    ~val = randTileIndicator === 3 ? 4 : 2,
+    ~x = x,
+    ~y = y
+  )
 }
 
 let keyCodeToDirection = (code: int): option<direction> => {
@@ -87,11 +95,11 @@ let keyCodeToDirection = (code: int): option<direction> => {
 let isWinningValue = (tile: tile) => tile.val === winningValue
 
 let transpose = (tiles: list<tile>): list<tile> => {
-  Belt.List.map(tiles, tile => { val: tile.val, pos: { x: tile.pos.y, y: tile.pos.x } })
+  Belt.List.map(tiles, tile => { ...tile, pos: { x: tile.pos.y, y: tile.pos.x } })
 }
 
 let reverseRow = (tiles: list<tile>, size: int): list<tile> => {
-  Belt.List.map(tiles, tile => { val: tile.val, pos: { x: size - 1 - tile.pos.x, y: tile.pos.y }})
+  Belt.List.map(tiles, tile => { ...tile, pos: { x: size - 1 - tile.pos.x, y: tile.pos.y }})
 }
 
 let rotateClockwise = (tiles: list<tile>, size: int): list<tile> => {
@@ -152,9 +160,9 @@ let sortTilesByColumn = (tiles: list<tile>): list<tile> => {
 
 let setColumn = (tile: tile, x: int) => { ...tile, pos: { x: x, y: tile.pos.y } }
 
-let setCollapsed = (tile: tile, collapsed: bool): extendedTile => { val: tile.val, pos: tile.pos, collapsed: collapsed }
+let setCollapsed = (tile: tile, collapsed: bool): extendedTile => { id: tile.id, val: tile.val, pos: tile.pos, collapsed: collapsed }
 
-let collapsedTileToTile = (tile: extendedTile): tile => { val: tile.val, pos: tile.pos }
+let collapsedTileToTile = (tile: extendedTile): tile => { id: tile.id, val: tile.val, pos: tile.pos }
 
 let movementReducer = (ts, tile) => {
   let addTile = (x, collapsed) => Belt.List.add(ts, tile -> setColumn(x) -> setCollapsed(collapsed))
@@ -167,7 +175,7 @@ let movementReducer = (ts, tile) => {
         if (t.val === tile.val && !t.collapsed) {
           Belt.List.add(
             Belt.Option.getWithDefault(Belt.List.drop(ts, 1), list{}),
-            { val: t.val * 2, pos: t.pos, collapsed: true }
+            { id: tile.id, val: t.val * 2, pos: t.pos, collapsed: true } // ? maybe new ID ?
           )
         } else {
           addTile(t.pos.x + 1, false)  
