@@ -156,6 +156,7 @@ Test.test("#Utils.getPair: should return Nothing in case there is no such pair",
 Test.test("#Utils.transpose: should transpose matrix", (function (param) {
         Test.assertion("Transpose once", "transpose", Caml_obj.caml_equal, Utils.transpose({
                   hd: {
+                    id: "0",
                     val: 2,
                     pos: {
                       x: 0,
@@ -164,6 +165,7 @@ Test.test("#Utils.transpose: should transpose matrix", (function (param) {
                   },
                   tl: {
                     hd: {
+                      id: "1",
                       val: 4,
                       pos: {
                         x: 0,
@@ -174,6 +176,7 @@ Test.test("#Utils.transpose: should transpose matrix", (function (param) {
                   }
                 }), {
               hd: {
+                id: "0",
                 val: 2,
                 pos: {
                   x: 0,
@@ -182,6 +185,7 @@ Test.test("#Utils.transpose: should transpose matrix", (function (param) {
               },
               tl: {
                 hd: {
+                  id: "1",
                   val: 4,
                   pos: {
                     x: 1,
@@ -193,6 +197,7 @@ Test.test("#Utils.transpose: should transpose matrix", (function (param) {
             });
         return Test.assertion("Transpose two times => nothing changes", "transpose", Caml_obj.caml_equal, Utils.transpose(Utils.transpose({
                             hd: {
+                              id: "0",
                               val: 2,
                               pos: {
                                 x: 0,
@@ -201,6 +206,7 @@ Test.test("#Utils.transpose: should transpose matrix", (function (param) {
                             },
                             tl: {
                               hd: {
+                                id: "1",
                                 val: 4,
                                 pos: {
                                   x: 0,
@@ -211,6 +217,7 @@ Test.test("#Utils.transpose: should transpose matrix", (function (param) {
                             }
                           })), {
                     hd: {
+                      id: "0",
                       val: 2,
                       pos: {
                         x: 0,
@@ -219,6 +226,7 @@ Test.test("#Utils.transpose: should transpose matrix", (function (param) {
                     },
                     tl: {
                       hd: {
+                        id: "1",
                         val: 4,
                         pos: {
                           x: 0,
@@ -233,6 +241,7 @@ Test.test("#Utils.transpose: should transpose matrix", (function (param) {
 Test.test("#Utils.reverseRow: should map all tiles in a row in reverse order", (function (param) {
         Test.assertion("Reverse once", "reverseRow", Caml_obj.caml_equal, Utils.reverseRow({
                   hd: {
+                    id: "0",
                     val: 2,
                     pos: {
                       x: 0,
@@ -241,6 +250,7 @@ Test.test("#Utils.reverseRow: should map all tiles in a row in reverse order", (
                   },
                   tl: {
                     hd: {
+                      id: "1",
                       val: 4,
                       pos: {
                         x: 1,
@@ -251,6 +261,7 @@ Test.test("#Utils.reverseRow: should map all tiles in a row in reverse order", (
                   }
                 }, 2), {
               hd: {
+                id: "0",
                 val: 2,
                 pos: {
                   x: 1,
@@ -259,6 +270,7 @@ Test.test("#Utils.reverseRow: should map all tiles in a row in reverse order", (
               },
               tl: {
                 hd: {
+                  id: "1",
                   val: 4,
                   pos: {
                     x: 0,
@@ -270,6 +282,7 @@ Test.test("#Utils.reverseRow: should map all tiles in a row in reverse order", (
             });
         return Test.assertion("reverse two times => nothing changes", "reverseRow", Caml_obj.caml_equal, Utils.reverseRow(Utils.reverseRow({
                             hd: {
+                              id: "0",
                               val: 2,
                               pos: {
                                 x: 0,
@@ -278,6 +291,7 @@ Test.test("#Utils.reverseRow: should map all tiles in a row in reverse order", (
                             },
                             tl: {
                               hd: {
+                                id: "1",
                                 val: 4,
                                 pos: {
                                   x: 1,
@@ -288,6 +302,7 @@ Test.test("#Utils.reverseRow: should map all tiles in a row in reverse order", (
                             }
                           }, 2), 2), {
                     hd: {
+                      id: "0",
                       val: 2,
                       pos: {
                         x: 0,
@@ -296,6 +311,7 @@ Test.test("#Utils.reverseRow: should map all tiles in a row in reverse order", (
                     },
                     tl: {
                       hd: {
+                        id: "1",
                         val: 4,
                         pos: {
                           x: 1,
@@ -310,6 +326,7 @@ Test.test("#Utils.reverseRow: should map all tiles in a row in reverse order", (
 Test.test("#Utils.rotateClockwise: should rotate tiles (to handle all moves at once: move top is like to rotate anti clockwise and then move left)", (function (param) {
         Test.assertion("Rotate once", "rotateClockwise", Caml_obj.caml_equal, Utils.rotateClockwise({
                   hd: {
+                    id: "0",
                     val: 2,
                     pos: {
                       x: 0,
@@ -318,6 +335,7 @@ Test.test("#Utils.rotateClockwise: should rotate tiles (to handle all moves at o
                   },
                   tl: {
                     hd: {
+                      id: "1",
                       val: 4,
                       pos: {
                         x: 1,
@@ -328,6 +346,7 @@ Test.test("#Utils.rotateClockwise: should rotate tiles (to handle all moves at o
                   }
                 }, 2), {
               hd: {
+                id: "0",
                 val: 2,
                 pos: {
                   x: 1,
@@ -336,6 +355,7 @@ Test.test("#Utils.rotateClockwise: should rotate tiles (to handle all moves at o
               },
               tl: {
                 hd: {
+                  id: "1",
                   val: 4,
                   pos: {
                     x: 0,
@@ -347,6 +367,7 @@ Test.test("#Utils.rotateClockwise: should rotate tiles (to handle all moves at o
             });
         return Test.assertion("Rotate 4 times => nothing changes", "rotateClockwise", Caml_obj.caml_equal, Utils.rotateClockwise(Utils.rotateClockwise(Utils.rotateClockwise(Utils.rotateClockwise({
                                     hd: {
+                                      id: "0",
                                       val: 2,
                                       pos: {
                                         x: 0,
@@ -355,6 +376,7 @@ Test.test("#Utils.rotateClockwise: should rotate tiles (to handle all moves at o
                                     },
                                     tl: {
                                       hd: {
+                                        id: "1",
                                         val: 4,
                                         pos: {
                                           x: 1,
@@ -365,6 +387,7 @@ Test.test("#Utils.rotateClockwise: should rotate tiles (to handle all moves at o
                                     }
                                   }, 2), 2), 2), 2), {
                     hd: {
+                      id: "0",
                       val: 2,
                       pos: {
                         x: 0,
@@ -373,6 +396,7 @@ Test.test("#Utils.rotateClockwise: should rotate tiles (to handle all moves at o
                     },
                     tl: {
                       hd: {
+                        id: "1",
                         val: 4,
                         pos: {
                           x: 1,
@@ -387,6 +411,7 @@ Test.test("#Utils.rotateClockwise: should rotate tiles (to handle all moves at o
 Test.test("#Utils.rotateAntiClockwise: should rotate tiles anti clockwise (to handle all moves at once: move top is like to rotate anti clockwise and then move left)", (function (param) {
         Test.assertion("Rotate once", "rotateAntiClockwise", Caml_obj.caml_equal, Utils.rotateAntiClockwise({
                   hd: {
+                    id: "0",
                     val: 2,
                     pos: {
                       x: 0,
@@ -395,6 +420,7 @@ Test.test("#Utils.rotateAntiClockwise: should rotate tiles anti clockwise (to ha
                   },
                   tl: {
                     hd: {
+                      id: "1",
                       val: 4,
                       pos: {
                         x: 1,
@@ -405,6 +431,7 @@ Test.test("#Utils.rotateAntiClockwise: should rotate tiles anti clockwise (to ha
                   }
                 }, 2), {
               hd: {
+                id: "0",
                 val: 2,
                 pos: {
                   x: 0,
@@ -413,6 +440,7 @@ Test.test("#Utils.rotateAntiClockwise: should rotate tiles anti clockwise (to ha
               },
               tl: {
                 hd: {
+                  id: "1",
                   val: 4,
                   pos: {
                     x: 1,
@@ -424,6 +452,7 @@ Test.test("#Utils.rotateAntiClockwise: should rotate tiles anti clockwise (to ha
             });
         return Test.assertion("Rotate 4 times => nothing changes", "rotateAntiClockwise", Caml_obj.caml_equal, Utils.rotateAntiClockwise(Utils.rotateAntiClockwise(Utils.rotateAntiClockwise(Utils.rotateAntiClockwise({
                                     hd: {
+                                      id: "0",
                                       val: 2,
                                       pos: {
                                         x: 0,
@@ -432,6 +461,7 @@ Test.test("#Utils.rotateAntiClockwise: should rotate tiles anti clockwise (to ha
                                     },
                                     tl: {
                                       hd: {
+                                        id: "1",
                                         val: 4,
                                         pos: {
                                           x: 1,
@@ -442,6 +472,7 @@ Test.test("#Utils.rotateAntiClockwise: should rotate tiles anti clockwise (to ha
                                     }
                                   }, 2), 2), 2), 2), {
                     hd: {
+                      id: "0",
                       val: 2,
                       pos: {
                         x: 0,
@@ -450,6 +481,7 @@ Test.test("#Utils.rotateAntiClockwise: should rotate tiles anti clockwise (to ha
                     },
                     tl: {
                       hd: {
+                        id: "1",
                         val: 4,
                         pos: {
                           x: 1,
@@ -464,6 +496,7 @@ Test.test("#Utils.rotateAntiClockwise: should rotate tiles anti clockwise (to ha
 Test.test("#Utils.rotateToMoveToRight: should rotate tiles to make each movement as movement to right (ease the algo)", (function (param) {
         Test.assertion("Right (nothing changes)", "rotateToMoveToRight", Caml_obj.caml_equal, Utils.rotateToMoveToRight(2, /* Right */1, {
                   hd: {
+                    id: "0",
                     val: 2,
                     pos: {
                       x: 0,
@@ -472,6 +505,7 @@ Test.test("#Utils.rotateToMoveToRight: should rotate tiles to make each movement
                   },
                   tl: {
                     hd: {
+                      id: "1",
                       val: 4,
                       pos: {
                         x: 1,
@@ -482,6 +516,7 @@ Test.test("#Utils.rotateToMoveToRight: should rotate tiles to make each movement
                   }
                 }), {
               hd: {
+                id: "0",
                 val: 2,
                 pos: {
                   x: 0,
@@ -490,6 +525,7 @@ Test.test("#Utils.rotateToMoveToRight: should rotate tiles to make each movement
               },
               tl: {
                 hd: {
+                  id: "1",
                   val: 4,
                   pos: {
                     x: 1,
@@ -501,6 +537,7 @@ Test.test("#Utils.rotateToMoveToRight: should rotate tiles to make each movement
             });
         Test.assertion("Up", "rotateToMoveToRight", Caml_obj.caml_equal, Utils.rotateToMoveToRight(2, /* Up */0, {
                   hd: {
+                    id: "0",
                     val: 2,
                     pos: {
                       x: 0,
@@ -509,6 +546,7 @@ Test.test("#Utils.rotateToMoveToRight: should rotate tiles to make each movement
                   },
                   tl: {
                     hd: {
+                      id: "1",
                       val: 4,
                       pos: {
                         x: 1,
@@ -519,6 +557,7 @@ Test.test("#Utils.rotateToMoveToRight: should rotate tiles to make each movement
                   }
                 }), {
               hd: {
+                id: "0",
                 val: 2,
                 pos: {
                   x: 1,
@@ -527,6 +566,7 @@ Test.test("#Utils.rotateToMoveToRight: should rotate tiles to make each movement
               },
               tl: {
                 hd: {
+                  id: "1",
                   val: 4,
                   pos: {
                     x: 0,
@@ -538,6 +578,7 @@ Test.test("#Utils.rotateToMoveToRight: should rotate tiles to make each movement
             });
         Test.assertion("Down", "rotateToMoveToRight", Caml_obj.caml_equal, Utils.rotateToMoveToRight(2, /* Down */2, {
                   hd: {
+                    id: "0",
                     val: 2,
                     pos: {
                       x: 0,
@@ -546,6 +587,7 @@ Test.test("#Utils.rotateToMoveToRight: should rotate tiles to make each movement
                   },
                   tl: {
                     hd: {
+                      id: "1",
                       val: 4,
                       pos: {
                         x: 1,
@@ -556,6 +598,7 @@ Test.test("#Utils.rotateToMoveToRight: should rotate tiles to make each movement
                   }
                 }), {
               hd: {
+                id: "0",
                 val: 2,
                 pos: {
                   x: 0,
@@ -564,6 +607,7 @@ Test.test("#Utils.rotateToMoveToRight: should rotate tiles to make each movement
               },
               tl: {
                 hd: {
+                  id: "1",
                   val: 4,
                   pos: {
                     x: 1,
@@ -575,6 +619,7 @@ Test.test("#Utils.rotateToMoveToRight: should rotate tiles to make each movement
             });
         return Test.assertion("Left", "rotateToMoveToRight", Caml_obj.caml_equal, Utils.rotateToMoveToRight(2, /* Left */3, {
                         hd: {
+                          id: "0",
                           val: 2,
                           pos: {
                             x: 0,
@@ -583,6 +628,7 @@ Test.test("#Utils.rotateToMoveToRight: should rotate tiles to make each movement
                         },
                         tl: {
                           hd: {
+                            id: "1",
                             val: 4,
                             pos: {
                               x: 1,
@@ -593,6 +639,7 @@ Test.test("#Utils.rotateToMoveToRight: should rotate tiles to make each movement
                         }
                       }), {
                     hd: {
+                      id: "0",
                       val: 2,
                       pos: {
                         x: 1,
@@ -601,6 +648,7 @@ Test.test("#Utils.rotateToMoveToRight: should rotate tiles to make each movement
                     },
                     tl: {
                       hd: {
+                        id: "1",
                         val: 4,
                         pos: {
                           x: 0,
@@ -615,6 +663,7 @@ Test.test("#Utils.rotateToMoveToRight: should rotate tiles to make each movement
 Test.test("#Utils.rotateBack: should rotate tiles back after rotatement to move them in specific direction", (function (param) {
         Test.assertion("Right (nothing changes)", "rotateBack", Caml_obj.caml_equal, Utils.rotateBack(2, /* Right */1, {
                   hd: {
+                    id: "0",
                     val: 2,
                     pos: {
                       x: 0,
@@ -623,6 +672,7 @@ Test.test("#Utils.rotateBack: should rotate tiles back after rotatement to move 
                   },
                   tl: {
                     hd: {
+                      id: "1",
                       val: 4,
                       pos: {
                         x: 1,
@@ -633,6 +683,7 @@ Test.test("#Utils.rotateBack: should rotate tiles back after rotatement to move 
                   }
                 }), {
               hd: {
+                id: "0",
                 val: 2,
                 pos: {
                   x: 0,
@@ -641,6 +692,7 @@ Test.test("#Utils.rotateBack: should rotate tiles back after rotatement to move 
               },
               tl: {
                 hd: {
+                  id: "1",
                   val: 4,
                   pos: {
                     x: 1,
@@ -652,6 +704,7 @@ Test.test("#Utils.rotateBack: should rotate tiles back after rotatement to move 
             });
         Test.assertion("Up", "rotateBack", Caml_obj.caml_equal, Utils.rotateBack(2, /* Up */0, {
                   hd: {
+                    id: "0",
                     val: 2,
                     pos: {
                       x: 0,
@@ -660,6 +713,7 @@ Test.test("#Utils.rotateBack: should rotate tiles back after rotatement to move 
                   },
                   tl: {
                     hd: {
+                      id: "1",
                       val: 4,
                       pos: {
                         x: 1,
@@ -670,6 +724,7 @@ Test.test("#Utils.rotateBack: should rotate tiles back after rotatement to move 
                   }
                 }), {
               hd: {
+                id: "0",
                 val: 2,
                 pos: {
                   x: 0,
@@ -678,6 +733,7 @@ Test.test("#Utils.rotateBack: should rotate tiles back after rotatement to move 
               },
               tl: {
                 hd: {
+                  id: "1",
                   val: 4,
                   pos: {
                     x: 1,
@@ -689,6 +745,7 @@ Test.test("#Utils.rotateBack: should rotate tiles back after rotatement to move 
             });
         Test.assertion("Down", "rotateBack", Caml_obj.caml_equal, Utils.rotateBack(2, /* Down */2, {
                   hd: {
+                    id: "0",
                     val: 2,
                     pos: {
                       x: 0,
@@ -697,6 +754,7 @@ Test.test("#Utils.rotateBack: should rotate tiles back after rotatement to move 
                   },
                   tl: {
                     hd: {
+                      id: "1",
                       val: 4,
                       pos: {
                         x: 1,
@@ -707,6 +765,7 @@ Test.test("#Utils.rotateBack: should rotate tiles back after rotatement to move 
                   }
                 }), {
               hd: {
+                id: "0",
                 val: 2,
                 pos: {
                   x: 1,
@@ -715,6 +774,7 @@ Test.test("#Utils.rotateBack: should rotate tiles back after rotatement to move 
               },
               tl: {
                 hd: {
+                  id: "1",
                   val: 4,
                   pos: {
                     x: 0,
@@ -726,6 +786,7 @@ Test.test("#Utils.rotateBack: should rotate tiles back after rotatement to move 
             });
         return Test.assertion("Left", "rotateBack", Caml_obj.caml_equal, Utils.rotateBack(2, /* Left */3, {
                         hd: {
+                          id: "0",
                           val: 2,
                           pos: {
                             x: 0,
@@ -734,6 +795,7 @@ Test.test("#Utils.rotateBack: should rotate tiles back after rotatement to move 
                         },
                         tl: {
                           hd: {
+                            id: "1",
                             val: 4,
                             pos: {
                               x: 1,
@@ -744,6 +806,7 @@ Test.test("#Utils.rotateBack: should rotate tiles back after rotatement to move 
                         }
                       }), {
                     hd: {
+                      id: "0",
                       val: 2,
                       pos: {
                         x: 1,
@@ -752,6 +815,7 @@ Test.test("#Utils.rotateBack: should rotate tiles back after rotatement to move 
                     },
                     tl: {
                       hd: {
+                        id: "1",
                         val: 4,
                         pos: {
                           x: 0,
@@ -774,6 +838,7 @@ Test.test("#Utils.positionFilterPred: should verify that pair is valid & there i
                 return a === b;
               }), Utils.positionFilterPred({
                   hd: {
+                    id: "0",
                     val: 2,
                     pos: {
                       x: 0,
@@ -789,6 +854,7 @@ Test.test("#Utils.positionFilterPred: should verify that pair is valid & there i
                       return a === b;
                     }), Utils.positionFilterPred({
                         hd: {
+                          id: "0",
                           val: 2,
                           pos: {
                             x: 0,
@@ -815,6 +881,7 @@ Test.test("#Utils.isWin: should check if user won", (function (param) {
                 return a === b;
               }), Utils.isWin({
                   hd: {
+                    id: "0",
                     val: 2048,
                     pos: {
                       x: 0,
@@ -827,6 +894,7 @@ Test.test("#Utils.isWin: should check if user won", (function (param) {
                       return a === b;
                     }), Utils.isWin({
                         hd: {
+                          id: "0",
                           val: 1024,
                           pos: {
                             x: 0,
@@ -845,6 +913,7 @@ Test.test("#Utils.isLoss: should check if user loss", (function (param) {
                 return a === b;
               }), Utils.isLoss(2, {
                   hd: {
+                    id: "0",
                     val: 2,
                     pos: {
                       x: 0,
@@ -853,6 +922,7 @@ Test.test("#Utils.isLoss: should check if user loss", (function (param) {
                   },
                   tl: {
                     hd: {
+                      id: "1",
                       val: 1024,
                       pos: {
                         x: 1,
@@ -861,6 +931,7 @@ Test.test("#Utils.isLoss: should check if user loss", (function (param) {
                     },
                     tl: {
                       hd: {
+                        id: "2",
                         val: 1024,
                         pos: {
                           x: 0,
@@ -869,6 +940,7 @@ Test.test("#Utils.isLoss: should check if user loss", (function (param) {
                       },
                       tl: {
                         hd: {
+                          id: "3",
                           val: 2,
                           pos: {
                             x: 1,
@@ -884,6 +956,7 @@ Test.test("#Utils.isLoss: should check if user loss", (function (param) {
                 return a === b;
               }), Utils.isLoss(2, {
                   hd: {
+                    id: "0",
                     val: 2,
                     pos: {
                       x: 0,
@@ -892,6 +965,7 @@ Test.test("#Utils.isLoss: should check if user loss", (function (param) {
                   },
                   tl: {
                     hd: {
+                      id: "1",
                       val: 2,
                       pos: {
                         x: 1,
@@ -900,6 +974,7 @@ Test.test("#Utils.isLoss: should check if user loss", (function (param) {
                     },
                     tl: {
                       hd: {
+                        id: "2",
                         val: 1024,
                         pos: {
                           x: 0,
@@ -908,6 +983,7 @@ Test.test("#Utils.isLoss: should check if user loss", (function (param) {
                       },
                       tl: {
                         hd: {
+                          id: "3",
                           val: 2,
                           pos: {
                             x: 1,
@@ -923,6 +999,7 @@ Test.test("#Utils.isLoss: should check if user loss", (function (param) {
                       return a === b;
                     }), Utils.isLoss(2, {
                         hd: {
+                          id: "0",
                           val: 1024,
                           pos: {
                             x: 0,
@@ -933,152 +1010,12 @@ Test.test("#Utils.isLoss: should check if user loss", (function (param) {
                       }), false);
       }));
 
-Test.test("#Utils.tilesToBoard: should map tiles to board", (function (param) {
-        Test.assertion("tilesToBoard", "tilesToBoard", Caml_obj.caml_equal, Utils.tilesToBoard(2, {
-                  hd: {
-                    val: 2,
-                    pos: {
-                      x: 0,
-                      y: 0
-                    }
-                  },
-                  tl: {
-                    hd: {
-                      val: 2,
-                      pos: {
-                        x: 0,
-                        y: 1
-                      }
-                    },
-                    tl: /* [] */0
-                  }
-                }), {
-              hd: {
-                hd: 2,
-                tl: {
-                  hd: undefined,
-                  tl: /* [] */0
-                }
-              },
-              tl: {
-                hd: {
-                  hd: 2,
-                  tl: {
-                    hd: undefined,
-                    tl: /* [] */0
-                  }
-                },
-                tl: /* [] */0
-              }
-            });
-        Test.assertion("tilesToBoard", "tilesToBoard", Caml_obj.caml_equal, Utils.tilesToBoard(2, {
-                  hd: {
-                    val: 2,
-                    pos: {
-                      x: 0,
-                      y: 0
-                    }
-                  },
-                  tl: {
-                    hd: {
-                      val: 2,
-                      pos: {
-                        x: 1,
-                        y: 1
-                      }
-                    },
-                    tl: /* [] */0
-                  }
-                }), {
-              hd: {
-                hd: 2,
-                tl: {
-                  hd: undefined,
-                  tl: /* [] */0
-                }
-              },
-              tl: {
-                hd: {
-                  hd: undefined,
-                  tl: {
-                    hd: 2,
-                    tl: /* [] */0
-                  }
-                },
-                tl: /* [] */0
-              }
-            });
-        return Test.assertion("tilesToBoard", "tilesToBoard", Caml_obj.caml_equal, Utils.tilesToBoard(3, {
-                        hd: {
-                          val: 2,
-                          pos: {
-                            x: 0,
-                            y: 0
-                          }
-                        },
-                        tl: {
-                          hd: {
-                            val: 2,
-                            pos: {
-                              x: 1,
-                              y: 1
-                            }
-                          },
-                          tl: {
-                            hd: {
-                              val: 4,
-                              pos: {
-                                x: 2,
-                                y: 2
-                              }
-                            },
-                            tl: /* [] */0
-                          }
-                        }
-                      }), {
-                    hd: {
-                      hd: 2,
-                      tl: {
-                        hd: undefined,
-                        tl: {
-                          hd: undefined,
-                          tl: /* [] */0
-                        }
-                      }
-                    },
-                    tl: {
-                      hd: {
-                        hd: undefined,
-                        tl: {
-                          hd: 2,
-                          tl: {
-                            hd: undefined,
-                            tl: /* [] */0
-                          }
-                        }
-                      },
-                      tl: {
-                        hd: {
-                          hd: undefined,
-                          tl: {
-                            hd: undefined,
-                            tl: {
-                              hd: 4,
-                              tl: /* [] */0
-                            }
-                          }
-                        },
-                        tl: /* [] */0
-                      }
-                    }
-                  });
-      }));
-
 Test.test("#Utils.isMoveToRightPossible: should check if it's possible to move tiles to the right", (function (param) {
         Test.assertion("One row is empty and other is full", "isMoveToRightPossible", (function (a, b) {
                 return a === b;
               }), Utils.isMoveToRightPossible({
                   hd: {
+                    id: "0",
                     val: 2,
                     pos: {
                       x: 0,
@@ -1087,6 +1024,7 @@ Test.test("#Utils.isMoveToRightPossible: should check if it's possible to move t
                   },
                   tl: {
                     hd: {
+                      id: "1",
                       val: 4,
                       pos: {
                         x: 1,
@@ -1100,6 +1038,7 @@ Test.test("#Utils.isMoveToRightPossible: should check if it's possible to move t
                 return a === b;
               }), Utils.isMoveToRightPossible({
                   hd: {
+                    id: "0",
                     val: 2,
                     pos: {
                       x: 0,
@@ -1108,6 +1047,7 @@ Test.test("#Utils.isMoveToRightPossible: should check if it's possible to move t
                   },
                   tl: {
                     hd: {
+                      id: "1",
                       val: 2,
                       pos: {
                         x: 0,
@@ -1121,6 +1061,7 @@ Test.test("#Utils.isMoveToRightPossible: should check if it's possible to move t
                 return a === b;
               }), Utils.isMoveToRightPossible({
                   hd: {
+                    id: "0",
                     val: 2,
                     pos: {
                       x: 0,
@@ -1129,6 +1070,7 @@ Test.test("#Utils.isMoveToRightPossible: should check if it's possible to move t
                   },
                   tl: {
                     hd: {
+                      id: "1",
                       val: 2,
                       pos: {
                         x: 1,
@@ -1142,6 +1084,7 @@ Test.test("#Utils.isMoveToRightPossible: should check if it's possible to move t
                 return a === b;
               }), Utils.isMoveToRightPossible({
                   hd: {
+                    id: "0",
                     val: 2,
                     pos: {
                       x: 0,
@@ -1150,6 +1093,7 @@ Test.test("#Utils.isMoveToRightPossible: should check if it's possible to move t
                   },
                   tl: {
                     hd: {
+                      id: "1",
                       val: 4,
                       pos: {
                         x: 1,
@@ -1158,6 +1102,7 @@ Test.test("#Utils.isMoveToRightPossible: should check if it's possible to move t
                     },
                     tl: {
                       hd: {
+                        id: "2",
                         val: 2,
                         pos: {
                           x: 2,
@@ -1166,6 +1111,7 @@ Test.test("#Utils.isMoveToRightPossible: should check if it's possible to move t
                       },
                       tl: {
                         hd: {
+                          id: "3",
                           val: 2,
                           pos: {
                             x: 1,
@@ -1174,6 +1120,7 @@ Test.test("#Utils.isMoveToRightPossible: should check if it's possible to move t
                         },
                         tl: {
                           hd: {
+                            id: "4",
                             val: 4,
                             pos: {
                               x: 2,
@@ -1190,6 +1137,7 @@ Test.test("#Utils.isMoveToRightPossible: should check if it's possible to move t
                       return a === b;
                     }), Utils.isMoveToRightPossible({
                         hd: {
+                          id: "0",
                           val: 2,
                           pos: {
                             x: 0,
@@ -1198,6 +1146,7 @@ Test.test("#Utils.isMoveToRightPossible: should check if it's possible to move t
                         },
                         tl: {
                           hd: {
+                            id: "1",
                             val: 4,
                             pos: {
                               x: 1,
@@ -1206,6 +1155,7 @@ Test.test("#Utils.isMoveToRightPossible: should check if it's possible to move t
                           },
                           tl: {
                             hd: {
+                              id: "2",
                               val: 2,
                               pos: {
                                 x: 2,
@@ -1214,6 +1164,7 @@ Test.test("#Utils.isMoveToRightPossible: should check if it's possible to move t
                             },
                             tl: {
                               hd: {
+                                id: "3",
                                 val: 2,
                                 pos: {
                                   x: 1,
@@ -1222,6 +1173,7 @@ Test.test("#Utils.isMoveToRightPossible: should check if it's possible to move t
                               },
                               tl: {
                                 hd: {
+                                  id: "4",
                                   val: 2,
                                   pos: {
                                     x: 2,
@@ -1239,6 +1191,7 @@ Test.test("#Utils.isMoveToRightPossible: should check if it's possible to move t
 Test.test("#Utils.sortTilesByColumn: should sort all tiles in one row by column number in ascending order", (function (param) {
         return Test.assertion("should sort", "sortTilesByColumn", Caml_obj.caml_equal, Utils.sortTilesByColumn({
                         hd: {
+                          id: "0",
                           val: 2,
                           pos: {
                             x: 2,
@@ -1247,6 +1200,7 @@ Test.test("#Utils.sortTilesByColumn: should sort all tiles in one row by column 
                         },
                         tl: {
                           hd: {
+                            id: "1",
                             val: 16,
                             pos: {
                               x: 0,
@@ -1255,6 +1209,7 @@ Test.test("#Utils.sortTilesByColumn: should sort all tiles in one row by column 
                           },
                           tl: {
                             hd: {
+                              id: "2",
                               val: 4,
                               pos: {
                                 x: 1,
@@ -1263,6 +1218,7 @@ Test.test("#Utils.sortTilesByColumn: should sort all tiles in one row by column 
                             },
                             tl: {
                               hd: {
+                                id: "3",
                                 val: 32,
                                 pos: {
                                   x: 1,
@@ -1271,6 +1227,7 @@ Test.test("#Utils.sortTilesByColumn: should sort all tiles in one row by column 
                               },
                               tl: {
                                 hd: {
+                                  id: "4",
                                   val: 8,
                                   pos: {
                                     x: 0,
@@ -1284,6 +1241,7 @@ Test.test("#Utils.sortTilesByColumn: should sort all tiles in one row by column 
                         }
                       }), {
                     hd: {
+                      id: "4",
                       val: 8,
                       pos: {
                         x: 0,
@@ -1292,6 +1250,7 @@ Test.test("#Utils.sortTilesByColumn: should sort all tiles in one row by column 
                     },
                     tl: {
                       hd: {
+                        id: "2",
                         val: 4,
                         pos: {
                           x: 1,
@@ -1300,6 +1259,7 @@ Test.test("#Utils.sortTilesByColumn: should sort all tiles in one row by column 
                       },
                       tl: {
                         hd: {
+                          id: "0",
                           val: 2,
                           pos: {
                             x: 2,
@@ -1308,6 +1268,7 @@ Test.test("#Utils.sortTilesByColumn: should sort all tiles in one row by column 
                         },
                         tl: {
                           hd: {
+                            id: "3",
                             val: 32,
                             pos: {
                               x: 1,
@@ -1316,6 +1277,7 @@ Test.test("#Utils.sortTilesByColumn: should sort all tiles in one row by column 
                           },
                           tl: {
                             hd: {
+                              id: "1",
                               val: 16,
                               pos: {
                                 x: 0,
@@ -1347,6 +1309,7 @@ function compareTiles(xs, ys) {
 Test.test("#Utils.moveRight: should move all tiles to right where it's possible", (function (param) {
         Test.assertion("In case nothing can be moved nothing should be changed", "moveRight", compareTiles, Utils.moveRight(2, {
                   hd: {
+                    id: "0",
                     val: 2,
                     pos: {
                       x: 0,
@@ -1355,6 +1318,7 @@ Test.test("#Utils.moveRight: should move all tiles to right where it's possible"
                   },
                   tl: {
                     hd: {
+                      id: "1",
                       val: 4,
                       pos: {
                         x: 1,
@@ -1365,6 +1329,7 @@ Test.test("#Utils.moveRight: should move all tiles to right where it's possible"
                   }
                 }), {
               hd: {
+                id: "0",
                 val: 2,
                 pos: {
                   x: 0,
@@ -1373,6 +1338,7 @@ Test.test("#Utils.moveRight: should move all tiles to right where it's possible"
               },
               tl: {
                 hd: {
+                  id: "1",
                   val: 4,
                   pos: {
                     x: 1,
@@ -1384,6 +1350,7 @@ Test.test("#Utils.moveRight: should move all tiles to right where it's possible"
             });
         Test.assertion("In case some tiles can be moved they should be moved", "moveRight", compareTiles, Utils.moveRight(2, {
                   hd: {
+                    id: "0",
                     val: 2,
                     pos: {
                       x: 0,
@@ -1392,6 +1359,7 @@ Test.test("#Utils.moveRight: should move all tiles to right where it's possible"
                   },
                   tl: {
                     hd: {
+                      id: "1",
                       val: 4,
                       pos: {
                         x: 0,
@@ -1402,6 +1370,7 @@ Test.test("#Utils.moveRight: should move all tiles to right where it's possible"
                   }
                 }), {
               hd: {
+                id: "0",
                 val: 2,
                 pos: {
                   x: 1,
@@ -1410,6 +1379,7 @@ Test.test("#Utils.moveRight: should move all tiles to right where it's possible"
               },
               tl: {
                 hd: {
+                  id: "1",
                   val: 4,
                   pos: {
                     x: 1,
@@ -1421,6 +1391,7 @@ Test.test("#Utils.moveRight: should move all tiles to right where it's possible"
             });
         Test.assertion("In case some tiles can be moved they should be moved (3 * 3)", "moveRight", compareTiles, Utils.moveRight(3, {
                   hd: {
+                    id: "0",
                     val: 2,
                     pos: {
                       x: 1,
@@ -1429,6 +1400,7 @@ Test.test("#Utils.moveRight: should move all tiles to right where it's possible"
                   },
                   tl: {
                     hd: {
+                      id: "1",
                       val: 4,
                       pos: {
                         x: 0,
@@ -1437,6 +1409,7 @@ Test.test("#Utils.moveRight: should move all tiles to right where it's possible"
                     },
                     tl: {
                       hd: {
+                        id: "2",
                         val: 8,
                         pos: {
                           x: 0,
@@ -1445,6 +1418,7 @@ Test.test("#Utils.moveRight: should move all tiles to right where it's possible"
                       },
                       tl: {
                         hd: {
+                          id: "3",
                           val: 16,
                           pos: {
                             x: 2,
@@ -1453,6 +1427,7 @@ Test.test("#Utils.moveRight: should move all tiles to right where it's possible"
                         },
                         tl: {
                           hd: {
+                            id: "4",
                             val: 32,
                             pos: {
                               x: 2,
@@ -1466,6 +1441,7 @@ Test.test("#Utils.moveRight: should move all tiles to right where it's possible"
                   }
                 }), {
               hd: {
+                id: "0",
                 val: 2,
                 pos: {
                   x: 2,
@@ -1474,6 +1450,7 @@ Test.test("#Utils.moveRight: should move all tiles to right where it's possible"
               },
               tl: {
                 hd: {
+                  id: "1",
                   val: 4,
                   pos: {
                     x: 1,
@@ -1482,6 +1459,7 @@ Test.test("#Utils.moveRight: should move all tiles to right where it's possible"
                 },
                 tl: {
                   hd: {
+                    id: "2",
                     val: 8,
                     pos: {
                       x: 1,
@@ -1490,6 +1468,7 @@ Test.test("#Utils.moveRight: should move all tiles to right where it's possible"
                   },
                   tl: {
                     hd: {
+                      id: "3",
                       val: 16,
                       pos: {
                         x: 2,
@@ -1498,6 +1477,7 @@ Test.test("#Utils.moveRight: should move all tiles to right where it's possible"
                     },
                     tl: {
                       hd: {
+                        id: "4",
                         val: 32,
                         pos: {
                           x: 2,
@@ -1512,6 +1492,7 @@ Test.test("#Utils.moveRight: should move all tiles to right where it's possible"
             });
         Test.assertion("In case some tiles can be collapsed they should be collapsed", "moveRight", compareTiles, Utils.moveRight(2, {
                   hd: {
+                    id: "0",
                     val: 2,
                     pos: {
                       x: 0,
@@ -1520,6 +1501,7 @@ Test.test("#Utils.moveRight: should move all tiles to right where it's possible"
                   },
                   tl: {
                     hd: {
+                      id: "1",
                       val: 2,
                       pos: {
                         x: 1,
@@ -1530,6 +1512,7 @@ Test.test("#Utils.moveRight: should move all tiles to right where it's possible"
                   }
                 }), {
               hd: {
+                id: "0",
                 val: 4,
                 pos: {
                   x: 1,
@@ -1540,6 +1523,7 @@ Test.test("#Utils.moveRight: should move all tiles to right where it's possible"
             });
         Test.assertion("In case some tiles can be collapsed they should be collapsed (3 * 3)", "moveRight", compareTiles, Utils.moveRight(3, {
                   hd: {
+                    id: "0",
                     val: 2,
                     pos: {
                       x: 1,
@@ -1548,6 +1532,7 @@ Test.test("#Utils.moveRight: should move all tiles to right where it's possible"
                   },
                   tl: {
                     hd: {
+                      id: "1",
                       val: 4,
                       pos: {
                         x: 0,
@@ -1556,6 +1541,7 @@ Test.test("#Utils.moveRight: should move all tiles to right where it's possible"
                     },
                     tl: {
                       hd: {
+                        id: "2",
                         val: 8,
                         pos: {
                           x: 0,
@@ -1564,6 +1550,7 @@ Test.test("#Utils.moveRight: should move all tiles to right where it's possible"
                       },
                       tl: {
                         hd: {
+                          id: "3",
                           val: 4,
                           pos: {
                             x: 2,
@@ -1572,6 +1559,7 @@ Test.test("#Utils.moveRight: should move all tiles to right where it's possible"
                         },
                         tl: {
                           hd: {
+                            id: "4",
                             val: 32,
                             pos: {
                               x: 2,
@@ -1585,6 +1573,7 @@ Test.test("#Utils.moveRight: should move all tiles to right where it's possible"
                   }
                 }), {
               hd: {
+                id: "0",
                 val: 2,
                 pos: {
                   x: 2,
@@ -1593,6 +1582,7 @@ Test.test("#Utils.moveRight: should move all tiles to right where it's possible"
               },
               tl: {
                 hd: {
+                  id: "1",
                   val: 8,
                   pos: {
                     x: 2,
@@ -1601,6 +1591,7 @@ Test.test("#Utils.moveRight: should move all tiles to right where it's possible"
                 },
                 tl: {
                   hd: {
+                    id: "2",
                     val: 8,
                     pos: {
                       x: 1,
@@ -1609,6 +1600,7 @@ Test.test("#Utils.moveRight: should move all tiles to right where it's possible"
                   },
                   tl: {
                     hd: {
+                      id: "4",
                       val: 32,
                       pos: {
                         x: 2,
@@ -1622,6 +1614,7 @@ Test.test("#Utils.moveRight: should move all tiles to right where it's possible"
             });
         return Test.assertion("In case some tiles can be collapsed they should be collapsed (4 * 4)", "moveRight", compareTiles, Utils.moveRight(4, {
                         hd: {
+                          id: "0",
                           val: 2,
                           pos: {
                             x: 1,
@@ -1630,6 +1623,7 @@ Test.test("#Utils.moveRight: should move all tiles to right where it's possible"
                         },
                         tl: {
                           hd: {
+                            id: "1",
                             val: 4,
                             pos: {
                               x: 0,
@@ -1638,6 +1632,7 @@ Test.test("#Utils.moveRight: should move all tiles to right where it's possible"
                           },
                           tl: {
                             hd: {
+                              id: "2",
                               val: 8,
                               pos: {
                                 x: 0,
@@ -1646,6 +1641,7 @@ Test.test("#Utils.moveRight: should move all tiles to right where it's possible"
                             },
                             tl: {
                               hd: {
+                                id: "3",
                                 val: 4,
                                 pos: {
                                   x: 2,
@@ -1654,6 +1650,7 @@ Test.test("#Utils.moveRight: should move all tiles to right where it's possible"
                               },
                               tl: {
                                 hd: {
+                                  id: "4",
                                   val: 32,
                                   pos: {
                                     x: 2,
@@ -1662,6 +1659,7 @@ Test.test("#Utils.moveRight: should move all tiles to right where it's possible"
                                 },
                                 tl: {
                                   hd: {
+                                    id: "5",
                                     val: 4,
                                     pos: {
                                       x: 0,
@@ -1670,6 +1668,7 @@ Test.test("#Utils.moveRight: should move all tiles to right where it's possible"
                                   },
                                   tl: {
                                     hd: {
+                                      id: "6",
                                       val: 4,
                                       pos: {
                                         x: 1,
@@ -1678,6 +1677,7 @@ Test.test("#Utils.moveRight: should move all tiles to right where it's possible"
                                     },
                                     tl: {
                                       hd: {
+                                        id: "7",
                                         val: 4,
                                         pos: {
                                           x: 2,
@@ -1686,6 +1686,7 @@ Test.test("#Utils.moveRight: should move all tiles to right where it's possible"
                                       },
                                       tl: {
                                         hd: {
+                                          id: "8",
                                           val: 4,
                                           pos: {
                                             x: 3,
@@ -1703,6 +1704,7 @@ Test.test("#Utils.moveRight: should move all tiles to right where it's possible"
                         }
                       }), {
                     hd: {
+                      id: "0",
                       val: 2,
                       pos: {
                         x: 3,
@@ -1711,6 +1713,7 @@ Test.test("#Utils.moveRight: should move all tiles to right where it's possible"
                     },
                     tl: {
                       hd: {
+                        id: "1",
                         val: 8,
                         pos: {
                           x: 3,
@@ -1719,6 +1722,7 @@ Test.test("#Utils.moveRight: should move all tiles to right where it's possible"
                       },
                       tl: {
                         hd: {
+                          id: "2",
                           val: 8,
                           pos: {
                             x: 2,
@@ -1727,6 +1731,7 @@ Test.test("#Utils.moveRight: should move all tiles to right where it's possible"
                         },
                         tl: {
                           hd: {
+                            id: "4",
                             val: 32,
                             pos: {
                               x: 3,
@@ -1735,6 +1740,7 @@ Test.test("#Utils.moveRight: should move all tiles to right where it's possible"
                           },
                           tl: {
                             hd: {
+                              id: "5",
                               val: 8,
                               pos: {
                                 x: 2,
@@ -1743,6 +1749,7 @@ Test.test("#Utils.moveRight: should move all tiles to right where it's possible"
                             },
                             tl: {
                               hd: {
+                                id: "7",
                                 val: 8,
                                 pos: {
                                   x: 3,

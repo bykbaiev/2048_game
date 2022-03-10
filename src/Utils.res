@@ -22,8 +22,6 @@ type extendedTile = {
   collapsed: bool,
 }
 
-type board = list<list<option<int>>>
-
 let gridSize = 4
 
 let winningValue = 2048
@@ -33,20 +31,6 @@ let getCls = (styles: Js.Dict.t<'a>, name: string): string =>
   -> Js.Dict.get("default")
   -> Belt.Option.flatMap(defaults => Js.Dict.get(defaults, name))
   -> Belt.Option.getWithDefault("")
-
-let tilesToBoard = (size: int, tiles: list<tile>): board => {
-  Belt.List.makeBy(size, y => {
-    Belt.List.makeBy(size, x => {
-      Belt.Option.map(
-        Belt.List.getBy(
-          tiles,
-          tile => tile.pos.x === x && tile.pos.y === y
-        ),
-        tile => tile.val
-      )
-    })
-  })
-}
 
 let createTile = (~id, ~val, ~x, ~y): tile => { id: id, val: val, pos: { x: x, y: y } }
 
@@ -175,7 +159,7 @@ let movementReducer = (ts, tile) => {
         if (t.val === tile.val && !t.collapsed) {
           Belt.List.add(
             Belt.Option.getWithDefault(Belt.List.drop(ts, 1), list{}),
-            { id: tile.id, val: t.val * 2, pos: t.pos, collapsed: true } // ? maybe new ID ?
+            { id: tile.pos.x > t.pos.x ? tile.id : t.id, val: t.val * 2, pos: t.pos, collapsed: true } // ? maybe new ID ?
           )
         } else {
           addTile(t.pos.x + 1, false)  

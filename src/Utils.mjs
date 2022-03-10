@@ -12,22 +12,6 @@ function getCls(styles, name) {
                   })), "");
 }
 
-function tilesToBoard(size, tiles) {
-  return Belt_List.makeBy(size, (function (y) {
-                return Belt_List.makeBy(size, (function (x) {
-                              return Belt_Option.map(Belt_List.getBy(tiles, (function (tile) {
-                                                if (tile.pos.x === x) {
-                                                  return tile.pos.y === y;
-                                                } else {
-                                                  return false;
-                                                }
-                                              })), (function (tile) {
-                                            return tile.val;
-                                          }));
-                            }));
-              }));
-}
-
 function createTile(id, val, x, y) {
   return {
           id: id,
@@ -252,7 +236,7 @@ function movementReducer(ts, tile) {
                 if (t.pos.y === tile.pos.y) {
                   if (t.val === tile.val && !t.collapsed) {
                     return Belt_List.add(Belt_Option.getWithDefault(Belt_List.drop(ts, 1), /* [] */0), {
-                                id: tile.id,
+                                id: tile.pos.x > t.pos.x ? tile.id : t.id,
                                 val: (t.val << 1),
                                 pos: t.pos,
                                 collapsed: true
@@ -292,7 +276,6 @@ export {
   gridSize ,
   winningValue ,
   getCls ,
-  tilesToBoard ,
   createTile ,
   getPair ,
   positionFilterPred ,
