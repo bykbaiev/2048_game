@@ -82,7 +82,8 @@ function createNewTile(tiles) {
         0,
         0
       ]);
-  return createTile(2, match[0], match[1]);
+  var randTileIndicator = Js_math.random_int(0, 4);
+  return createTile(randTileIndicator === 3 ? 4 : 2, match[0], match[1]);
 }
 
 function keyCodeToDirection(code) {

@@ -70,7 +70,8 @@ let createNewTile = (tiles: list<tile>): tile => {
     -> Belt.List.keep(positionFilterPred(tiles))
   let idx = Js.Math.random_int(0, Belt.List.size(availablePositions))
   let (x, y) = availablePositions -> Belt.List.get(idx) -> Belt.Option.getWithDefault((0, 0))
-  createTile(~val = 2, ~x = x, ~y = y) // TODO: sometimes it's 4
+  let randTileIndicator = Js.Math.random_int(0, 4)
+  createTile(~val = randTileIndicator === 3 ? 4 : 2, ~x = x, ~y = y)
 }
 
 let keyCodeToDirection = (code: int): option<direction> => {
