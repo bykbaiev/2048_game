@@ -3,7 +3,9 @@
 
 @react.component
 let make = () => {
-  <div>
-    <Board />
-  </div>
+  <Recoil.RecoilRoot>
+    <div>
+      <Board />
+    </div>
+  </Recoil.RecoilRoot>
 }
