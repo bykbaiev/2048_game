@@ -161,7 +161,9 @@ Test.test("#Utils.transpose: should transpose matrix", (function (param) {
                     pos: {
                       x: 0,
                       y: 0
-                    }
+                    },
+                    new: false,
+                    merged: false
                   },
                   tl: {
                     hd: {
@@ -170,7 +172,9 @@ Test.test("#Utils.transpose: should transpose matrix", (function (param) {
                       pos: {
                         x: 0,
                         y: 1
-                      }
+                      },
+                      new: false,
+                      merged: false
                     },
                     tl: /* [] */0
                   }
@@ -181,7 +185,9 @@ Test.test("#Utils.transpose: should transpose matrix", (function (param) {
                 pos: {
                   x: 0,
                   y: 0
-                }
+                },
+                new: false,
+                merged: false
               },
               tl: {
                 hd: {
@@ -190,7 +196,9 @@ Test.test("#Utils.transpose: should transpose matrix", (function (param) {
                   pos: {
                     x: 1,
                     y: 0
-                  }
+                  },
+                  new: false,
+                  merged: false
                 },
                 tl: /* [] */0
               }
@@ -202,7 +210,9 @@ Test.test("#Utils.transpose: should transpose matrix", (function (param) {
                               pos: {
                                 x: 0,
                                 y: 0
-                              }
+                              },
+                              new: false,
+                              merged: false
                             },
                             tl: {
                               hd: {
@@ -211,7 +221,9 @@ Test.test("#Utils.transpose: should transpose matrix", (function (param) {
                                 pos: {
                                   x: 0,
                                   y: 1
-                                }
+                                },
+                                new: false,
+                                merged: false
                               },
                               tl: /* [] */0
                             }
@@ -222,7 +234,9 @@ Test.test("#Utils.transpose: should transpose matrix", (function (param) {
                       pos: {
                         x: 0,
                         y: 0
-                      }
+                      },
+                      new: false,
+                      merged: false
                     },
                     tl: {
                       hd: {
@@ -231,7 +245,9 @@ Test.test("#Utils.transpose: should transpose matrix", (function (param) {
                         pos: {
                           x: 0,
                           y: 1
-                        }
+                        },
+                        new: false,
+                        merged: false
                       },
                       tl: /* [] */0
                     }
@@ -246,7 +262,9 @@ Test.test("#Utils.reverseRow: should map all tiles in a row in reverse order", (
                     pos: {
                       x: 0,
                       y: 0
-                    }
+                    },
+                    new: false,
+                    merged: false
                   },
                   tl: {
                     hd: {
@@ -255,7 +273,9 @@ Test.test("#Utils.reverseRow: should map all tiles in a row in reverse order", (
                       pos: {
                         x: 1,
                         y: 1
-                      }
+                      },
+                      new: false,
+                      merged: false
                     },
                     tl: /* [] */0
                   }
@@ -266,7 +286,9 @@ Test.test("#Utils.reverseRow: should map all tiles in a row in reverse order", (
                 pos: {
                   x: 1,
                   y: 0
-                }
+                },
+                new: false,
+                merged: false
               },
               tl: {
                 hd: {
@@ -275,7 +297,9 @@ Test.test("#Utils.reverseRow: should map all tiles in a row in reverse order", (
                   pos: {
                     x: 0,
                     y: 1
-                  }
+                  },
+                  new: false,
+                  merged: false
                 },
                 tl: /* [] */0
               }
@@ -287,7 +311,9 @@ Test.test("#Utils.reverseRow: should map all tiles in a row in reverse order", (
                               pos: {
                                 x: 0,
                                 y: 0
-                              }
+                              },
+                              new: false,
+                              merged: false
                             },
                             tl: {
                               hd: {
@@ -296,7 +322,9 @@ Test.test("#Utils.reverseRow: should map all tiles in a row in reverse order", (
                                 pos: {
                                   x: 1,
                                   y: 1
-                                }
+                                },
+                                new: false,
+                                merged: false
                               },
                               tl: /* [] */0
                             }
@@ -307,7 +335,9 @@ Test.test("#Utils.reverseRow: should map all tiles in a row in reverse order", (
                       pos: {
                         x: 0,
                         y: 0
-                      }
+                      },
+                      new: false,
+                      merged: false
                     },
                     tl: {
                       hd: {
@@ -316,7 +346,9 @@ Test.test("#Utils.reverseRow: should map all tiles in a row in reverse order", (
                         pos: {
                           x: 1,
                           y: 1
-                        }
+                        },
+                        new: false,
+                        merged: false
                       },
                       tl: /* [] */0
                     }
@@ -331,7 +363,9 @@ Test.test("#Utils.rotateClockwise: should rotate tiles (to handle all moves at o
                     pos: {
                       x: 0,
                       y: 0
-                    }
+                    },
+                    new: false,
+                    merged: false
                   },
                   tl: {
                     hd: {
@@ -340,7 +374,9 @@ Test.test("#Utils.rotateClockwise: should rotate tiles (to handle all moves at o
                       pos: {
                         x: 1,
                         y: 1
-                      }
+                      },
+                      new: false,
+                      merged: false
                     },
                     tl: /* [] */0
                   }
@@ -351,7 +387,9 @@ Test.test("#Utils.rotateClockwise: should rotate tiles (to handle all moves at o
                 pos: {
                   x: 1,
                   y: 0
-                }
+                },
+                new: false,
+                merged: false
               },
               tl: {
                 hd: {
@@ -360,7 +398,9 @@ Test.test("#Utils.rotateClockwise: should rotate tiles (to handle all moves at o
                   pos: {
                     x: 0,
                     y: 1
-                  }
+                  },
+                  new: false,
+                  merged: false
                 },
                 tl: /* [] */0
               }
@@ -372,7 +412,9 @@ Test.test("#Utils.rotateClockwise: should rotate tiles (to handle all moves at o
                                       pos: {
                                         x: 0,
                                         y: 0
-                                      }
+                                      },
+                                      new: false,
+                                      merged: false
                                     },
                                     tl: {
                                       hd: {
@@ -381,7 +423,9 @@ Test.test("#Utils.rotateClockwise: should rotate tiles (to handle all moves at o
                                         pos: {
                                           x: 1,
                                           y: 1
-                                        }
+                                        },
+                                        new: false,
+                                        merged: false
                                       },
                                       tl: /* [] */0
                                     }
@@ -392,7 +436,9 @@ Test.test("#Utils.rotateClockwise: should rotate tiles (to handle all moves at o
                       pos: {
                         x: 0,
                         y: 0
-                      }
+                      },
+                      new: false,
+                      merged: false
                     },
                     tl: {
                       hd: {
@@ -401,7 +447,9 @@ Test.test("#Utils.rotateClockwise: should rotate tiles (to handle all moves at o
                         pos: {
                           x: 1,
                           y: 1
-                        }
+                        },
+                        new: false,
+                        merged: false
                       },
                       tl: /* [] */0
                     }
@@ -416,7 +464,9 @@ Test.test("#Utils.rotateAntiClockwise: should rotate tiles anti clockwise (to ha
                     pos: {
                       x: 0,
                       y: 0
-                    }
+                    },
+                    new: false,
+                    merged: false
                   },
                   tl: {
                     hd: {
@@ -425,7 +475,9 @@ Test.test("#Utils.rotateAntiClockwise: should rotate tiles anti clockwise (to ha
                       pos: {
                         x: 1,
                         y: 1
-                      }
+                      },
+                      new: false,
+                      merged: false
                     },
                     tl: /* [] */0
                   }
@@ -436,7 +488,9 @@ Test.test("#Utils.rotateAntiClockwise: should rotate tiles anti clockwise (to ha
                 pos: {
                   x: 0,
                   y: 1
-                }
+                },
+                new: false,
+                merged: false
               },
               tl: {
                 hd: {
@@ -445,7 +499,9 @@ Test.test("#Utils.rotateAntiClockwise: should rotate tiles anti clockwise (to ha
                   pos: {
                     x: 1,
                     y: 0
-                  }
+                  },
+                  new: false,
+                  merged: false
                 },
                 tl: /* [] */0
               }
@@ -457,7 +513,9 @@ Test.test("#Utils.rotateAntiClockwise: should rotate tiles anti clockwise (to ha
                                       pos: {
                                         x: 0,
                                         y: 0
-                                      }
+                                      },
+                                      new: false,
+                                      merged: false
                                     },
                                     tl: {
                                       hd: {
@@ -466,7 +524,9 @@ Test.test("#Utils.rotateAntiClockwise: should rotate tiles anti clockwise (to ha
                                         pos: {
                                           x: 1,
                                           y: 1
-                                        }
+                                        },
+                                        new: false,
+                                        merged: false
                                       },
                                       tl: /* [] */0
                                     }
@@ -477,7 +537,9 @@ Test.test("#Utils.rotateAntiClockwise: should rotate tiles anti clockwise (to ha
                       pos: {
                         x: 0,
                         y: 0
-                      }
+                      },
+                      new: false,
+                      merged: false
                     },
                     tl: {
                       hd: {
@@ -486,7 +548,9 @@ Test.test("#Utils.rotateAntiClockwise: should rotate tiles anti clockwise (to ha
                         pos: {
                           x: 1,
                           y: 1
-                        }
+                        },
+                        new: false,
+                        merged: false
                       },
                       tl: /* [] */0
                     }
@@ -501,7 +565,9 @@ Test.test("#Utils.rotateToMoveToRight: should rotate tiles to make each movement
                     pos: {
                       x: 0,
                       y: 0
-                    }
+                    },
+                    new: false,
+                    merged: false
                   },
                   tl: {
                     hd: {
@@ -510,7 +576,9 @@ Test.test("#Utils.rotateToMoveToRight: should rotate tiles to make each movement
                       pos: {
                         x: 1,
                         y: 1
-                      }
+                      },
+                      new: false,
+                      merged: false
                     },
                     tl: /* [] */0
                   }
@@ -521,7 +589,9 @@ Test.test("#Utils.rotateToMoveToRight: should rotate tiles to make each movement
                 pos: {
                   x: 0,
                   y: 0
-                }
+                },
+                new: false,
+                merged: false
               },
               tl: {
                 hd: {
@@ -530,7 +600,9 @@ Test.test("#Utils.rotateToMoveToRight: should rotate tiles to make each movement
                   pos: {
                     x: 1,
                     y: 1
-                  }
+                  },
+                  new: false,
+                  merged: false
                 },
                 tl: /* [] */0
               }
@@ -542,7 +614,9 @@ Test.test("#Utils.rotateToMoveToRight: should rotate tiles to make each movement
                     pos: {
                       x: 0,
                       y: 0
-                    }
+                    },
+                    new: false,
+                    merged: false
                   },
                   tl: {
                     hd: {
@@ -551,7 +625,9 @@ Test.test("#Utils.rotateToMoveToRight: should rotate tiles to make each movement
                       pos: {
                         x: 1,
                         y: 1
-                      }
+                      },
+                      new: false,
+                      merged: false
                     },
                     tl: /* [] */0
                   }
@@ -562,7 +638,9 @@ Test.test("#Utils.rotateToMoveToRight: should rotate tiles to make each movement
                 pos: {
                   x: 1,
                   y: 0
-                }
+                },
+                new: false,
+                merged: false
               },
               tl: {
                 hd: {
@@ -571,7 +649,9 @@ Test.test("#Utils.rotateToMoveToRight: should rotate tiles to make each movement
                   pos: {
                     x: 0,
                     y: 1
-                  }
+                  },
+                  new: false,
+                  merged: false
                 },
                 tl: /* [] */0
               }
@@ -583,7 +663,9 @@ Test.test("#Utils.rotateToMoveToRight: should rotate tiles to make each movement
                     pos: {
                       x: 0,
                       y: 0
-                    }
+                    },
+                    new: false,
+                    merged: false
                   },
                   tl: {
                     hd: {
@@ -592,7 +674,9 @@ Test.test("#Utils.rotateToMoveToRight: should rotate tiles to make each movement
                       pos: {
                         x: 1,
                         y: 1
-                      }
+                      },
+                      new: false,
+                      merged: false
                     },
                     tl: /* [] */0
                   }
@@ -603,7 +687,9 @@ Test.test("#Utils.rotateToMoveToRight: should rotate tiles to make each movement
                 pos: {
                   x: 0,
                   y: 1
-                }
+                },
+                new: false,
+                merged: false
               },
               tl: {
                 hd: {
@@ -612,7 +698,9 @@ Test.test("#Utils.rotateToMoveToRight: should rotate tiles to make each movement
                   pos: {
                     x: 1,
                     y: 0
-                  }
+                  },
+                  new: false,
+                  merged: false
                 },
                 tl: /* [] */0
               }
@@ -624,7 +712,9 @@ Test.test("#Utils.rotateToMoveToRight: should rotate tiles to make each movement
                           pos: {
                             x: 0,
                             y: 0
-                          }
+                          },
+                          new: false,
+                          merged: false
                         },
                         tl: {
                           hd: {
@@ -633,7 +723,9 @@ Test.test("#Utils.rotateToMoveToRight: should rotate tiles to make each movement
                             pos: {
                               x: 1,
                               y: 1
-                            }
+                            },
+                            new: false,
+                            merged: false
                           },
                           tl: /* [] */0
                         }
@@ -644,7 +736,9 @@ Test.test("#Utils.rotateToMoveToRight: should rotate tiles to make each movement
                       pos: {
                         x: 1,
                         y: 1
-                      }
+                      },
+                      new: false,
+                      merged: false
                     },
                     tl: {
                       hd: {
@@ -653,7 +747,9 @@ Test.test("#Utils.rotateToMoveToRight: should rotate tiles to make each movement
                         pos: {
                           x: 0,
                           y: 0
-                        }
+                        },
+                        new: false,
+                        merged: false
                       },
                       tl: /* [] */0
                     }
@@ -668,7 +764,9 @@ Test.test("#Utils.rotateBack: should rotate tiles back after rotatement to move 
                     pos: {
                       x: 0,
                       y: 0
-                    }
+                    },
+                    new: false,
+                    merged: false
                   },
                   tl: {
                     hd: {
@@ -677,7 +775,9 @@ Test.test("#Utils.rotateBack: should rotate tiles back after rotatement to move 
                       pos: {
                         x: 1,
                         y: 1
-                      }
+                      },
+                      new: false,
+                      merged: false
                     },
                     tl: /* [] */0
                   }
@@ -688,7 +788,9 @@ Test.test("#Utils.rotateBack: should rotate tiles back after rotatement to move 
                 pos: {
                   x: 0,
                   y: 0
-                }
+                },
+                new: false,
+                merged: false
               },
               tl: {
                 hd: {
@@ -697,7 +799,9 @@ Test.test("#Utils.rotateBack: should rotate tiles back after rotatement to move 
                   pos: {
                     x: 1,
                     y: 1
-                  }
+                  },
+                  new: false,
+                  merged: false
                 },
                 tl: /* [] */0
               }
@@ -709,7 +813,9 @@ Test.test("#Utils.rotateBack: should rotate tiles back after rotatement to move 
                     pos: {
                       x: 0,
                       y: 0
-                    }
+                    },
+                    new: false,
+                    merged: false
                   },
                   tl: {
                     hd: {
@@ -718,7 +824,9 @@ Test.test("#Utils.rotateBack: should rotate tiles back after rotatement to move 
                       pos: {
                         x: 1,
                         y: 1
-                      }
+                      },
+                      new: false,
+                      merged: false
                     },
                     tl: /* [] */0
                   }
@@ -729,7 +837,9 @@ Test.test("#Utils.rotateBack: should rotate tiles back after rotatement to move 
                 pos: {
                   x: 0,
                   y: 1
-                }
+                },
+                new: false,
+                merged: false
               },
               tl: {
                 hd: {
@@ -738,7 +848,9 @@ Test.test("#Utils.rotateBack: should rotate tiles back after rotatement to move 
                   pos: {
                     x: 1,
                     y: 0
-                  }
+                  },
+                  new: false,
+                  merged: false
                 },
                 tl: /* [] */0
               }
@@ -750,7 +862,9 @@ Test.test("#Utils.rotateBack: should rotate tiles back after rotatement to move 
                     pos: {
                       x: 0,
                       y: 0
-                    }
+                    },
+                    new: false,
+                    merged: false
                   },
                   tl: {
                     hd: {
@@ -759,7 +873,9 @@ Test.test("#Utils.rotateBack: should rotate tiles back after rotatement to move 
                       pos: {
                         x: 1,
                         y: 1
-                      }
+                      },
+                      new: false,
+                      merged: false
                     },
                     tl: /* [] */0
                   }
@@ -770,7 +886,9 @@ Test.test("#Utils.rotateBack: should rotate tiles back after rotatement to move 
                 pos: {
                   x: 1,
                   y: 0
-                }
+                },
+                new: false,
+                merged: false
               },
               tl: {
                 hd: {
@@ -779,7 +897,9 @@ Test.test("#Utils.rotateBack: should rotate tiles back after rotatement to move 
                   pos: {
                     x: 0,
                     y: 1
-                  }
+                  },
+                  new: false,
+                  merged: false
                 },
                 tl: /* [] */0
               }
@@ -791,7 +911,9 @@ Test.test("#Utils.rotateBack: should rotate tiles back after rotatement to move 
                           pos: {
                             x: 0,
                             y: 0
-                          }
+                          },
+                          new: false,
+                          merged: false
                         },
                         tl: {
                           hd: {
@@ -800,7 +922,9 @@ Test.test("#Utils.rotateBack: should rotate tiles back after rotatement to move 
                             pos: {
                               x: 1,
                               y: 1
-                            }
+                            },
+                            new: false,
+                            merged: false
                           },
                           tl: /* [] */0
                         }
@@ -811,7 +935,9 @@ Test.test("#Utils.rotateBack: should rotate tiles back after rotatement to move 
                       pos: {
                         x: 1,
                         y: 1
-                      }
+                      },
+                      new: false,
+                      merged: false
                     },
                     tl: {
                       hd: {
@@ -820,7 +946,9 @@ Test.test("#Utils.rotateBack: should rotate tiles back after rotatement to move 
                         pos: {
                           x: 0,
                           y: 0
-                        }
+                        },
+                        new: false,
+                        merged: false
                       },
                       tl: /* [] */0
                     }
@@ -843,7 +971,9 @@ Test.test("#Utils.positionFilterPred: should verify that pair is valid & there i
                     pos: {
                       x: 0,
                       y: 0
-                    }
+                    },
+                    new: false,
+                    merged: false
                   },
                   tl: /* [] */0
                 }, [
@@ -859,7 +989,9 @@ Test.test("#Utils.positionFilterPred: should verify that pair is valid & there i
                           pos: {
                             x: 0,
                             y: 0
-                          }
+                          },
+                          new: false,
+                          merged: false
                         },
                         tl: /* [] */0
                       }, [
@@ -886,7 +1018,9 @@ Test.test("#Utils.isWin: should check if user won", (function (param) {
                     pos: {
                       x: 0,
                       y: 0
-                    }
+                    },
+                    new: false,
+                    merged: false
                   },
                   tl: /* [] */0
                 }), true);
@@ -899,7 +1033,9 @@ Test.test("#Utils.isWin: should check if user won", (function (param) {
                           pos: {
                             x: 0,
                             y: 0
-                          }
+                          },
+                          new: false,
+                          merged: false
                         },
                         tl: /* [] */0
                       }), false);
@@ -918,7 +1054,9 @@ Test.test("#Utils.isLoss: should check if user loss", (function (param) {
                     pos: {
                       x: 0,
                       y: 0
-                    }
+                    },
+                    new: false,
+                    merged: false
                   },
                   tl: {
                     hd: {
@@ -927,7 +1065,9 @@ Test.test("#Utils.isLoss: should check if user loss", (function (param) {
                       pos: {
                         x: 1,
                         y: 0
-                      }
+                      },
+                      new: false,
+                      merged: false
                     },
                     tl: {
                       hd: {
@@ -936,7 +1076,9 @@ Test.test("#Utils.isLoss: should check if user loss", (function (param) {
                         pos: {
                           x: 0,
                           y: 1
-                        }
+                        },
+                        new: false,
+                        merged: false
                       },
                       tl: {
                         hd: {
@@ -945,7 +1087,9 @@ Test.test("#Utils.isLoss: should check if user loss", (function (param) {
                           pos: {
                             x: 1,
                             y: 1
-                          }
+                          },
+                          new: false,
+                          merged: false
                         },
                         tl: /* [] */0
                       }
@@ -961,7 +1105,9 @@ Test.test("#Utils.isLoss: should check if user loss", (function (param) {
                     pos: {
                       x: 0,
                       y: 0
-                    }
+                    },
+                    new: false,
+                    merged: false
                   },
                   tl: {
                     hd: {
@@ -970,7 +1116,9 @@ Test.test("#Utils.isLoss: should check if user loss", (function (param) {
                       pos: {
                         x: 1,
                         y: 0
-                      }
+                      },
+                      new: false,
+                      merged: false
                     },
                     tl: {
                       hd: {
@@ -979,7 +1127,9 @@ Test.test("#Utils.isLoss: should check if user loss", (function (param) {
                         pos: {
                           x: 0,
                           y: 1
-                        }
+                        },
+                        new: false,
+                        merged: false
                       },
                       tl: {
                         hd: {
@@ -988,7 +1138,9 @@ Test.test("#Utils.isLoss: should check if user loss", (function (param) {
                           pos: {
                             x: 1,
                             y: 1
-                          }
+                          },
+                          new: false,
+                          merged: false
                         },
                         tl: /* [] */0
                       }
@@ -1004,7 +1156,9 @@ Test.test("#Utils.isLoss: should check if user loss", (function (param) {
                           pos: {
                             x: 0,
                             y: 0
-                          }
+                          },
+                          new: false,
+                          merged: false
                         },
                         tl: /* [] */0
                       }), false);
@@ -1020,7 +1174,9 @@ Test.test("#Utils.isMoveToRightPossible: should check if it's possible to move t
                     pos: {
                       x: 0,
                       y: 0
-                    }
+                    },
+                    new: false,
+                    merged: false
                   },
                   tl: {
                     hd: {
@@ -1029,7 +1185,9 @@ Test.test("#Utils.isMoveToRightPossible: should check if it's possible to move t
                       pos: {
                         x: 1,
                         y: 0
-                      }
+                      },
+                      new: false,
+                      merged: false
                     },
                     tl: /* [] */0
                   }
@@ -1043,7 +1201,9 @@ Test.test("#Utils.isMoveToRightPossible: should check if it's possible to move t
                     pos: {
                       x: 0,
                       y: 0
-                    }
+                    },
+                    new: false,
+                    merged: false
                   },
                   tl: {
                     hd: {
@@ -1052,7 +1212,9 @@ Test.test("#Utils.isMoveToRightPossible: should check if it's possible to move t
                       pos: {
                         x: 0,
                         y: 1
-                      }
+                      },
+                      new: false,
+                      merged: false
                     },
                     tl: /* [] */0
                   }
@@ -1066,7 +1228,9 @@ Test.test("#Utils.isMoveToRightPossible: should check if it's possible to move t
                     pos: {
                       x: 0,
                       y: 0
-                    }
+                    },
+                    new: false,
+                    merged: false
                   },
                   tl: {
                     hd: {
@@ -1075,7 +1239,9 @@ Test.test("#Utils.isMoveToRightPossible: should check if it's possible to move t
                       pos: {
                         x: 1,
                         y: 0
-                      }
+                      },
+                      new: false,
+                      merged: false
                     },
                     tl: /* [] */0
                   }
@@ -1089,7 +1255,9 @@ Test.test("#Utils.isMoveToRightPossible: should check if it's possible to move t
                     pos: {
                       x: 0,
                       y: 0
-                    }
+                    },
+                    new: false,
+                    merged: false
                   },
                   tl: {
                     hd: {
@@ -1098,7 +1266,9 @@ Test.test("#Utils.isMoveToRightPossible: should check if it's possible to move t
                       pos: {
                         x: 1,
                         y: 0
-                      }
+                      },
+                      new: false,
+                      merged: false
                     },
                     tl: {
                       hd: {
@@ -1107,7 +1277,9 @@ Test.test("#Utils.isMoveToRightPossible: should check if it's possible to move t
                         pos: {
                           x: 2,
                           y: 0
-                        }
+                        },
+                        new: false,
+                        merged: false
                       },
                       tl: {
                         hd: {
@@ -1116,7 +1288,9 @@ Test.test("#Utils.isMoveToRightPossible: should check if it's possible to move t
                           pos: {
                             x: 1,
                             y: 1
-                          }
+                          },
+                          new: false,
+                          merged: false
                         },
                         tl: {
                           hd: {
@@ -1125,7 +1299,9 @@ Test.test("#Utils.isMoveToRightPossible: should check if it's possible to move t
                             pos: {
                               x: 2,
                               y: 1
-                            }
+                            },
+                            new: false,
+                            merged: false
                           },
                           tl: /* [] */0
                         }
@@ -1142,7 +1318,9 @@ Test.test("#Utils.isMoveToRightPossible: should check if it's possible to move t
                           pos: {
                             x: 0,
                             y: 0
-                          }
+                          },
+                          new: false,
+                          merged: false
                         },
                         tl: {
                           hd: {
@@ -1151,7 +1329,9 @@ Test.test("#Utils.isMoveToRightPossible: should check if it's possible to move t
                             pos: {
                               x: 1,
                               y: 0
-                            }
+                            },
+                            new: false,
+                            merged: false
                           },
                           tl: {
                             hd: {
@@ -1160,7 +1340,9 @@ Test.test("#Utils.isMoveToRightPossible: should check if it's possible to move t
                               pos: {
                                 x: 2,
                                 y: 0
-                              }
+                              },
+                              new: false,
+                              merged: false
                             },
                             tl: {
                               hd: {
@@ -1169,7 +1351,9 @@ Test.test("#Utils.isMoveToRightPossible: should check if it's possible to move t
                                 pos: {
                                   x: 1,
                                   y: 1
-                                }
+                                },
+                                new: false,
+                                merged: false
                               },
                               tl: {
                                 hd: {
@@ -1178,7 +1362,9 @@ Test.test("#Utils.isMoveToRightPossible: should check if it's possible to move t
                                   pos: {
                                     x: 2,
                                     y: 1
-                                  }
+                                  },
+                                  new: false,
+                                  merged: false
                                 },
                                 tl: /* [] */0
                               }
@@ -1196,7 +1382,9 @@ Test.test("#Utils.sortTilesByColumn: should sort all tiles in one row by column 
                           pos: {
                             x: 2,
                             y: 0
-                          }
+                          },
+                          new: false,
+                          merged: false
                         },
                         tl: {
                           hd: {
@@ -1205,7 +1393,9 @@ Test.test("#Utils.sortTilesByColumn: should sort all tiles in one row by column 
                             pos: {
                               x: 0,
                               y: 2
-                            }
+                            },
+                            new: false,
+                            merged: false
                           },
                           tl: {
                             hd: {
@@ -1214,7 +1404,9 @@ Test.test("#Utils.sortTilesByColumn: should sort all tiles in one row by column 
                               pos: {
                                 x: 1,
                                 y: 0
-                              }
+                              },
+                              new: false,
+                              merged: false
                             },
                             tl: {
                               hd: {
@@ -1223,7 +1415,9 @@ Test.test("#Utils.sortTilesByColumn: should sort all tiles in one row by column 
                                 pos: {
                                   x: 1,
                                   y: 1
-                                }
+                                },
+                                new: false,
+                                merged: false
                               },
                               tl: {
                                 hd: {
@@ -1232,7 +1426,9 @@ Test.test("#Utils.sortTilesByColumn: should sort all tiles in one row by column 
                                   pos: {
                                     x: 0,
                                     y: 0
-                                  }
+                                  },
+                                  new: false,
+                                  merged: false
                                 },
                                 tl: /* [] */0
                               }
@@ -1246,7 +1442,9 @@ Test.test("#Utils.sortTilesByColumn: should sort all tiles in one row by column 
                       pos: {
                         x: 0,
                         y: 0
-                      }
+                      },
+                      new: false,
+                      merged: false
                     },
                     tl: {
                       hd: {
@@ -1255,7 +1453,9 @@ Test.test("#Utils.sortTilesByColumn: should sort all tiles in one row by column 
                         pos: {
                           x: 1,
                           y: 0
-                        }
+                        },
+                        new: false,
+                        merged: false
                       },
                       tl: {
                         hd: {
@@ -1264,7 +1464,9 @@ Test.test("#Utils.sortTilesByColumn: should sort all tiles in one row by column 
                           pos: {
                             x: 2,
                             y: 0
-                          }
+                          },
+                          new: false,
+                          merged: false
                         },
                         tl: {
                           hd: {
@@ -1273,7 +1475,9 @@ Test.test("#Utils.sortTilesByColumn: should sort all tiles in one row by column 
                             pos: {
                               x: 1,
                               y: 1
-                            }
+                            },
+                            new: false,
+                            merged: false
                           },
                           tl: {
                             hd: {
@@ -1282,7 +1486,9 @@ Test.test("#Utils.sortTilesByColumn: should sort all tiles in one row by column 
                               pos: {
                                 x: 0,
                                 y: 2
-                              }
+                              },
+                              new: false,
+                              merged: false
                             },
                             tl: /* [] */0
                           }
@@ -1314,7 +1520,9 @@ Test.test("#Utils.moveRight: should move all tiles to right where it's possible"
                     pos: {
                       x: 0,
                       y: 0
-                    }
+                    },
+                    new: false,
+                    merged: false
                   },
                   tl: {
                     hd: {
@@ -1323,7 +1531,9 @@ Test.test("#Utils.moveRight: should move all tiles to right where it's possible"
                       pos: {
                         x: 1,
                         y: 0
-                      }
+                      },
+                      new: false,
+                      merged: false
                     },
                     tl: /* [] */0
                   }
@@ -1334,7 +1544,9 @@ Test.test("#Utils.moveRight: should move all tiles to right where it's possible"
                 pos: {
                   x: 0,
                   y: 0
-                }
+                },
+                new: false,
+                merged: false
               },
               tl: {
                 hd: {
@@ -1343,7 +1555,9 @@ Test.test("#Utils.moveRight: should move all tiles to right where it's possible"
                   pos: {
                     x: 1,
                     y: 0
-                  }
+                  },
+                  new: false,
+                  merged: false
                 },
                 tl: /* [] */0
               }
@@ -1355,7 +1569,9 @@ Test.test("#Utils.moveRight: should move all tiles to right where it's possible"
                     pos: {
                       x: 0,
                       y: 0
-                    }
+                    },
+                    new: false,
+                    merged: false
                   },
                   tl: {
                     hd: {
@@ -1364,7 +1580,9 @@ Test.test("#Utils.moveRight: should move all tiles to right where it's possible"
                       pos: {
                         x: 0,
                         y: 1
-                      }
+                      },
+                      new: false,
+                      merged: false
                     },
                     tl: /* [] */0
                   }
@@ -1375,7 +1593,9 @@ Test.test("#Utils.moveRight: should move all tiles to right where it's possible"
                 pos: {
                   x: 1,
                   y: 0
-                }
+                },
+                new: false,
+                merged: false
               },
               tl: {
                 hd: {
@@ -1384,7 +1604,9 @@ Test.test("#Utils.moveRight: should move all tiles to right where it's possible"
                   pos: {
                     x: 1,
                     y: 1
-                  }
+                  },
+                  new: false,
+                  merged: false
                 },
                 tl: /* [] */0
               }
@@ -1396,7 +1618,9 @@ Test.test("#Utils.moveRight: should move all tiles to right where it's possible"
                     pos: {
                       x: 1,
                       y: 1
-                    }
+                    },
+                    new: false,
+                    merged: false
                   },
                   tl: {
                     hd: {
@@ -1405,7 +1629,9 @@ Test.test("#Utils.moveRight: should move all tiles to right where it's possible"
                       pos: {
                         x: 0,
                         y: 0
-                      }
+                      },
+                      new: false,
+                      merged: false
                     },
                     tl: {
                       hd: {
@@ -1414,7 +1640,9 @@ Test.test("#Utils.moveRight: should move all tiles to right where it's possible"
                         pos: {
                           x: 0,
                           y: 1
-                        }
+                        },
+                        new: false,
+                        merged: false
                       },
                       tl: {
                         hd: {
@@ -1423,7 +1651,9 @@ Test.test("#Utils.moveRight: should move all tiles to right where it's possible"
                           pos: {
                             x: 2,
                             y: 0
-                          }
+                          },
+                          new: false,
+                          merged: false
                         },
                         tl: {
                           hd: {
@@ -1432,7 +1662,9 @@ Test.test("#Utils.moveRight: should move all tiles to right where it's possible"
                             pos: {
                               x: 2,
                               y: 2
-                            }
+                            },
+                            new: false,
+                            merged: false
                           },
                           tl: /* [] */0
                         }
@@ -1446,7 +1678,9 @@ Test.test("#Utils.moveRight: should move all tiles to right where it's possible"
                 pos: {
                   x: 2,
                   y: 1
-                }
+                },
+                new: false,
+                merged: false
               },
               tl: {
                 hd: {
@@ -1455,7 +1689,9 @@ Test.test("#Utils.moveRight: should move all tiles to right where it's possible"
                   pos: {
                     x: 1,
                     y: 0
-                  }
+                  },
+                  new: false,
+                  merged: false
                 },
                 tl: {
                   hd: {
@@ -1464,7 +1700,9 @@ Test.test("#Utils.moveRight: should move all tiles to right where it's possible"
                     pos: {
                       x: 1,
                       y: 1
-                    }
+                    },
+                    new: false,
+                    merged: false
                   },
                   tl: {
                     hd: {
@@ -1473,7 +1711,9 @@ Test.test("#Utils.moveRight: should move all tiles to right where it's possible"
                       pos: {
                         x: 2,
                         y: 0
-                      }
+                      },
+                      new: false,
+                      merged: false
                     },
                     tl: {
                       hd: {
@@ -1482,7 +1722,9 @@ Test.test("#Utils.moveRight: should move all tiles to right where it's possible"
                         pos: {
                           x: 2,
                           y: 2
-                        }
+                        },
+                        new: false,
+                        merged: false
                       },
                       tl: /* [] */0
                     }
@@ -1497,7 +1739,9 @@ Test.test("#Utils.moveRight: should move all tiles to right where it's possible"
                     pos: {
                       x: 0,
                       y: 0
-                    }
+                    },
+                    new: false,
+                    merged: false
                   },
                   tl: {
                     hd: {
@@ -1506,7 +1750,9 @@ Test.test("#Utils.moveRight: should move all tiles to right where it's possible"
                       pos: {
                         x: 1,
                         y: 0
-                      }
+                      },
+                      new: false,
+                      merged: false
                     },
                     tl: /* [] */0
                   }
@@ -1517,7 +1763,9 @@ Test.test("#Utils.moveRight: should move all tiles to right where it's possible"
                 pos: {
                   x: 1,
                   y: 0
-                }
+                },
+                new: true,
+                merged: true
               },
               tl: /* [] */0
             });
@@ -1528,7 +1776,9 @@ Test.test("#Utils.moveRight: should move all tiles to right where it's possible"
                     pos: {
                       x: 1,
                       y: 1
-                    }
+                    },
+                    new: false,
+                    merged: false
                   },
                   tl: {
                     hd: {
@@ -1537,7 +1787,9 @@ Test.test("#Utils.moveRight: should move all tiles to right where it's possible"
                       pos: {
                         x: 0,
                         y: 0
-                      }
+                      },
+                      new: false,
+                      merged: false
                     },
                     tl: {
                       hd: {
@@ -1546,7 +1798,9 @@ Test.test("#Utils.moveRight: should move all tiles to right where it's possible"
                         pos: {
                           x: 0,
                           y: 1
-                        }
+                        },
+                        new: false,
+                        merged: false
                       },
                       tl: {
                         hd: {
@@ -1555,7 +1809,9 @@ Test.test("#Utils.moveRight: should move all tiles to right where it's possible"
                           pos: {
                             x: 2,
                             y: 0
-                          }
+                          },
+                          new: false,
+                          merged: false
                         },
                         tl: {
                           hd: {
@@ -1564,7 +1820,9 @@ Test.test("#Utils.moveRight: should move all tiles to right where it's possible"
                             pos: {
                               x: 2,
                               y: 2
-                            }
+                            },
+                            new: false,
+                            merged: false
                           },
                           tl: /* [] */0
                         }
@@ -1578,7 +1836,9 @@ Test.test("#Utils.moveRight: should move all tiles to right where it's possible"
                 pos: {
                   x: 2,
                   y: 1
-                }
+                },
+                new: false,
+                merged: false
               },
               tl: {
                 hd: {
@@ -1587,7 +1847,9 @@ Test.test("#Utils.moveRight: should move all tiles to right where it's possible"
                   pos: {
                     x: 2,
                     y: 0
-                  }
+                  },
+                  new: true,
+                  merged: true
                 },
                 tl: {
                   hd: {
@@ -1596,7 +1858,9 @@ Test.test("#Utils.moveRight: should move all tiles to right where it's possible"
                     pos: {
                       x: 1,
                       y: 1
-                    }
+                    },
+                    new: false,
+                    merged: false
                   },
                   tl: {
                     hd: {
@@ -1605,7 +1869,9 @@ Test.test("#Utils.moveRight: should move all tiles to right where it's possible"
                       pos: {
                         x: 2,
                         y: 2
-                      }
+                      },
+                      new: false,
+                      merged: false
                     },
                     tl: /* [] */0
                   }
@@ -1619,7 +1885,9 @@ Test.test("#Utils.moveRight: should move all tiles to right where it's possible"
                           pos: {
                             x: 1,
                             y: 1
-                          }
+                          },
+                          new: false,
+                          merged: false
                         },
                         tl: {
                           hd: {
@@ -1628,7 +1896,9 @@ Test.test("#Utils.moveRight: should move all tiles to right where it's possible"
                             pos: {
                               x: 0,
                               y: 0
-                            }
+                            },
+                            new: false,
+                            merged: false
                           },
                           tl: {
                             hd: {
@@ -1637,7 +1907,9 @@ Test.test("#Utils.moveRight: should move all tiles to right where it's possible"
                               pos: {
                                 x: 0,
                                 y: 1
-                              }
+                              },
+                              new: false,
+                              merged: false
                             },
                             tl: {
                               hd: {
@@ -1646,7 +1918,9 @@ Test.test("#Utils.moveRight: should move all tiles to right where it's possible"
                                 pos: {
                                   x: 2,
                                   y: 0
-                                }
+                                },
+                                new: false,
+                                merged: false
                               },
                               tl: {
                                 hd: {
@@ -1655,7 +1929,9 @@ Test.test("#Utils.moveRight: should move all tiles to right where it's possible"
                                   pos: {
                                     x: 2,
                                     y: 2
-                                  }
+                                  },
+                                  new: false,
+                                  merged: false
                                 },
                                 tl: {
                                   hd: {
@@ -1664,7 +1940,9 @@ Test.test("#Utils.moveRight: should move all tiles to right where it's possible"
                                     pos: {
                                       x: 0,
                                       y: 3
-                                    }
+                                    },
+                                    new: false,
+                                    merged: false
                                   },
                                   tl: {
                                     hd: {
@@ -1673,7 +1951,9 @@ Test.test("#Utils.moveRight: should move all tiles to right where it's possible"
                                       pos: {
                                         x: 1,
                                         y: 3
-                                      }
+                                      },
+                                      new: false,
+                                      merged: false
                                     },
                                     tl: {
                                       hd: {
@@ -1682,7 +1962,9 @@ Test.test("#Utils.moveRight: should move all tiles to right where it's possible"
                                         pos: {
                                           x: 2,
                                           y: 3
-                                        }
+                                        },
+                                        new: false,
+                                        merged: false
                                       },
                                       tl: {
                                         hd: {
@@ -1691,7 +1973,9 @@ Test.test("#Utils.moveRight: should move all tiles to right where it's possible"
                                           pos: {
                                             x: 3,
                                             y: 3
-                                          }
+                                          },
+                                          new: false,
+                                          merged: false
                                         },
                                         tl: /* [] */0
                                       }
@@ -1709,7 +1993,9 @@ Test.test("#Utils.moveRight: should move all tiles to right where it's possible"
                       pos: {
                         x: 3,
                         y: 1
-                      }
+                      },
+                      new: false,
+                      merged: false
                     },
                     tl: {
                       hd: {
@@ -1718,7 +2004,9 @@ Test.test("#Utils.moveRight: should move all tiles to right where it's possible"
                         pos: {
                           x: 3,
                           y: 0
-                        }
+                        },
+                        new: true,
+                        merged: true
                       },
                       tl: {
                         hd: {
@@ -1727,7 +2015,9 @@ Test.test("#Utils.moveRight: should move all tiles to right where it's possible"
                           pos: {
                             x: 2,
                             y: 1
-                          }
+                          },
+                          new: false,
+                          merged: false
                         },
                         tl: {
                           hd: {
@@ -1736,7 +2026,9 @@ Test.test("#Utils.moveRight: should move all tiles to right where it's possible"
                             pos: {
                               x: 3,
                               y: 2
-                            }
+                            },
+                            new: false,
+                            merged: false
                           },
                           tl: {
                             hd: {
@@ -1745,7 +2037,9 @@ Test.test("#Utils.moveRight: should move all tiles to right where it's possible"
                               pos: {
                                 x: 2,
                                 y: 3
-                              }
+                              },
+                              new: true,
+                              merged: true
                             },
                             tl: {
                               hd: {
@@ -1754,7 +2048,9 @@ Test.test("#Utils.moveRight: should move all tiles to right where it's possible"
                                 pos: {
                                   x: 3,
                                   y: 3
-                                }
+                                },
+                                new: true,
+                                merged: true
                               },
                               tl: /* [] */0
                             }

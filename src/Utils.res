@@ -10,16 +10,11 @@ type position = {
 }
 
 type tile = {
-  id: string,
-  val: int,
-  pos: position
-}
-
-type extendedTile = {
-  id: string,
-  val: int,
-  pos: position,
-  collapsed: bool,
+  id:     string,
+  val:    int,
+  pos:    position,
+  new:    bool,
+  merged: bool,
 }
 
 let gridSize = 4
@@ -32,7 +27,7 @@ let getCls = (styles: Js.Dict.t<'a>, name: string): string =>
   -> Belt.Option.flatMap(defaults => Js.Dict.get(defaults, name))
   -> Belt.Option.getWithDefault("")
 
-let createTile = (~id, ~val, ~x, ~y): tile => { id: id, val: val, pos: { x: x, y: y } }
+let createTile = (~id, ~val, ~x, ~y): tile => { id: id, val: val, pos: { x: x, y: y }, new: true, merged: false, }
 
 let getPair = (max: int, idx: int): option<(int, int)> => {
   if idx >= max * max {
@@ -144,28 +139,33 @@ let sortTilesByColumn = (tiles: list<tile>): list<tile> => {
 
 let setColumn = (tile: tile, x: int) => { ...tile, pos: { x: x, y: tile.pos.y } }
 
-let setCollapsed = (tile: tile, collapsed: bool): extendedTile => { id: tile.id, val: tile.val, pos: tile.pos, collapsed: collapsed }
+let setNew = (tile: tile, new: bool) => { ...tile, new: new }
 
-let collapsedTileToTile = (tile: extendedTile): tile => { id: tile.id, val: tile.val, pos: tile.pos }
+let setMerged = (tile: tile, merged: bool) => { ...tile, merged: merged }
 
 let movementReducer = (ts, tile) => {
-  let addTile = (x, collapsed) => Belt.List.add(ts, tile -> setColumn(x) -> setCollapsed(collapsed))
+  let addTile = x => Belt.List.add(ts, tile -> setColumn(x) -> setNew(false) -> setMerged(false))
 
   Belt.Option.mapWithDefault(
     Belt.List.head(ts),
-    addTile(0, false),
+    addTile(0),
     t => {
       if (t.pos.y === tile.pos.y) {
-        if (t.val === tile.val && !t.collapsed) {
+        if (t.val === tile.val && !t.merged) {
           Belt.List.add(
             Belt.Option.getWithDefault(Belt.List.drop(ts, 1), list{}),
-            { id: tile.pos.x > t.pos.x ? tile.id : t.id, val: t.val * 2, pos: t.pos, collapsed: true } // ? maybe new ID ?
+            createTile(
+              ~id = tile.pos.x > t.pos.x ? tile.id : t.id,
+              ~val = t.val * 2,
+              ~x = t.pos.x,
+              ~y = t.pos.y
+            ) -> setMerged(true) -> setNew(true)
           )
         } else {
-          addTile(t.pos.x + 1, false)  
+          addTile(t.pos.x + 1)  
         }
       } else {
-        addTile(0, false)
+        addTile(0)
       }
     }
   )
@@ -176,7 +176,6 @@ let moveRight = (size: int, tiles: list<tile>): list<tile> => {
   -> reverseRow(size)
   -> sortTilesByColumn
   -> Belt.List.reduce(list{}, movementReducer)
-  -> Belt.List.map(collapsedTileToTile)
   -> reverseRow(size)
 }
 
