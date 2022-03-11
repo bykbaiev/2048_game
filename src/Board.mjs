@@ -45,12 +45,12 @@ function viewTile(param) {
   var pos = param.pos;
   var val = param.val;
   var valName = val > Utils.winningValue ? "tileSuper" : "tile-" + val;
-  var y = pos.y;
-  var x = pos.x;
-  var posName = "tilePosition-" + (x + 1 | 0).toString() + "-" + (y + 1 | 0).toString();
+  var posName = "tilePosition-" + (pos.x + 1 | 0).toString() + "-" + (pos.y + 1 | 0).toString();
+  var newName = param.new ? "tileNew" : "";
+  var mergedName = param.merged ? "tileMerged" : "";
   return React.createElement("div", {
-              key: "" + val + "-" + x + "-" + y + "-tile",
-              className: Utils.getCls(styles, "tile") + " " + Utils.getCls(styles, valName) + " " + Utils.getCls(styles, posName)
+              key: param.id,
+              className: Utils.getCls(styles, "tile") + " " + Utils.getCls(styles, valName) + " " + Utils.getCls(styles, posName) + " " + Utils.getCls(styles, newName) + " " + Utils.getCls(styles, mergedName)
             }, React.createElement("div", {
                   className: Utils.getCls(styles, "tileInner")
                 }, val.toString()));

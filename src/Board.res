@@ -20,11 +20,13 @@ let viewRow = (rowId) => {
   </div>
 }
 
-let viewTile = ({ val, pos }: Utils.tile) => {
+let viewTile = ({ id, val, pos, new, merged }: Utils.tile) => {
   let valName = val > Utils.winningValue ? "tileSuper" : j`tile-$val`
   let { x, y } = pos
   let posName = `tilePosition-${Js.Int.toString(x + 1)}-${Js.Int.toString(y + 1)}`
-  <div key={j`$val-$x-$y-tile`} className={`${getClassName("tile")} ${getClassName(valName)} ${getClassName(posName)}`}>
+  let newName = new ? "tileNew" : ""
+  let mergedName = merged ? "tileMerged" : ""
+  <div key={id} className={`${getClassName("tile")} ${getClassName(valName)} ${getClassName(posName)} ${getClassName(newName)} ${getClassName(mergedName)}`}>
     <div className={getClassName("tileInner")}>
       {React.string(Js.Int.toString(val))}
     </div>

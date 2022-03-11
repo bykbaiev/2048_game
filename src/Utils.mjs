@@ -12,29 +12,16 @@ function getCls(styles, name) {
                   })), "");
 }
 
-function tilesToBoard(size, tiles) {
-  return Belt_List.makeBy(size, (function (y) {
-                return Belt_List.makeBy(size, (function (x) {
-                              return Belt_Option.map(Belt_List.getBy(tiles, (function (tile) {
-                                                if (tile.pos.x === x) {
-                                                  return tile.pos.y === y;
-                                                } else {
-                                                  return false;
-                                                }
-                                              })), (function (tile) {
-                                            return tile.val;
-                                          }));
-                            }));
-              }));
-}
-
-function createTile(val, x, y) {
+function createTile(id, val, x, y) {
   return {
+          id: id,
           val: val,
           pos: {
             x: x,
             y: y
-          }
+          },
+          new: true,
+          merged: false
         };
 }
 
@@ -83,7 +70,8 @@ function createNewTile(tiles) {
         0
       ]);
   var randTileIndicator = Js_math.random_int(0, 4);
-  return createTile(randTileIndicator === 3 ? 4 : 2, match[0], match[1]);
+  var id = "tile-" + String(Math.random());
+  return createTile(id, randTileIndicator === 3 ? 4 : 2, match[0], match[1]);
 }
 
 function keyCodeToDirection(code) {
@@ -108,11 +96,14 @@ function isWinningValue(tile) {
 function transpose(tiles) {
   return Belt_List.map(tiles, (function (tile) {
                 return {
+                        id: tile.id,
                         val: tile.val,
                         pos: {
                           x: tile.pos.y,
                           y: tile.pos.x
-                        }
+                        },
+                        new: tile.new,
+                        merged: tile.merged
                       };
               }));
 }
@@ -120,11 +111,14 @@ function transpose(tiles) {
 function reverseRow(tiles, size) {
   return Belt_List.map(tiles, (function (tile) {
                 return {
+                        id: tile.id,
                         val: tile.val,
                         pos: {
                           x: (size - 1 | 0) - tile.pos.x | 0,
                           y: tile.pos.y
-                        }
+                        },
+                        new: tile.new,
+                        merged: tile.merged
                       };
               }));
 }
@@ -214,52 +208,56 @@ function sortTilesByColumn(tiles) {
 
 function setColumn(tile, x) {
   return {
+          id: tile.id,
           val: tile.val,
           pos: {
             x: x,
             y: tile.pos.y
-          }
+          },
+          new: tile.new,
+          merged: tile.merged
         };
 }
 
-function setCollapsed(tile, collapsed) {
+function setNew(tile, $$new) {
   return {
+          id: tile.id,
           val: tile.val,
           pos: tile.pos,
-          collapsed: collapsed
+          new: $$new,
+          merged: tile.merged
         };
 }
 
-function collapsedTileToTile(tile) {
+function setMerged(tile, merged) {
   return {
+          id: tile.id,
           val: tile.val,
-          pos: tile.pos
+          pos: tile.pos,
+          new: tile.new,
+          merged: merged
         };
 }
 
 function movementReducer(ts, tile) {
-  var addTile = function (x, collapsed) {
-    return Belt_List.add(ts, setCollapsed(setColumn(tile, x), collapsed));
+  var addTile = function (x) {
+    return Belt_List.add(ts, setMerged(setNew(setColumn(tile, x), false), false));
   };
-  return Belt_Option.mapWithDefault(Belt_List.head(ts), addTile(0, false), (function (t) {
+  return Belt_Option.mapWithDefault(Belt_List.head(ts), addTile(0), (function (t) {
                 if (t.pos.y === tile.pos.y) {
-                  if (t.val === tile.val && !t.collapsed) {
-                    return Belt_List.add(Belt_Option.getWithDefault(Belt_List.drop(ts, 1), /* [] */0), {
-                                val: (t.val << 1),
-                                pos: t.pos,
-                                collapsed: true
-                              });
+                  if (t.val === tile.val && !t.merged) {
+                    return Belt_List.add(Belt_Option.getWithDefault(Belt_List.drop(ts, 1), /* [] */0), setNew(setMerged(createTile(tile.pos.x > t.pos.x ? tile.id : t.id, (t.val << 1), t.pos.x, t.pos.y), true), true));
                   } else {
-                    return addTile(t.pos.x + 1 | 0, false);
+                    return addTile(t.pos.x + 1 | 0);
                   }
                 } else {
-                  return addTile(0, false);
+                  return addTile(0);
                 }
               }));
 }
 
 function moveRight(size, tiles) {
-  return reverseRow(Belt_List.map(Belt_List.reduce(sortTilesByColumn(reverseRow(tiles, size)), /* [] */0, movementReducer), collapsedTileToTile), size);
+  return reverseRow(Belt_List.reduce(sortTilesByColumn(reverseRow(tiles, size)), /* [] */0, movementReducer), size);
 }
 
 function move(dir, tiles) {
@@ -284,7 +282,6 @@ export {
   gridSize ,
   winningValue ,
   getCls ,
-  tilesToBoard ,
   createTile ,
   getPair ,
   positionFilterPred ,
@@ -303,8 +300,8 @@ export {
   isLoss ,
   sortTilesByColumn ,
   setColumn ,
-  setCollapsed ,
-  collapsedTileToTile ,
+  setNew ,
+  setMerged ,
   movementReducer ,
   moveRight ,
   move ,
