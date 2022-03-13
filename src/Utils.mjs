@@ -124,12 +124,12 @@ function sortTilesByColumn(tiles) {
 
 function movementReducer(ts, tile) {
   var addTile = function (x) {
-    return Belt_List.add(ts, Curry._2(Tile.GameTile.Setters.merged, Curry._2(Tile.GameTile.Setters.$$new, Curry._2(Tile.GameTile.Setters.x, tile, x), false), false));
+    return Belt_List.add(ts, Curry._1(Tile.GameTile.Converters.toAverage, Curry._2(Tile.GameTile.Setters.x, tile, x)));
   };
   return Belt_Option.mapWithDefault(Belt_List.head(ts), addTile(0), (function (t) {
                 if (Curry._1(Tile.GameTile.Getters.y, t) === Curry._1(Tile.GameTile.Getters.y, tile)) {
                   if (Curry._1(Tile.GameTile.Getters.val, t) === Curry._1(Tile.GameTile.Getters.val, tile) && !Curry._1(Tile.GameTile.Getters.merged, t)) {
-                    return Belt_List.add(Belt_Option.getWithDefault(Belt_List.drop(ts, 1), /* [] */0), Curry._2(Tile.GameTile.Setters.$$new, Curry._2(Tile.GameTile.Setters.merged, Curry._2(Tile.GameTile.Setters.val, Curry._2(Tile.GameTile.Setters.id, t, Curry._1(Tile.GameTile.Getters.x, tile) > Curry._1(Tile.GameTile.Getters.x, t) ? Curry._1(Tile.GameTile.Getters.id, tile) : Curry._1(Tile.GameTile.Getters.id, t)), (Curry._1(Tile.GameTile.Getters.val, t) << 1)), true), true));
+                    return Belt_List.add(Belt_Option.getWithDefault(Belt_List.drop(ts, 1), /* [] */0), Curry._1(Tile.GameTile.Converters.toMerged, Curry._2(Tile.GameTile.Setters.val, Curry._2(Tile.GameTile.Setters.id, t, Curry._1(Tile.GameTile.Getters.x, tile) > Curry._1(Tile.GameTile.Getters.x, t) ? Curry._1(Tile.GameTile.Getters.id, tile) : Curry._1(Tile.GameTile.Getters.id, t)), (Curry._1(Tile.GameTile.Getters.val, t) << 1))));
                   } else {
                     return addTile(Curry._1(Tile.GameTile.Getters.x, t) + 1 | 0);
                   }

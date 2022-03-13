@@ -8,18 +8,22 @@ type testPos = {
 type testTile = {
   id: string,
   merged: bool,
-  new: bool,
   val: int,
   pos: testPos,
 }
 
-let createTestTile = ({ id, val, pos, merged, new }): Tile.GameTile.tile => {
-  Tile.GameTile.createTile(
-    ~id  = id,
-    ~val = val,
-    ~x   = pos.x,
-    ~y   = pos.y
-  ) -> Tile.GameTile.Setters.merged(merged) -> Tile.GameTile.Setters.new(new)
+let createTestTile = ({ id, val, pos, merged }): Tile.GameTile.tile => {
+  let average = Tile.GameTile.createTile(
+                  ~id  = id,
+                  ~val = val,
+                  ~x   = pos.x,
+                  ~y   = pos.y
+                ) -> Tile.GameTile.Converters.toAverage
+  if merged {
+    Tile.GameTile.Converters.toMerged(average)
+  } else {
+    average
+  }
 }
 
 let checkPairs = (~max: int, ~idx: int, ~expected: option<(int, int)>) =>
@@ -144,7 +148,7 @@ test("#Tile.positionFilterPred: should verify that pair is valid & there is no s
     (a, b) => a == b,
     Tile.GameTile.positionFilterPred(
       list{
-        createTestTile({id: "0", merged: false, new: false, val: 2, pos: { x: 0, y: 0 } })
+        createTestTile({id: "0", merged: false, val: 2, pos: { x: 0, y: 0 } })
       },
       (0, 0)
     ),
@@ -157,7 +161,7 @@ test("#Tile.positionFilterPred: should verify that pair is valid & there is no s
     (a, b) => a == b,
     Tile.GameTile.positionFilterPred(
       list{
-        createTestTile({id: "0", merged: false, new: false, val: 2, pos: { x: 0, y: 0 } })
+        createTestTile({id: "0", merged: false, val: 2, pos: { x: 0, y: 0 } })
       },
       (1, 1)
     ),

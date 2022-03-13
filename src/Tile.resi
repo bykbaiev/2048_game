@@ -23,10 +23,14 @@ module GameTile: {
     let y: (tile, int) => tile
 
     let val: (tile, int) => tile
+  }
 
-    let new: (tile, bool) => tile
+  module Converters: {
+    let toNew: tile => tile
 
-    let merged: (tile, bool) => tile
+    let toMerged: tile => tile
+
+    let toAverage: tile => tile
   }
 
   let createTile: (~id: string, ~val: int, ~x: int, ~y: int) => tile

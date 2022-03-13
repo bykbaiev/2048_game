@@ -8,7 +8,12 @@ import * as Caml_array from "../node_modules/rescript/lib/es6/caml_array.js";
 
 function createTestTile(param) {
   var pos = param.pos;
-  return Curry._2(Tile.GameTile.Setters.$$new, Curry._2(Tile.GameTile.Setters.merged, Tile.GameTile.createTile(param.id, param.val, pos.x, pos.y), param.merged), param.new);
+  var average = Curry._1(Tile.GameTile.Converters.toAverage, Tile.GameTile.createTile(param.id, param.val, pos.x, pos.y));
+  if (param.merged) {
+    return Curry._1(Tile.GameTile.Converters.toMerged, average);
+  } else {
+    return average;
+  }
 }
 
 function checkPairs(max, idx, expected) {
@@ -137,7 +142,6 @@ Test.test("#Tile.positionFilterPred: should verify that pair is valid & there is
                   hd: createTestTile({
                         id: "0",
                         merged: false,
-                        new: false,
                         val: 2,
                         pos: {
                           x: 0,
@@ -155,7 +159,6 @@ Test.test("#Tile.positionFilterPred: should verify that pair is valid & there is
                         hd: createTestTile({
                               id: "0",
                               merged: false,
-                              new: false,
                               val: 2,
                               pos: {
                                 x: 0,

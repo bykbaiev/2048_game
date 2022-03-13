@@ -102,8 +102,7 @@ let movementReducer = (ts, tile) => {
     ts,
     tile
     -> GameTile.Setters.x(x)
-    -> GameTile.Setters.new(false)
-    -> GameTile.Setters.merged(false)
+    -> GameTile.Converters.toAverage
   )
 
   Belt.Option.mapWithDefault(
@@ -117,8 +116,7 @@ let movementReducer = (ts, tile) => {
             t
             -> GameTile.Setters.id(GameTile.Getters.x(tile) > GameTile.Getters.x(t) ? GameTile.Getters.id(tile) : GameTile.Getters.id(t))
             -> GameTile.Setters.val(GameTile.Getters.val(t) * 2)
-            -> GameTile.Setters.merged(true)
-            -> GameTile.Setters.new(true)
+            -> GameTile.Converters.toMerged
           )
         } else {
           addTile(GameTile.Getters.x(t) + 1)  

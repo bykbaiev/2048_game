@@ -4,55 +4,93 @@ module GameTile = {
     y: int
   }
 
-  type tile = {
-    id:     string,
-    val:    int,
-    pos:    position,
-    new:    bool,
-    merged: bool,
+  type tileInternals = {
+    id: string,
+    val: int,
+    pos: position,
   }
+
+  type tile =
+  | NewTile(tileInternals)
+  | MergedTile(tileInternals)
+  | AverageTile(tileInternals)
 
   let gridSize = 4
 
-  let createTile = (~id, ~val, ~x, ~y): tile => {
-    id: id,
-    val: val,
-    pos: { x: x, y: y },
-    new: true,
-    merged: false,
-  }
+  let createTile = (~id, ~val, ~x, ~y): tile =>
+    NewTile({
+      id: id,
+      val: val,
+      pos: { x: x, y: y },
+    })
 
   module Getters = {
-    let id = tile => tile.id
+    let internals = tile => switch tile {
+    | NewTile(data)     => data
+    | MergedTile(data)  => data
+    | AverageTile(data) => data
+    }
 
-    let val = tile => tile.val
+    let id = tile => internals(tile).id
 
-    let x = tile => tile.pos.x
+    let val = tile => internals(tile).val
 
-    let y = tile => tile.pos.y
+    let x = tile => internals(tile).pos.x
 
-    let new = tile => tile.new
+    let y = tile => internals(tile).pos.y
 
-    let merged = tile => tile.merged
+    let new = tile => switch tile {
+    | NewTile(_) => true
+    | _          => false
+    }
+
+    let merged = tile => switch tile {
+    | MergedTile(_) => true
+    | _             => false
+    }
+  }
+
+  let updateInternals = (fn: tileInternals => tileInternals, tile: tile) => switch tile {
+  | NewTile(internals)     => NewTile(fn(internals))
+  | MergedTile(internals)  => MergedTile(fn(internals))
+  | AverageTile(internals) => AverageTile(fn(internals))
   }
 
   module Setters = {
-    let id = (tile, id) => { ...tile, id: id }
+    let id = (tile, id) => updateInternals(internals => { ...internals, id: id }, tile)
 
-    let x = (tile, x) => { ...tile, pos: { ...tile.pos, x: x } }
+    let x = (tile, x) => updateInternals(internals => { ...internals, pos: { ...internals.pos, x: x } }, tile)
 
-    let y = (tile, y) => { ...tile, pos: { ...tile.pos, y: y } }
+    let y = (tile, y) => updateInternals(internals => { ...internals, pos: { ...internals.pos, y: y } }, tile)
 
-    let val = (tile, val) => { ...tile, val: val }
+    let val = (tile, val) => updateInternals(internals => { ...internals, val: val }, tile)
+  }
 
-    let new = (tile, new) => { ...tile, new: new }
+  module Converters = {
+    let toNew = tile => switch tile {
+    | AverageTile(internals) => NewTile(internals)
+    | MergedTile(internals)  => NewTile(internals)
+    | other                  => other
+    }
 
-    let merged = (tile, merged) => { ...tile, merged: merged }
+    let toMerged = tile => switch tile {
+    | AverageTile(internals) => MergedTile(internals)
+    | NewTile(internals)     => MergedTile(internals)
+    | other                  => other
+    }
+
+    let toAverage = tile => switch tile {
+    | MergedTile(internals) => AverageTile(internals)
+    | NewTile(internals)    => AverageTile(internals)
+    | other                 => other
+    }
   }
 
   let positionFilterPred = (tiles: list<tile>, position: (int, int)) => switch position {
   | (-1, -1) => false
-  | (x, y)   => !Belt.List.some(tiles, ({ pos }) => pos.x === x && pos.y === y)
+  | (x, y)   => !Belt.List.some(tiles, tile => {
+      Getters.x(tile) === x && Getters.y(tile) === y
+    })
   }
 
   let getPair = (max: int, idx: int): option<(int, int)> => {
@@ -82,5 +120,5 @@ module GameTile = {
     )
   }
 
-  let isWinningValue = (tile: tile) => tile.val === Constants.winningValue
+  let isWinningValue = (tile: tile) => Getters.val(tile) === Constants.winningValue
 }

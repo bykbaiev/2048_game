@@ -43,7 +43,12 @@ Test.test("#Utils.getCls", (function (param) {
 
 function createTestTile(param) {
   var pos = param.pos;
-  return Curry._2(Tile.GameTile.Setters.$$new, Curry._2(Tile.GameTile.Setters.merged, Tile.GameTile.createTile(param.id, param.val, pos.x, pos.y), param.merged), param.new);
+  var average = Curry._1(Tile.GameTile.Converters.toAverage, Tile.GameTile.createTile(param.id, param.val, pos.x, pos.y));
+  if (param.merged) {
+    return Curry._1(Tile.GameTile.Converters.toMerged, average);
+  } else {
+    return average;
+  }
 }
 
 Test.test("#Utils.transpose: should transpose matrix", (function (param) {
@@ -51,7 +56,6 @@ Test.test("#Utils.transpose: should transpose matrix", (function (param) {
                   hd: createTestTile({
                         id: "0",
                         merged: false,
-                        new: false,
                         val: 2,
                         pos: {
                           x: 0,
@@ -62,7 +66,6 @@ Test.test("#Utils.transpose: should transpose matrix", (function (param) {
                     hd: createTestTile({
                           id: "1",
                           merged: false,
-                          new: false,
                           val: 4,
                           pos: {
                             x: 0,
@@ -75,7 +78,6 @@ Test.test("#Utils.transpose: should transpose matrix", (function (param) {
               hd: createTestTile({
                     id: "0",
                     merged: false,
-                    new: false,
                     val: 2,
                     pos: {
                       x: 0,
@@ -86,7 +88,6 @@ Test.test("#Utils.transpose: should transpose matrix", (function (param) {
                 hd: createTestTile({
                       id: "1",
                       merged: false,
-                      new: false,
                       val: 4,
                       pos: {
                         x: 1,
@@ -100,7 +101,6 @@ Test.test("#Utils.transpose: should transpose matrix", (function (param) {
                             hd: createTestTile({
                                   id: "0",
                                   merged: false,
-                                  new: false,
                                   val: 2,
                                   pos: {
                                     x: 0,
@@ -111,7 +111,6 @@ Test.test("#Utils.transpose: should transpose matrix", (function (param) {
                               hd: createTestTile({
                                     id: "1",
                                     merged: false,
-                                    new: false,
                                     val: 4,
                                     pos: {
                                       x: 0,
@@ -124,7 +123,6 @@ Test.test("#Utils.transpose: should transpose matrix", (function (param) {
                     hd: createTestTile({
                           id: "0",
                           merged: false,
-                          new: false,
                           val: 2,
                           pos: {
                             x: 0,
@@ -135,7 +133,6 @@ Test.test("#Utils.transpose: should transpose matrix", (function (param) {
                       hd: createTestTile({
                             id: "1",
                             merged: false,
-                            new: false,
                             val: 4,
                             pos: {
                               x: 0,
@@ -152,7 +149,6 @@ Test.test("#Utils.reverseRow: should map all tiles in a row in reverse order", (
                   hd: createTestTile({
                         id: "0",
                         merged: false,
-                        new: false,
                         val: 2,
                         pos: {
                           x: 0,
@@ -163,7 +159,6 @@ Test.test("#Utils.reverseRow: should map all tiles in a row in reverse order", (
                     hd: createTestTile({
                           id: "1",
                           merged: false,
-                          new: false,
                           val: 4,
                           pos: {
                             x: 1,
@@ -176,7 +171,6 @@ Test.test("#Utils.reverseRow: should map all tiles in a row in reverse order", (
               hd: createTestTile({
                     id: "0",
                     merged: false,
-                    new: false,
                     val: 2,
                     pos: {
                       x: 1,
@@ -187,7 +181,6 @@ Test.test("#Utils.reverseRow: should map all tiles in a row in reverse order", (
                 hd: createTestTile({
                       id: "1",
                       merged: false,
-                      new: false,
                       val: 4,
                       pos: {
                         x: 0,
@@ -201,7 +194,6 @@ Test.test("#Utils.reverseRow: should map all tiles in a row in reverse order", (
                             hd: createTestTile({
                                   id: "0",
                                   merged: false,
-                                  new: false,
                                   val: 2,
                                   pos: {
                                     x: 0,
@@ -212,7 +204,6 @@ Test.test("#Utils.reverseRow: should map all tiles in a row in reverse order", (
                               hd: createTestTile({
                                     id: "1",
                                     merged: false,
-                                    new: false,
                                     val: 4,
                                     pos: {
                                       x: 1,
@@ -225,7 +216,6 @@ Test.test("#Utils.reverseRow: should map all tiles in a row in reverse order", (
                     hd: createTestTile({
                           id: "0",
                           merged: false,
-                          new: false,
                           val: 2,
                           pos: {
                             x: 0,
@@ -236,7 +226,6 @@ Test.test("#Utils.reverseRow: should map all tiles in a row in reverse order", (
                       hd: createTestTile({
                             id: "1",
                             merged: false,
-                            new: false,
                             val: 4,
                             pos: {
                               x: 1,
@@ -253,7 +242,6 @@ Test.test("#Utils.rotateClockwise: should rotate tiles (to handle all moves at o
                   hd: createTestTile({
                         id: "0",
                         merged: false,
-                        new: false,
                         val: 2,
                         pos: {
                           x: 0,
@@ -264,7 +252,6 @@ Test.test("#Utils.rotateClockwise: should rotate tiles (to handle all moves at o
                     hd: createTestTile({
                           id: "1",
                           merged: false,
-                          new: false,
                           val: 4,
                           pos: {
                             x: 1,
@@ -277,7 +264,6 @@ Test.test("#Utils.rotateClockwise: should rotate tiles (to handle all moves at o
               hd: createTestTile({
                     id: "0",
                     merged: false,
-                    new: false,
                     val: 2,
                     pos: {
                       x: 1,
@@ -288,7 +274,6 @@ Test.test("#Utils.rotateClockwise: should rotate tiles (to handle all moves at o
                 hd: createTestTile({
                       id: "1",
                       merged: false,
-                      new: false,
                       val: 4,
                       pos: {
                         x: 0,
@@ -302,7 +287,6 @@ Test.test("#Utils.rotateClockwise: should rotate tiles (to handle all moves at o
                                     hd: createTestTile({
                                           id: "0",
                                           merged: false,
-                                          new: false,
                                           val: 2,
                                           pos: {
                                             x: 0,
@@ -313,7 +297,6 @@ Test.test("#Utils.rotateClockwise: should rotate tiles (to handle all moves at o
                                       hd: createTestTile({
                                             id: "1",
                                             merged: false,
-                                            new: false,
                                             val: 4,
                                             pos: {
                                               x: 1,
@@ -326,7 +309,6 @@ Test.test("#Utils.rotateClockwise: should rotate tiles (to handle all moves at o
                     hd: createTestTile({
                           id: "0",
                           merged: false,
-                          new: false,
                           val: 2,
                           pos: {
                             x: 0,
@@ -337,7 +319,6 @@ Test.test("#Utils.rotateClockwise: should rotate tiles (to handle all moves at o
                       hd: createTestTile({
                             id: "1",
                             merged: false,
-                            new: false,
                             val: 4,
                             pos: {
                               x: 1,
@@ -354,7 +335,6 @@ Test.test("#Utils.rotateAntiClockwise: should rotate tiles anti clockwise (to ha
                   hd: createTestTile({
                         id: "0",
                         merged: false,
-                        new: false,
                         val: 2,
                         pos: {
                           x: 0,
@@ -365,7 +345,6 @@ Test.test("#Utils.rotateAntiClockwise: should rotate tiles anti clockwise (to ha
                     hd: createTestTile({
                           id: "1",
                           merged: false,
-                          new: false,
                           val: 4,
                           pos: {
                             x: 1,
@@ -378,7 +357,6 @@ Test.test("#Utils.rotateAntiClockwise: should rotate tiles anti clockwise (to ha
               hd: createTestTile({
                     id: "0",
                     merged: false,
-                    new: false,
                     val: 2,
                     pos: {
                       x: 0,
@@ -389,7 +367,6 @@ Test.test("#Utils.rotateAntiClockwise: should rotate tiles anti clockwise (to ha
                 hd: createTestTile({
                       id: "1",
                       merged: false,
-                      new: false,
                       val: 4,
                       pos: {
                         x: 1,
@@ -403,7 +380,6 @@ Test.test("#Utils.rotateAntiClockwise: should rotate tiles anti clockwise (to ha
                                     hd: createTestTile({
                                           id: "0",
                                           merged: false,
-                                          new: false,
                                           val: 2,
                                           pos: {
                                             x: 0,
@@ -414,7 +390,6 @@ Test.test("#Utils.rotateAntiClockwise: should rotate tiles anti clockwise (to ha
                                       hd: createTestTile({
                                             id: "1",
                                             merged: false,
-                                            new: false,
                                             val: 4,
                                             pos: {
                                               x: 1,
@@ -427,7 +402,6 @@ Test.test("#Utils.rotateAntiClockwise: should rotate tiles anti clockwise (to ha
                     hd: createTestTile({
                           id: "0",
                           merged: false,
-                          new: false,
                           val: 2,
                           pos: {
                             x: 0,
@@ -438,7 +412,6 @@ Test.test("#Utils.rotateAntiClockwise: should rotate tiles anti clockwise (to ha
                       hd: createTestTile({
                             id: "1",
                             merged: false,
-                            new: false,
                             val: 4,
                             pos: {
                               x: 1,
@@ -455,7 +428,6 @@ Test.test("#Utils.rotateToMoveToRight: should rotate tiles to make each movement
                   hd: createTestTile({
                         id: "0",
                         merged: false,
-                        new: false,
                         val: 2,
                         pos: {
                           x: 0,
@@ -466,7 +438,6 @@ Test.test("#Utils.rotateToMoveToRight: should rotate tiles to make each movement
                     hd: createTestTile({
                           id: "1",
                           merged: false,
-                          new: false,
                           val: 4,
                           pos: {
                             x: 1,
@@ -479,7 +450,6 @@ Test.test("#Utils.rotateToMoveToRight: should rotate tiles to make each movement
               hd: createTestTile({
                     id: "0",
                     merged: false,
-                    new: false,
                     val: 2,
                     pos: {
                       x: 0,
@@ -490,7 +460,6 @@ Test.test("#Utils.rotateToMoveToRight: should rotate tiles to make each movement
                 hd: createTestTile({
                       id: "1",
                       merged: false,
-                      new: false,
                       val: 4,
                       pos: {
                         x: 1,
@@ -504,7 +473,6 @@ Test.test("#Utils.rotateToMoveToRight: should rotate tiles to make each movement
                   hd: createTestTile({
                         id: "0",
                         merged: false,
-                        new: false,
                         val: 2,
                         pos: {
                           x: 0,
@@ -515,7 +483,6 @@ Test.test("#Utils.rotateToMoveToRight: should rotate tiles to make each movement
                     hd: createTestTile({
                           id: "1",
                           merged: false,
-                          new: false,
                           val: 4,
                           pos: {
                             x: 1,
@@ -528,7 +495,6 @@ Test.test("#Utils.rotateToMoveToRight: should rotate tiles to make each movement
               hd: createTestTile({
                     id: "0",
                     merged: false,
-                    new: false,
                     val: 2,
                     pos: {
                       x: 1,
@@ -539,7 +505,6 @@ Test.test("#Utils.rotateToMoveToRight: should rotate tiles to make each movement
                 hd: createTestTile({
                       id: "1",
                       merged: false,
-                      new: false,
                       val: 4,
                       pos: {
                         x: 0,
@@ -553,7 +518,6 @@ Test.test("#Utils.rotateToMoveToRight: should rotate tiles to make each movement
                   hd: createTestTile({
                         id: "0",
                         merged: false,
-                        new: false,
                         val: 2,
                         pos: {
                           x: 0,
@@ -564,7 +528,6 @@ Test.test("#Utils.rotateToMoveToRight: should rotate tiles to make each movement
                     hd: createTestTile({
                           id: "1",
                           merged: false,
-                          new: false,
                           val: 4,
                           pos: {
                             x: 1,
@@ -577,7 +540,6 @@ Test.test("#Utils.rotateToMoveToRight: should rotate tiles to make each movement
               hd: createTestTile({
                     id: "0",
                     merged: false,
-                    new: false,
                     val: 2,
                     pos: {
                       x: 0,
@@ -588,7 +550,6 @@ Test.test("#Utils.rotateToMoveToRight: should rotate tiles to make each movement
                 hd: createTestTile({
                       id: "1",
                       merged: false,
-                      new: false,
                       val: 4,
                       pos: {
                         x: 1,
@@ -602,7 +563,6 @@ Test.test("#Utils.rotateToMoveToRight: should rotate tiles to make each movement
                         hd: createTestTile({
                               id: "0",
                               merged: false,
-                              new: false,
                               val: 2,
                               pos: {
                                 x: 0,
@@ -613,7 +573,6 @@ Test.test("#Utils.rotateToMoveToRight: should rotate tiles to make each movement
                           hd: createTestTile({
                                 id: "1",
                                 merged: false,
-                                new: false,
                                 val: 4,
                                 pos: {
                                   x: 1,
@@ -626,7 +585,6 @@ Test.test("#Utils.rotateToMoveToRight: should rotate tiles to make each movement
                     hd: createTestTile({
                           id: "0",
                           merged: false,
-                          new: false,
                           val: 2,
                           pos: {
                             x: 1,
@@ -637,7 +595,6 @@ Test.test("#Utils.rotateToMoveToRight: should rotate tiles to make each movement
                       hd: createTestTile({
                             id: "1",
                             merged: false,
-                            new: false,
                             val: 4,
                             pos: {
                               x: 0,
@@ -654,7 +611,6 @@ Test.test("#Utils.rotateBack: should rotate tiles back after rotatement to move 
                   hd: createTestTile({
                         id: "0",
                         merged: false,
-                        new: false,
                         val: 2,
                         pos: {
                           x: 0,
@@ -665,7 +621,6 @@ Test.test("#Utils.rotateBack: should rotate tiles back after rotatement to move 
                     hd: createTestTile({
                           id: "1",
                           merged: false,
-                          new: false,
                           val: 4,
                           pos: {
                             x: 1,
@@ -678,7 +633,6 @@ Test.test("#Utils.rotateBack: should rotate tiles back after rotatement to move 
               hd: createTestTile({
                     id: "0",
                     merged: false,
-                    new: false,
                     val: 2,
                     pos: {
                       x: 0,
@@ -689,7 +643,6 @@ Test.test("#Utils.rotateBack: should rotate tiles back after rotatement to move 
                 hd: createTestTile({
                       id: "1",
                       merged: false,
-                      new: false,
                       val: 4,
                       pos: {
                         x: 1,
@@ -703,7 +656,6 @@ Test.test("#Utils.rotateBack: should rotate tiles back after rotatement to move 
                   hd: createTestTile({
                         id: "0",
                         merged: false,
-                        new: false,
                         val: 2,
                         pos: {
                           x: 0,
@@ -714,7 +666,6 @@ Test.test("#Utils.rotateBack: should rotate tiles back after rotatement to move 
                     hd: createTestTile({
                           id: "1",
                           merged: false,
-                          new: false,
                           val: 4,
                           pos: {
                             x: 1,
@@ -727,7 +678,6 @@ Test.test("#Utils.rotateBack: should rotate tiles back after rotatement to move 
               hd: createTestTile({
                     id: "0",
                     merged: false,
-                    new: false,
                     val: 2,
                     pos: {
                       x: 0,
@@ -738,7 +688,6 @@ Test.test("#Utils.rotateBack: should rotate tiles back after rotatement to move 
                 hd: createTestTile({
                       id: "1",
                       merged: false,
-                      new: false,
                       val: 4,
                       pos: {
                         x: 1,
@@ -752,7 +701,6 @@ Test.test("#Utils.rotateBack: should rotate tiles back after rotatement to move 
                   hd: createTestTile({
                         id: "0",
                         merged: false,
-                        new: false,
                         val: 2,
                         pos: {
                           x: 0,
@@ -763,7 +711,6 @@ Test.test("#Utils.rotateBack: should rotate tiles back after rotatement to move 
                     hd: createTestTile({
                           id: "1",
                           merged: false,
-                          new: false,
                           val: 4,
                           pos: {
                             x: 1,
@@ -776,7 +723,6 @@ Test.test("#Utils.rotateBack: should rotate tiles back after rotatement to move 
               hd: createTestTile({
                     id: "0",
                     merged: false,
-                    new: false,
                     val: 2,
                     pos: {
                       x: 1,
@@ -787,7 +733,6 @@ Test.test("#Utils.rotateBack: should rotate tiles back after rotatement to move 
                 hd: createTestTile({
                       id: "1",
                       merged: false,
-                      new: false,
                       val: 4,
                       pos: {
                         x: 0,
@@ -801,7 +746,6 @@ Test.test("#Utils.rotateBack: should rotate tiles back after rotatement to move 
                         hd: createTestTile({
                               id: "0",
                               merged: false,
-                              new: false,
                               val: 2,
                               pos: {
                                 x: 0,
@@ -812,7 +756,6 @@ Test.test("#Utils.rotateBack: should rotate tiles back after rotatement to move 
                           hd: createTestTile({
                                 id: "1",
                                 merged: false,
-                                new: false,
                                 val: 4,
                                 pos: {
                                   x: 1,
@@ -825,7 +768,6 @@ Test.test("#Utils.rotateBack: should rotate tiles back after rotatement to move 
                     hd: createTestTile({
                           id: "0",
                           merged: false,
-                          new: false,
                           val: 2,
                           pos: {
                             x: 1,
@@ -836,7 +778,6 @@ Test.test("#Utils.rotateBack: should rotate tiles back after rotatement to move 
                       hd: createTestTile({
                             id: "1",
                             merged: false,
-                            new: false,
                             val: 4,
                             pos: {
                               x: 0,
@@ -863,7 +804,6 @@ Test.test("#Utils.isWin: should check if user won", (function (param) {
                   hd: createTestTile({
                         id: "0",
                         merged: false,
-                        new: false,
                         val: 2048,
                         pos: {
                           x: 0,
@@ -878,7 +818,6 @@ Test.test("#Utils.isWin: should check if user won", (function (param) {
                         hd: createTestTile({
                               id: "0",
                               merged: false,
-                              new: false,
                               val: 1024,
                               pos: {
                                 x: 0,
@@ -899,7 +838,6 @@ Test.test("#Utils.isLoss: should check if user loss", (function (param) {
                   hd: createTestTile({
                         id: "0",
                         merged: false,
-                        new: false,
                         val: 2,
                         pos: {
                           x: 0,
@@ -910,7 +848,6 @@ Test.test("#Utils.isLoss: should check if user loss", (function (param) {
                     hd: createTestTile({
                           id: "1",
                           merged: false,
-                          new: false,
                           val: 1024,
                           pos: {
                             x: 1,
@@ -921,7 +858,6 @@ Test.test("#Utils.isLoss: should check if user loss", (function (param) {
                       hd: createTestTile({
                             id: "2",
                             merged: false,
-                            new: false,
                             val: 1024,
                             pos: {
                               x: 0,
@@ -932,7 +868,6 @@ Test.test("#Utils.isLoss: should check if user loss", (function (param) {
                         hd: createTestTile({
                               id: "3",
                               merged: false,
-                              new: false,
                               val: 2,
                               pos: {
                                 x: 1,
@@ -950,7 +885,6 @@ Test.test("#Utils.isLoss: should check if user loss", (function (param) {
                   hd: createTestTile({
                         id: "0",
                         merged: false,
-                        new: false,
                         val: 2,
                         pos: {
                           x: 0,
@@ -961,7 +895,6 @@ Test.test("#Utils.isLoss: should check if user loss", (function (param) {
                     hd: createTestTile({
                           id: "1",
                           merged: false,
-                          new: false,
                           val: 2,
                           pos: {
                             x: 1,
@@ -972,7 +905,6 @@ Test.test("#Utils.isLoss: should check if user loss", (function (param) {
                       hd: createTestTile({
                             id: "2",
                             merged: false,
-                            new: false,
                             val: 1024,
                             pos: {
                               x: 0,
@@ -983,7 +915,6 @@ Test.test("#Utils.isLoss: should check if user loss", (function (param) {
                         hd: createTestTile({
                               id: "3",
                               merged: false,
-                              new: false,
                               val: 2,
                               pos: {
                                 x: 1,
@@ -1001,7 +932,6 @@ Test.test("#Utils.isLoss: should check if user loss", (function (param) {
                         hd: createTestTile({
                               id: "0",
                               merged: false,
-                              new: false,
                               val: 1024,
                               pos: {
                                 x: 0,
@@ -1019,7 +949,6 @@ Test.test("#Utils.isMoveToRightPossible: should check if it's possible to move t
                   hd: createTestTile({
                         id: "0",
                         merged: false,
-                        new: false,
                         val: 2,
                         pos: {
                           x: 0,
@@ -1030,7 +959,6 @@ Test.test("#Utils.isMoveToRightPossible: should check if it's possible to move t
                     hd: createTestTile({
                           id: "1",
                           merged: false,
-                          new: false,
                           val: 4,
                           pos: {
                             x: 1,
@@ -1046,7 +974,6 @@ Test.test("#Utils.isMoveToRightPossible: should check if it's possible to move t
                   hd: createTestTile({
                         id: "0",
                         merged: false,
-                        new: false,
                         val: 2,
                         pos: {
                           x: 0,
@@ -1057,7 +984,6 @@ Test.test("#Utils.isMoveToRightPossible: should check if it's possible to move t
                     hd: createTestTile({
                           id: "1",
                           merged: false,
-                          new: false,
                           val: 2,
                           pos: {
                             x: 0,
@@ -1073,7 +999,6 @@ Test.test("#Utils.isMoveToRightPossible: should check if it's possible to move t
                   hd: createTestTile({
                         id: "0",
                         merged: false,
-                        new: false,
                         val: 2,
                         pos: {
                           x: 0,
@@ -1084,7 +1009,6 @@ Test.test("#Utils.isMoveToRightPossible: should check if it's possible to move t
                     hd: createTestTile({
                           id: "1",
                           merged: false,
-                          new: false,
                           val: 2,
                           pos: {
                             x: 1,
@@ -1100,7 +1024,6 @@ Test.test("#Utils.isMoveToRightPossible: should check if it's possible to move t
                   hd: createTestTile({
                         id: "0",
                         merged: false,
-                        new: false,
                         val: 2,
                         pos: {
                           x: 0,
@@ -1111,7 +1034,6 @@ Test.test("#Utils.isMoveToRightPossible: should check if it's possible to move t
                     hd: createTestTile({
                           id: "1",
                           merged: false,
-                          new: false,
                           val: 4,
                           pos: {
                             x: 1,
@@ -1122,7 +1044,6 @@ Test.test("#Utils.isMoveToRightPossible: should check if it's possible to move t
                       hd: createTestTile({
                             id: "2",
                             merged: false,
-                            new: false,
                             val: 2,
                             pos: {
                               x: 2,
@@ -1133,7 +1054,6 @@ Test.test("#Utils.isMoveToRightPossible: should check if it's possible to move t
                         hd: createTestTile({
                               id: "3",
                               merged: false,
-                              new: false,
                               val: 2,
                               pos: {
                                 x: 1,
@@ -1144,7 +1064,6 @@ Test.test("#Utils.isMoveToRightPossible: should check if it's possible to move t
                           hd: createTestTile({
                                 id: "4",
                                 merged: false,
-                                new: false,
                                 val: 4,
                                 pos: {
                                   x: 2,
@@ -1163,7 +1082,6 @@ Test.test("#Utils.isMoveToRightPossible: should check if it's possible to move t
                         hd: createTestTile({
                               id: "0",
                               merged: false,
-                              new: false,
                               val: 2,
                               pos: {
                                 x: 0,
@@ -1174,7 +1092,6 @@ Test.test("#Utils.isMoveToRightPossible: should check if it's possible to move t
                           hd: createTestTile({
                                 id: "1",
                                 merged: false,
-                                new: false,
                                 val: 4,
                                 pos: {
                                   x: 1,
@@ -1185,7 +1102,6 @@ Test.test("#Utils.isMoveToRightPossible: should check if it's possible to move t
                             hd: createTestTile({
                                   id: "2",
                                   merged: false,
-                                  new: false,
                                   val: 2,
                                   pos: {
                                     x: 2,
@@ -1196,7 +1112,6 @@ Test.test("#Utils.isMoveToRightPossible: should check if it's possible to move t
                               hd: createTestTile({
                                     id: "3",
                                     merged: false,
-                                    new: false,
                                     val: 2,
                                     pos: {
                                       x: 1,
@@ -1207,7 +1122,6 @@ Test.test("#Utils.isMoveToRightPossible: should check if it's possible to move t
                                 hd: createTestTile({
                                       id: "4",
                                       merged: false,
-                                      new: false,
                                       val: 2,
                                       pos: {
                                         x: 2,
@@ -1227,7 +1141,6 @@ Test.test("#Utils.sortTilesByColumn: should sort all tiles in one row by column 
                         hd: createTestTile({
                               id: "0",
                               merged: false,
-                              new: false,
                               val: 2,
                               pos: {
                                 x: 2,
@@ -1238,7 +1151,6 @@ Test.test("#Utils.sortTilesByColumn: should sort all tiles in one row by column 
                           hd: createTestTile({
                                 id: "1",
                                 merged: false,
-                                new: false,
                                 val: 16,
                                 pos: {
                                   x: 0,
@@ -1249,7 +1161,6 @@ Test.test("#Utils.sortTilesByColumn: should sort all tiles in one row by column 
                             hd: createTestTile({
                                   id: "2",
                                   merged: false,
-                                  new: false,
                                   val: 4,
                                   pos: {
                                     x: 1,
@@ -1260,7 +1171,6 @@ Test.test("#Utils.sortTilesByColumn: should sort all tiles in one row by column 
                               hd: createTestTile({
                                     id: "3",
                                     merged: false,
-                                    new: false,
                                     val: 32,
                                     pos: {
                                       x: 1,
@@ -1271,7 +1181,6 @@ Test.test("#Utils.sortTilesByColumn: should sort all tiles in one row by column 
                                 hd: createTestTile({
                                       id: "4",
                                       merged: false,
-                                      new: false,
                                       val: 8,
                                       pos: {
                                         x: 0,
@@ -1287,7 +1196,6 @@ Test.test("#Utils.sortTilesByColumn: should sort all tiles in one row by column 
                     hd: createTestTile({
                           id: "4",
                           merged: false,
-                          new: false,
                           val: 8,
                           pos: {
                             x: 0,
@@ -1298,7 +1206,6 @@ Test.test("#Utils.sortTilesByColumn: should sort all tiles in one row by column 
                       hd: createTestTile({
                             id: "2",
                             merged: false,
-                            new: false,
                             val: 4,
                             pos: {
                               x: 1,
@@ -1309,7 +1216,6 @@ Test.test("#Utils.sortTilesByColumn: should sort all tiles in one row by column 
                         hd: createTestTile({
                               id: "0",
                               merged: false,
-                              new: false,
                               val: 2,
                               pos: {
                                 x: 2,
@@ -1320,7 +1226,6 @@ Test.test("#Utils.sortTilesByColumn: should sort all tiles in one row by column 
                           hd: createTestTile({
                                 id: "3",
                                 merged: false,
-                                new: false,
                                 val: 32,
                                 pos: {
                                   x: 1,
@@ -1331,7 +1236,6 @@ Test.test("#Utils.sortTilesByColumn: should sort all tiles in one row by column 
                             hd: createTestTile({
                                   id: "1",
                                   merged: false,
-                                  new: false,
                                   val: 16,
                                   pos: {
                                     x: 0,
@@ -1365,7 +1269,6 @@ Test.test("#Utils.moveRight: should move all tiles to right where it's possible"
                   hd: createTestTile({
                         id: "0",
                         merged: false,
-                        new: false,
                         val: 2,
                         pos: {
                           x: 0,
@@ -1376,7 +1279,6 @@ Test.test("#Utils.moveRight: should move all tiles to right where it's possible"
                     hd: createTestTile({
                           id: "1",
                           merged: false,
-                          new: false,
                           val: 4,
                           pos: {
                             x: 1,
@@ -1389,7 +1291,6 @@ Test.test("#Utils.moveRight: should move all tiles to right where it's possible"
               hd: createTestTile({
                     id: "0",
                     merged: false,
-                    new: false,
                     val: 2,
                     pos: {
                       x: 0,
@@ -1400,7 +1301,6 @@ Test.test("#Utils.moveRight: should move all tiles to right where it's possible"
                 hd: createTestTile({
                       id: "1",
                       merged: false,
-                      new: false,
                       val: 4,
                       pos: {
                         x: 1,
@@ -1414,7 +1314,6 @@ Test.test("#Utils.moveRight: should move all tiles to right where it's possible"
                   hd: createTestTile({
                         id: "0",
                         merged: false,
-                        new: false,
                         val: 2,
                         pos: {
                           x: 0,
@@ -1425,7 +1324,6 @@ Test.test("#Utils.moveRight: should move all tiles to right where it's possible"
                     hd: createTestTile({
                           id: "1",
                           merged: false,
-                          new: false,
                           val: 4,
                           pos: {
                             x: 0,
@@ -1438,7 +1336,6 @@ Test.test("#Utils.moveRight: should move all tiles to right where it's possible"
               hd: createTestTile({
                     id: "0",
                     merged: false,
-                    new: false,
                     val: 2,
                     pos: {
                       x: 1,
@@ -1449,7 +1346,6 @@ Test.test("#Utils.moveRight: should move all tiles to right where it's possible"
                 hd: createTestTile({
                       id: "1",
                       merged: false,
-                      new: false,
                       val: 4,
                       pos: {
                         x: 1,
@@ -1463,7 +1359,6 @@ Test.test("#Utils.moveRight: should move all tiles to right where it's possible"
                   hd: createTestTile({
                         id: "0",
                         merged: false,
-                        new: false,
                         val: 2,
                         pos: {
                           x: 1,
@@ -1474,7 +1369,6 @@ Test.test("#Utils.moveRight: should move all tiles to right where it's possible"
                     hd: createTestTile({
                           id: "1",
                           merged: false,
-                          new: false,
                           val: 4,
                           pos: {
                             x: 0,
@@ -1485,7 +1379,6 @@ Test.test("#Utils.moveRight: should move all tiles to right where it's possible"
                       hd: createTestTile({
                             id: "2",
                             merged: false,
-                            new: false,
                             val: 8,
                             pos: {
                               x: 0,
@@ -1496,7 +1389,6 @@ Test.test("#Utils.moveRight: should move all tiles to right where it's possible"
                         hd: createTestTile({
                               id: "3",
                               merged: false,
-                              new: false,
                               val: 16,
                               pos: {
                                 x: 2,
@@ -1507,7 +1399,6 @@ Test.test("#Utils.moveRight: should move all tiles to right where it's possible"
                           hd: createTestTile({
                                 id: "4",
                                 merged: false,
-                                new: false,
                                 val: 32,
                                 pos: {
                                   x: 2,
@@ -1523,7 +1414,6 @@ Test.test("#Utils.moveRight: should move all tiles to right where it's possible"
               hd: createTestTile({
                     id: "0",
                     merged: false,
-                    new: false,
                     val: 2,
                     pos: {
                       x: 2,
@@ -1534,7 +1424,6 @@ Test.test("#Utils.moveRight: should move all tiles to right where it's possible"
                 hd: createTestTile({
                       id: "1",
                       merged: false,
-                      new: false,
                       val: 4,
                       pos: {
                         x: 1,
@@ -1545,7 +1434,6 @@ Test.test("#Utils.moveRight: should move all tiles to right where it's possible"
                   hd: createTestTile({
                         id: "2",
                         merged: false,
-                        new: false,
                         val: 8,
                         pos: {
                           x: 1,
@@ -1556,7 +1444,6 @@ Test.test("#Utils.moveRight: should move all tiles to right where it's possible"
                     hd: createTestTile({
                           id: "3",
                           merged: false,
-                          new: false,
                           val: 16,
                           pos: {
                             x: 2,
@@ -1567,7 +1454,6 @@ Test.test("#Utils.moveRight: should move all tiles to right where it's possible"
                       hd: createTestTile({
                             id: "4",
                             merged: false,
-                            new: false,
                             val: 32,
                             pos: {
                               x: 2,
@@ -1584,7 +1470,6 @@ Test.test("#Utils.moveRight: should move all tiles to right where it's possible"
                   hd: createTestTile({
                         id: "0",
                         merged: false,
-                        new: false,
                         val: 2,
                         pos: {
                           x: 0,
@@ -1595,7 +1480,6 @@ Test.test("#Utils.moveRight: should move all tiles to right where it's possible"
                     hd: createTestTile({
                           id: "1",
                           merged: false,
-                          new: false,
                           val: 2,
                           pos: {
                             x: 1,
@@ -1608,7 +1492,6 @@ Test.test("#Utils.moveRight: should move all tiles to right where it's possible"
               hd: createTestTile({
                     id: "0",
                     merged: true,
-                    new: true,
                     val: 4,
                     pos: {
                       x: 1,
@@ -1621,7 +1504,6 @@ Test.test("#Utils.moveRight: should move all tiles to right where it's possible"
                   hd: createTestTile({
                         id: "0",
                         merged: false,
-                        new: false,
                         val: 2,
                         pos: {
                           x: 1,
@@ -1632,7 +1514,6 @@ Test.test("#Utils.moveRight: should move all tiles to right where it's possible"
                     hd: createTestTile({
                           id: "1",
                           merged: false,
-                          new: false,
                           val: 4,
                           pos: {
                             x: 0,
@@ -1643,7 +1524,6 @@ Test.test("#Utils.moveRight: should move all tiles to right where it's possible"
                       hd: createTestTile({
                             id: "2",
                             merged: false,
-                            new: false,
                             val: 8,
                             pos: {
                               x: 0,
@@ -1654,7 +1534,6 @@ Test.test("#Utils.moveRight: should move all tiles to right where it's possible"
                         hd: createTestTile({
                               id: "3",
                               merged: false,
-                              new: false,
                               val: 4,
                               pos: {
                                 x: 2,
@@ -1665,7 +1544,6 @@ Test.test("#Utils.moveRight: should move all tiles to right where it's possible"
                           hd: createTestTile({
                                 id: "4",
                                 merged: false,
-                                new: false,
                                 val: 32,
                                 pos: {
                                   x: 2,
@@ -1681,7 +1559,6 @@ Test.test("#Utils.moveRight: should move all tiles to right where it's possible"
               hd: createTestTile({
                     id: "0",
                     merged: false,
-                    new: false,
                     val: 2,
                     pos: {
                       x: 2,
@@ -1692,7 +1569,6 @@ Test.test("#Utils.moveRight: should move all tiles to right where it's possible"
                 hd: createTestTile({
                       id: "1",
                       merged: true,
-                      new: true,
                       val: 8,
                       pos: {
                         x: 2,
@@ -1703,7 +1579,6 @@ Test.test("#Utils.moveRight: should move all tiles to right where it's possible"
                   hd: createTestTile({
                         id: "2",
                         merged: false,
-                        new: false,
                         val: 8,
                         pos: {
                           x: 1,
@@ -1714,7 +1589,6 @@ Test.test("#Utils.moveRight: should move all tiles to right where it's possible"
                     hd: createTestTile({
                           id: "4",
                           merged: false,
-                          new: false,
                           val: 32,
                           pos: {
                             x: 2,
@@ -1730,7 +1604,6 @@ Test.test("#Utils.moveRight: should move all tiles to right where it's possible"
                         hd: createTestTile({
                               id: "0",
                               merged: false,
-                              new: false,
                               val: 2,
                               pos: {
                                 x: 1,
@@ -1741,7 +1614,6 @@ Test.test("#Utils.moveRight: should move all tiles to right where it's possible"
                           hd: createTestTile({
                                 id: "1",
                                 merged: false,
-                                new: false,
                                 val: 4,
                                 pos: {
                                   x: 0,
@@ -1752,7 +1624,6 @@ Test.test("#Utils.moveRight: should move all tiles to right where it's possible"
                             hd: createTestTile({
                                   id: "2",
                                   merged: false,
-                                  new: false,
                                   val: 8,
                                   pos: {
                                     x: 0,
@@ -1763,7 +1634,6 @@ Test.test("#Utils.moveRight: should move all tiles to right where it's possible"
                               hd: createTestTile({
                                     id: "3",
                                     merged: false,
-                                    new: false,
                                     val: 4,
                                     pos: {
                                       x: 2,
@@ -1774,7 +1644,6 @@ Test.test("#Utils.moveRight: should move all tiles to right where it's possible"
                                 hd: createTestTile({
                                       id: "4",
                                       merged: false,
-                                      new: false,
                                       val: 32,
                                       pos: {
                                         x: 2,
@@ -1785,7 +1654,6 @@ Test.test("#Utils.moveRight: should move all tiles to right where it's possible"
                                   hd: createTestTile({
                                         id: "5",
                                         merged: false,
-                                        new: false,
                                         val: 4,
                                         pos: {
                                           x: 0,
@@ -1796,7 +1664,6 @@ Test.test("#Utils.moveRight: should move all tiles to right where it's possible"
                                     hd: createTestTile({
                                           id: "6",
                                           merged: false,
-                                          new: false,
                                           val: 4,
                                           pos: {
                                             x: 1,
@@ -1807,7 +1674,6 @@ Test.test("#Utils.moveRight: should move all tiles to right where it's possible"
                                       hd: createTestTile({
                                             id: "7",
                                             merged: false,
-                                            new: false,
                                             val: 4,
                                             pos: {
                                               x: 2,
@@ -1818,7 +1684,6 @@ Test.test("#Utils.moveRight: should move all tiles to right where it's possible"
                                         hd: createTestTile({
                                               id: "8",
                                               merged: false,
-                                              new: false,
                                               val: 4,
                                               pos: {
                                                 x: 3,
@@ -1838,7 +1703,6 @@ Test.test("#Utils.moveRight: should move all tiles to right where it's possible"
                     hd: createTestTile({
                           id: "0",
                           merged: false,
-                          new: false,
                           val: 2,
                           pos: {
                             x: 3,
@@ -1849,7 +1713,6 @@ Test.test("#Utils.moveRight: should move all tiles to right where it's possible"
                       hd: createTestTile({
                             id: "1",
                             merged: true,
-                            new: true,
                             val: 8,
                             pos: {
                               x: 3,
@@ -1860,7 +1723,6 @@ Test.test("#Utils.moveRight: should move all tiles to right where it's possible"
                         hd: createTestTile({
                               id: "2",
                               merged: false,
-                              new: false,
                               val: 8,
                               pos: {
                                 x: 2,
@@ -1871,7 +1733,6 @@ Test.test("#Utils.moveRight: should move all tiles to right where it's possible"
                           hd: createTestTile({
                                 id: "4",
                                 merged: false,
-                                new: false,
                                 val: 32,
                                 pos: {
                                   x: 3,
@@ -1882,7 +1743,6 @@ Test.test("#Utils.moveRight: should move all tiles to right where it's possible"
                             hd: createTestTile({
                                   id: "5",
                                   merged: true,
-                                  new: true,
                                   val: 8,
                                   pos: {
                                     x: 2,
@@ -1893,7 +1753,6 @@ Test.test("#Utils.moveRight: should move all tiles to right where it's possible"
                               hd: createTestTile({
                                     id: "7",
                                     merged: true,
-                                    new: true,
                                     val: 8,
                                     pos: {
                                       x: 3,
