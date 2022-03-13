@@ -2,6 +2,8 @@
 
 @val external document: 'a = "document"
 
+open Tile
+
 let indexes = Belt.Array.makeBy(Utils.gridSize, idx => idx)
 
 let getClassName = Utils.getCls(styles)
@@ -20,13 +22,15 @@ let viewRow = (rowId) => {
   </div>
 }
 
-let viewTile = ({ id, val, pos, new, merged }: Utils.tile) => {
-  let valName = val > Utils.winningValue ? "tileSuper" : j`tile-$val`
-  let { x, y } = pos
+let viewTile = (tile: GameTile.tile) => {
+  let val = GameTile.Getters.val(tile)
+  let valName = val > Constants.winningValue ? "tileSuper" : j`tile-$val`
+  let x = GameTile.Getters.x(tile)
+  let y = GameTile.Getters.y(tile)
   let posName = `tilePosition-${Js.Int.toString(x + 1)}-${Js.Int.toString(y + 1)}`
-  let newName = new ? "tileNew" : ""
-  let mergedName = merged ? "tileMerged" : ""
-  <div key={id} className={`${getClassName("tile")} ${getClassName(valName)} ${getClassName(posName)} ${getClassName(newName)} ${getClassName(mergedName)}`}>
+  let newName = GameTile.Getters.new(tile) ? "tileNew" : ""
+  let mergedName = GameTile.Getters.merged(tile) ? "tileMerged" : ""
+  <div key={GameTile.Getters.id(tile)} className={`${getClassName("tile")} ${getClassName(valName)} ${getClassName(posName)} ${getClassName(newName)} ${getClassName(mergedName)}`}>
     <div className={getClassName("tileInner")}>
       {React.string(Js.Int.toString(val))}
     </div>

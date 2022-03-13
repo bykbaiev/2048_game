@@ -1,21 +1,4 @@
-type direction =
-  | Up
-  | Right
-  | Down
-  | Left
-
-type position = {
-  x: int,
-  y: int
-}
-
-type tile = {
-  id:     string,
-  val:    int,
-  pos:    position,
-  new:    bool,
-  merged: bool,
-}
+open Tile
 
 let gridSize = 4
 
@@ -27,76 +10,48 @@ let getCls = (styles: Js.Dict.t<'a>, name: string): string =>
   -> Belt.Option.flatMap(defaults => Js.Dict.get(defaults, name))
   -> Belt.Option.getWithDefault("")
 
-let createTile = (~id, ~val, ~x, ~y): tile => { id: id, val: val, pos: { x: x, y: y }, new: true, merged: false, }
-
-let getPair = (max: int, idx: int): option<(int, int)> => {
-  if idx >= max * max {
-    None
-  } else {
-    let y = mod(idx, max)
-    Some(idx / max, y)
-  }
-}
-
-let positionFilterPred = (tiles: list<tile>, position: (int, int)) => switch position {
-| (-1, -1) => false
-| (x, y)   => !Belt.List.some(tiles, ({ pos }) => pos.x === x && pos.y === y)
-}
-
-// SIDE EFFECT - CREATION OF NEW RANDOM TILE
-let createNewTile = (tiles: list<tile>): tile => {
-  let allPositions = Belt.List.makeBy(gridSize * gridSize, getPair(gridSize))
-  let availablePositions = allPositions
-    -> Belt.List.map(pos => Belt.Option.getWithDefault(pos, (-1, -1)))
-    -> Belt.List.keep(positionFilterPred(tiles))
-  let idx = Js.Math.random_int(0, Belt.List.size(availablePositions))
-  let (x, y) = availablePositions -> Belt.List.get(idx) -> Belt.Option.getWithDefault((0, 0))
-  let randTileIndicator = Js.Math.random_int(0, 4)
-  let id = `tile-${Belt.Float.toString(Js.Math.random())}`
-  createTile(
-    ~id = id,
-    ~val = randTileIndicator === 3 ? 4 : 2,
-    ~x = x,
-    ~y = y
-  )
-}
-
-let keyCodeToDirection = (code: int): option<direction> => {
+let keyCodeToDirection = (code: int): option<Constants.direction> => {
   switch code {
-  | 37 => Some(Left)
-  | 38 => Some(Up)
-  | 39 => Some(Right)
-  | 40 => Some(Down)
+  | 37 => Some(Constants.Left)
+  | 38 => Some(Constants.Up)
+  | 39 => Some(Constants.Right)
+  | 40 => Some(Constants.Down)
   | _  => None
   }
 }
 
-let isWinningValue = (tile: tile) => tile.val === winningValue
-
-let transpose = (tiles: list<tile>): list<tile> => {
-  Belt.List.map(tiles, tile => { ...tile, pos: { x: tile.pos.y, y: tile.pos.x } })
+let transpose = (tiles: list<GameTile.tile>): list<GameTile.tile> => {
+  Belt.List.map(
+    tiles,
+    tile => tile
+            -> GameTile.Setters.x(GameTile.Getters.y(tile))
+            -> GameTile.Setters.y(GameTile.Getters.x(tile))
+  )
 }
 
-let reverseRow = (tiles: list<tile>, size: int): list<tile> => {
-  Belt.List.map(tiles, tile => { ...tile, pos: { x: size - 1 - tile.pos.x, y: tile.pos.y }})
+let reverseRow = (tiles: list<GameTile.tile>, size: int): list<GameTile.tile> => {
+  Belt.List.map(tiles, tile => GameTile.Setters.x(tile, size - 1 - GameTile.Getters.x(tile)))
 }
 
-let rotateClockwise = (tiles: list<tile>, size: int): list<tile> => {
+let rotateClockwise = (tiles: list<GameTile.tile>, size: int): list<GameTile.tile> => {
   tiles -> transpose -> reverseRow(size)
 }
 
-let rotateAntiClockwise = (tiles: list<tile>, size: int): list<tile> => {
+let rotateAntiClockwise = (tiles: list<GameTile.tile>, size: int): list<GameTile.tile> => {
   tiles -> reverseRow(size) -> transpose
 }
 
-let isMoveToRightPossible = (tiles: list<tile>, size: int): bool => {
+let isMoveToRightPossible = (tiles: list<GameTile.tile>, size: int): bool => {
   Belt.List.some(tiles, tile => {
-    let neighbour = Belt.List.getBy(tiles, t => t.pos.y === tile.pos.y && t.pos.x === tile.pos.x + 1)
-    tile.pos.x < size - 1 && Belt.Option.mapWithDefault(neighbour, true, t => t.val === tile.val)
+    let neighbour = Belt.List.getBy(
+      tiles,
+      t => GameTile.Getters.y(t) === GameTile.Getters.y(tile) && GameTile.Getters.x(t) === GameTile.Getters.x(tile) + 1
+    )
+    GameTile.Getters.x(tile) < size - 1 && Belt.Option.mapWithDefault(neighbour, true, t => GameTile.Getters.val(t) === GameTile.Getters.val(tile))
   })
 }
 
-let rotateToMoveToRight = (size: int, dir: direction, tiles: list<tile>) => {
+let rotateToMoveToRight = (size: int, dir: Constants.direction, tiles: list<GameTile.tile>) => {
   switch dir {
   | Up    => rotateClockwise(tiles, size)
   | Right => tiles
@@ -105,7 +60,7 @@ let rotateToMoveToRight = (size: int, dir: direction, tiles: list<tile>) => {
   }
 }
 
-let rotateBack = (size: int, dir: direction, tiles: list<tile>) => {
+let rotateBack = (size: int, dir: Constants.direction, tiles: list<GameTile.tile>) => {
   switch dir {
   | Up    => rotateAntiClockwise(tiles, size)
   | Right => tiles
@@ -114,55 +69,59 @@ let rotateBack = (size: int, dir: direction, tiles: list<tile>) => {
   }
 }
 
-let isMovePossible = (tiles: list<tile>, size: int, dir: direction) => {
+let isMovePossible = (tiles: list<GameTile.tile>, size: int, dir: Constants.direction) => {
   isMoveToRightPossible(rotateToMoveToRight(size, dir, tiles), size)
 }
 
-let isWin = (tiles: list<tile>): bool => {
-  Belt.List.some(tiles, isWinningValue)
+let isWin = (tiles: list<GameTile.tile>): bool => {
+  Belt.List.some(tiles, GameTile.isWinningValue)
 }
 
-let isLoss = (size: int, tiles: list<tile>): bool => {
+let isLoss = (size: int, tiles: list<GameTile.tile>): bool => {
   let isPossibleToMoveSomewhere = isMovePossible(tiles, size)
 
   size * size === Belt.List.size(tiles)  &&
-  !Belt.List.some(tiles, isWinningValue) &&
+  !Belt.List.some(tiles, GameTile.isWinningValue) &&
   !isPossibleToMoveSomewhere(Up)         &&
   !isPossibleToMoveSomewhere(Right)      &&
   !isPossibleToMoveSomewhere(Down)       &&
   !isPossibleToMoveSomewhere(Left)
 }
 
-let sortTilesByColumn = (tiles: list<tile>): list<tile> => {
-  Belt.List.sort(tiles, (a, b) => a.pos.y === b.pos.y ? a.pos.x - b.pos.x : a.pos.y - b.pos.y)
+let sortTilesByColumn = (tiles: list<GameTile.tile>): list<GameTile.tile> => {
+  Belt.List.sort(
+    tiles,
+    (a, b) => GameTile.Getters.y(a) === GameTile.Getters.y(b)
+                ? GameTile.Getters.x(a) - GameTile.Getters.x(b)
+                : GameTile.Getters.y(a) - GameTile.Getters.y(b)
+  )
 }
 
-let setColumn = (tile: tile, x: int) => { ...tile, pos: { x: x, y: tile.pos.y } }
-
-let setNew = (tile: tile, new: bool) => { ...tile, new: new }
-
-let setMerged = (tile: tile, merged: bool) => { ...tile, merged: merged }
-
 let movementReducer = (ts, tile) => {
-  let addTile = x => Belt.List.add(ts, tile -> setColumn(x) -> setNew(false) -> setMerged(false))
+  let addTile = x => Belt.List.add(
+    ts,
+    tile
+    -> GameTile.Setters.x(x)
+    -> GameTile.Setters.new(false)
+    -> GameTile.Setters.merged(false)
+  )
 
   Belt.Option.mapWithDefault(
     Belt.List.head(ts),
     addTile(0),
     t => {
-      if (t.pos.y === tile.pos.y) {
-        if (t.val === tile.val && !t.merged) {
+      if (GameTile.Getters.y(t) === GameTile.Getters.y(tile)) {
+        if (GameTile.Getters.val(t) === GameTile.Getters.val(tile) && !GameTile.Getters.merged(t)) {
           Belt.List.add(
             Belt.Option.getWithDefault(Belt.List.drop(ts, 1), list{}),
-            createTile(
-              ~id = tile.pos.x > t.pos.x ? tile.id : t.id,
-              ~val = t.val * 2,
-              ~x = t.pos.x,
-              ~y = t.pos.y
-            ) -> setMerged(true) -> setNew(true)
+            t
+            -> GameTile.Setters.id(GameTile.Getters.x(tile) > GameTile.Getters.x(t) ? GameTile.Getters.id(tile) : GameTile.Getters.id(t))
+            -> GameTile.Setters.val(GameTile.Getters.val(t) * 2)
+            -> GameTile.Setters.merged(true)
+            -> GameTile.Setters.new(true)
           )
         } else {
-          addTile(t.pos.x + 1)  
+          addTile(GameTile.Getters.x(t) + 1)  
         }
       } else {
         addTile(0)
@@ -171,7 +130,7 @@ let movementReducer = (ts, tile) => {
   )
 }
 
-let moveRight = (size: int, tiles: list<tile>): list<tile> => {
+let moveRight = (size: int, tiles: list<GameTile.tile>): list<GameTile.tile> => {
   tiles
   -> reverseRow(size)
   -> sortTilesByColumn
@@ -187,7 +146,7 @@ let moveRight = (size: int, tiles: list<tile>): list<tile> => {
 // * check if move is possible
 // * check if it's a loss
 // * transform back
-let move = (dir: direction, tiles: list<tile>) => {
+let move = (dir: Constants.direction, tiles: list<GameTile.tile>) => {
   let size = gridSize
   let rotated = rotateToMoveToRight(size, dir, tiles)
 
@@ -197,7 +156,7 @@ let move = (dir: direction, tiles: list<tile>) => {
     if isWin(moved) || isLoss(size, moved) {
       rotateBack(size, dir, moved)
     } else {
-      let updated = Belt.List.add(moved, createNewTile(moved))
+      let updated = Belt.List.add(moved, GameTile.createNewTile(moved))
 
       if isWin(updated) || isLoss(size, updated) {
         rotateBack(size, dir, updated) // TODO add handling for Win | Loss | Play
