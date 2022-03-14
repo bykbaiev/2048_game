@@ -75,6 +75,22 @@ var bestScoreState = Recoil.selector({
         })
     });
 
+function isWin(state) {
+  if (state.TAG === /* Win */1) {
+    return true;
+  } else {
+    return false;
+  }
+}
+
+function isLoss(state) {
+  if (state.TAG === /* Loss */2) {
+    return true;
+  } else {
+    return false;
+  }
+}
+
 export {
   gameState ,
   getInternals ,
@@ -83,6 +99,8 @@ export {
   tilesState ,
   scoreState ,
   bestScoreState ,
+  isWin ,
+  isLoss ,
   
 }
 /* gameState Not a pure module */

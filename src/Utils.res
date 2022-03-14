@@ -141,7 +141,7 @@ let move = (dir: Constants.direction, state: State.state): State.state => {
   let size = gridSize
   let rotated = rotateToMoveToRight(size, dir, tiles)
 
-  if isMoveToRightPossible(rotated, size) {
+  if !State.isWin(state) && !State.isLoss(state) && isMoveToRightPossible(rotated, size) {
     let moved = moveRight(size, rotated)
     let movedInternals = State.setTiles(internals, rotateBack(size, dir, moved))
 

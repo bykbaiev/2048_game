@@ -75,3 +75,17 @@ let bestScoreState: Recoil.readOnly<int> = Recoil.selector({
     Belt.Option.getWithDefault(internals.best, score)
   }
 })
+
+let isWin = (state: state): bool => {
+  switch state {
+  | Win(_) => true
+  | _      => false
+  }
+}
+
+let isLoss = (state: state): bool => {
+  switch state {
+  | Loss(_) => true
+  | _       => false
+  }
+}

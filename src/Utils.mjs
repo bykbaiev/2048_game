@@ -148,7 +148,7 @@ function move(dir, state) {
   var internals = State.getInternals(state);
   var tiles = internals.tiles;
   var rotated = rotateToMoveToRight(4, dir, tiles);
-  if (!isMoveToRightPossible(rotated, 4)) {
+  if (!(!State.isWin(state) && !State.isLoss(state) && isMoveToRightPossible(rotated, 4))) {
     return state;
   }
   var moved = moveRight(4, rotated);
