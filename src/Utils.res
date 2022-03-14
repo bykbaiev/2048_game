@@ -2,8 +2,6 @@ open Tile
 
 let gridSize = 4
 
-let winningValue = 2048
-
 let getCls = (styles: Js.Dict.t<'a>, name: string): string =>
   styles
   -> Js.Dict.get("default")
@@ -136,33 +134,34 @@ let moveRight = (size: int, tiles: list<GameTile.tile>): list<GameTile.tile> => 
   -> reverseRow(size)
 }
 
-// * transform the tiles that move is always to right !
-// * check if move is possible
-// * move tiles (if possible)
-// * check if it's a win or a loss
-// * add new tile
-// * check if move is possible
-// * check if it's a loss
-// * transform back
-let move = (dir: Constants.direction, tiles: list<GameTile.tile>) => {
+let move = (dir: Constants.direction, state: State.state): State.state => {
+  let internals = State.getInternals(state)
+  let tiles = internals.tiles
+
   let size = gridSize
   let rotated = rotateToMoveToRight(size, dir, tiles)
 
   if isMoveToRightPossible(rotated, size) {
     let moved = moveRight(size, rotated)
+    let movedInternals = State.setTiles(internals, rotateBack(size, dir, moved))
 
-    if isWin(moved) || isLoss(size, moved) {
-      rotateBack(size, dir, moved)
+    if isWin(moved) {
+      State.Win(movedInternals)
+    } else if isLoss(size, moved) {
+      State.Loss(movedInternals)
     } else {
       let updated = Belt.List.add(moved, GameTile.createNewTile(moved))
+      let updatedInternals = State.setTiles(internals, rotateBack(size, dir, updated))
 
-      if isWin(updated) || isLoss(size, updated) {
-        rotateBack(size, dir, updated) // TODO add handling for Win | Loss | Play
+      if isWin(updated) {
+        State.Win(updatedInternals)
+      } else if isLoss(size, updated) {
+        State.Loss(updatedInternals)
       } else {
-        rotateBack(size, dir, updated)
+        State.Playing(updatedInternals)
       }
     }
   } else {
-    tiles
+    state
   }
 }

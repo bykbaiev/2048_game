@@ -39,12 +39,13 @@ let viewTile = (tile: GameTile.tile) => {
 
 @react.component
 let make = () => {
-  let (tiles, setTiles) = Recoil.useRecoilState(State.tilesState);
+  let setState = Recoil.useSetRecoilState(State.gameState)
+  let tiles = Recoil.useRecoilValue(State.tilesState);
 
   React.useEffect0(() => {
     document["addEventListener"](."keydown", event => {
       switch Utils.keyCodeToDirection(event["keyCode"]) {
-      | Some(dir) => setTiles(Utils.move(dir))
+      | Some(dir) => setState(Utils.move(dir))
       | _ => ()
       }
     })

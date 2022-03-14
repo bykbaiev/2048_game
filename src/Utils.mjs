@@ -2,6 +2,7 @@
 
 import * as Tile from "./Tile.mjs";
 import * as Curry from "../node_modules/rescript/lib/es6/curry.js";
+import * as State from "./State.mjs";
 import * as Js_dict from "../node_modules/rescript/lib/es6/js_dict.js";
 import * as Belt_List from "../node_modules/rescript/lib/es6/belt_List.js";
 import * as Belt_Option from "../node_modules/rescript/lib/es6/belt_Option.js";
@@ -143,27 +144,51 @@ function moveRight(size, tiles) {
   return reverseRow(Belt_List.reduce(sortTilesByColumn(reverseRow(tiles, size)), /* [] */0, movementReducer), size);
 }
 
-function move(dir, tiles) {
+function move(dir, state) {
+  var internals = State.getInternals(state);
+  var tiles = internals.tiles;
   var rotated = rotateToMoveToRight(4, dir, tiles);
   if (!isMoveToRightPossible(rotated, 4)) {
-    return tiles;
+    return state;
   }
   var moved = moveRight(4, rotated);
-  if (Belt_List.some(moved, Tile.GameTile.isWinningValue) || isLoss(4, moved)) {
-    return rotateBack(4, dir, moved);
+  var movedInternals = State.setTiles(internals, rotateBack(4, dir, moved));
+  if (Belt_List.some(moved, Tile.GameTile.isWinningValue)) {
+    return {
+            TAG: /* Win */1,
+            _0: movedInternals
+          };
+  }
+  if (isLoss(4, moved)) {
+    return {
+            TAG: /* Loss */2,
+            _0: movedInternals
+          };
   }
   var updated = Belt_List.add(moved, Tile.GameTile.createNewTile(moved));
-  Belt_List.some(updated, Tile.GameTile.isWinningValue) || isLoss(4, updated);
-  return rotateBack(4, dir, updated);
+  var updatedInternals = State.setTiles(internals, rotateBack(4, dir, updated));
+  if (Belt_List.some(updated, Tile.GameTile.isWinningValue)) {
+    return {
+            TAG: /* Win */1,
+            _0: updatedInternals
+          };
+  } else if (isLoss(4, updated)) {
+    return {
+            TAG: /* Loss */2,
+            _0: updatedInternals
+          };
+  } else {
+    return {
+            TAG: /* Playing */0,
+            _0: updatedInternals
+          };
+  }
 }
 
 var gridSize = 4;
 
-var winningValue = 2048;
-
 export {
   gridSize ,
-  winningValue ,
   getCls ,
   keyCodeToDirection ,
   transpose ,
@@ -182,4 +207,4 @@ export {
   move ,
   
 }
-/* No side effect */
+/* State Not a pure module */

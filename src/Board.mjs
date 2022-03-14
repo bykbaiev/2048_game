@@ -60,13 +60,13 @@ function viewTile(tile) {
 }
 
 function Board(Props) {
-  var match = Recoil.useRecoilState(State.tilesState);
-  var setTiles = match[1];
+  var setState = Recoil.useSetRecoilState(State.gameState);
+  var tiles = Recoil.useRecoilValue(State.tilesState);
   React.useEffect((function () {
           document.addEventListener("keydown", (function ($$event) {
                   var dir = Utils.keyCodeToDirection($$event.keyCode);
                   if (dir !== undefined) {
-                    return Curry._1(setTiles, (function (param) {
+                    return Curry._1(setState, (function (param) {
                                   return Utils.move(dir, param);
                                 }));
                   }
@@ -82,7 +82,7 @@ function Board(Props) {
                   className: Utils.getCls(styles, "gridContainer")
                 }, Belt_Array.map(indexes, viewRow)), React.createElement("div", {
                   className: Utils.getCls(styles, "tileContainer")
-                }, Belt_Array.map(Belt_List.toArray(match[0]), viewTile)));
+                }, Belt_Array.map(Belt_List.toArray(tiles), viewTile)));
 }
 
 var make = Board;
