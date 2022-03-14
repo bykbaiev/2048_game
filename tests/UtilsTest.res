@@ -40,112 +40,31 @@ test("#Utils.getCls", () => {
   )
 })
 
-let checkPairs = (~max: int, ~idx: int, ~expected: option<(int, int)>) =>
-  assertion(
-    ~message = "check pairs for equality: " ++ Js.Int.toString(max) ++ " " ++ Js.Int.toString(idx),
-    ~operator = "getPair",
-    (a, b) => a == b,
-    Utils.getPair(max, idx),
-    expected
-  )
+type testPos = {
+  x: int,
+  y: int
+}
 
-let pairs2 = [(0, 0), (0, 1), (1, 0), (1, 1)]
+type testTile = {
+  id: string,
+  merged: bool,
+  val: int,
+  pos: testPos,
+}
 
-let pairs4 = [(0, 0), (0, 1), (0, 2), (0, 3),
-              (1, 0), (1, 1), (1, 2), (1, 3),
-              (2, 0), (2, 1), (2, 2), (2, 3),
-              (3, 0), (3, 1), (3, 2), (3, 3)]
-
-test("#Utils.getPair: should return correct pair from cortesian product by max value and index of this pair", () => {
-  checkPairs(
-    ~max = 2,
-    ~idx = 0,
-    ~expected = Some(pairs2[0])
-  )
-  checkPairs(
-    ~max = 2,
-    ~idx = 1,
-    ~expected = Some(pairs2[1])
-  )
-  checkPairs(
-    ~max = 2,
-    ~idx = 2,
-    ~expected = Some(pairs2[2])
-  )
-  checkPairs(
-    ~max = 2,
-    ~idx = 3,
-    ~expected = Some(pairs2[3])
-  )
-  checkPairs(
-    ~max = 4,
-    ~idx = 0,
-    ~expected = Some(pairs4[0])
-  )
-  checkPairs(
-    ~max = 4,
-    ~idx = 1,
-    ~expected = Some(pairs4[1])
-  )
-  checkPairs(
-    ~max = 4,
-    ~idx = 2,
-    ~expected = Some(pairs4[2])
-  )
-  checkPairs(
-    ~max = 4,
-    ~idx = 3,
-    ~expected = Some(pairs4[3])
-  )
-  checkPairs(
-    ~max = 4,
-    ~idx = 4,
-    ~expected = Some(pairs4[4])
-  )
-  checkPairs(
-    ~max = 4,
-    ~idx = 5,
-    ~expected = Some(pairs4[5])
-  )
-  checkPairs(
-    ~max = 4,
-    ~idx = 6,
-    ~expected = Some(pairs4[6])
-  )
-  checkPairs(
-    ~max = 4,
-    ~idx = 7,
-    ~expected = Some(pairs4[7])
-  )
-  checkPairs(
-    ~max = 4,
-    ~idx = 8,
-    ~expected = Some(pairs4[8])
-  )
-  checkPairs(
-    ~max = 4,
-    ~idx = 9,
-    ~expected = Some(pairs4[9])
-  )
-  checkPairs(
-    ~max = 4,
-    ~idx = 10,
-    ~expected = Some(pairs4[10])
-  )
-  checkPairs(
-    ~max = 4,
-    ~idx = 15,
-    ~expected = Some(pairs4[15])
-  )
-})
-
-test("#Utils.getPair: should return Nothing in case there is no such pair", () => {
-  checkPairs(
-    ~max = 4,
-    ~idx = 20,
-    ~expected = None
-  )
-})
+let createTestTile = ({ id, val, pos, merged }): Tile.GameTile.tile => {
+  let average = Tile.GameTile.createTile(
+                  ~id  = id,
+                  ~val = val,
+                  ~x   = pos.x,
+                  ~y   = pos.y
+                ) -> Tile.GameTile.Converters.toAverage
+  if merged {
+    Tile.GameTile.Converters.toMerged(average)
+  } else {
+    average
+  }
+}
 
 test("#Utils.transpose: should transpose matrix", () => {
   assertion(
@@ -153,12 +72,12 @@ test("#Utils.transpose: should transpose matrix", () => {
     ~operator = "transpose",
     (a, b) => a == b,
     Utils.transpose(list{
-      { id: "0", merged: false, new: false, val: 2, pos: { x: 0, y: 0 } },
-      { id: "1", merged: false, new: false, val: 4, pos: { x: 0, y: 1 } }
+      createTestTile({ id: "0", merged: false, val: 2, pos: { x: 0, y: 0 } }),
+      createTestTile({ id: "1", merged: false, val: 4, pos: { x: 0, y: 1 } })
     }),
     list{
-      { id: "0", merged: false, new: false, val: 2, pos: { x: 0, y: 0 } },
-      { id: "1", merged: false, new: false, val: 4, pos: { x: 1, y: 0 } }
+      createTestTile({ id: "0", merged: false, val: 2, pos: { x: 0, y: 0 } }),
+      createTestTile({ id: "1", merged: false, val: 4, pos: { x: 1, y: 0 } })
     }
   )
 
@@ -168,13 +87,13 @@ test("#Utils.transpose: should transpose matrix", () => {
     (a, b) => a == b,
     Utils.transpose(
       Utils.transpose(list{
-        { id: "0", merged: false, new: false, val: 2, pos: { x: 0, y: 0 } },
-        { id: "1", merged: false, new: false, val: 4, pos: { x: 0, y: 1 } }
+        createTestTile({ id: "0", merged: false, val: 2, pos: { x: 0, y: 0 } }),
+        createTestTile({ id: "1", merged: false, val: 4, pos: { x: 0, y: 1 } })
       })
     ),
     list{
-      { id: "0", merged: false, new: false, val: 2, pos: { x: 0, y: 0 } },
-      { id: "1", merged: false, new: false, val: 4, pos: { x: 0, y: 1 } }
+      createTestTile({ id: "0", merged: false, val: 2, pos: { x: 0, y: 0 } }),
+      createTestTile({ id: "1", merged: false, val: 4, pos: { x: 0, y: 1 } })
     }
   )
 })
@@ -185,12 +104,12 @@ test("#Utils.reverseRow: should map all tiles in a row in reverse order", () => 
     ~operator = "reverseRow",
     (a, b) => a == b,
     Utils.reverseRow(list{
-      { id: "0", merged: false, new: false, val: 2, pos: { x: 0, y: 0 } },
-      { id: "1", merged: false, new: false, val: 4, pos: { x: 1, y: 1 } }
+      createTestTile({ id: "0", merged: false, val: 2, pos: { x: 0, y: 0 } }),
+      createTestTile({ id: "1", merged: false, val: 4, pos: { x: 1, y: 1 } })
     }, 2),
     list{
-      { id: "0", merged: false, new: false, val: 2, pos: { x: 1, y: 0 } },
-      { id: "1", merged: false, new: false, val: 4, pos: { x: 0, y: 1 } }
+      createTestTile({ id: "0", merged: false, val: 2, pos: { x: 1, y: 0 } }),
+      createTestTile({ id: "1", merged: false, val: 4, pos: { x: 0, y: 1 } })
     }
   )
 
@@ -200,14 +119,14 @@ test("#Utils.reverseRow: should map all tiles in a row in reverse order", () => 
     (a, b) => a == b,
     Utils.reverseRow(
       Utils.reverseRow(list{
-        { id: "0", merged: false, new: false, val: 2, pos: { x: 0, y: 0 } },
-        { id: "1", merged: false, new: false, val: 4, pos: { x: 1, y: 1 } }
+        createTestTile({ id: "0", merged: false, val: 2, pos: { x: 0, y: 0 } }),
+        createTestTile({ id: "1", merged: false, val: 4, pos: { x: 1, y: 1 } })
       }, 2),
       2
     ),
     list{
-      { id: "0", merged: false, new: false, val: 2, pos: { x: 0, y: 0 } },
-      { id: "1", merged: false, new: false, val: 4, pos: { x: 1, y: 1 } }
+      createTestTile({ id: "0", merged: false, val: 2, pos: { x: 0, y: 0 } }),
+      createTestTile({ id: "1", merged: false, val: 4, pos: { x: 1, y: 1 } })
     }
   )
 })
@@ -218,12 +137,12 @@ test("#Utils.rotateClockwise: should rotate tiles (to handle all moves at once: 
     ~operator = "rotateClockwise",
     (a, b) => a == b,
     Utils.rotateClockwise(list{
-      { id: "0", merged: false, new: false, val: 2, pos: { x: 0, y: 0 } },
-      { id: "1", merged: false, new: false, val: 4, pos: { x: 1, y: 1 } }
+      createTestTile({ id: "0", merged: false, val: 2, pos: { x: 0, y: 0 } }),
+      createTestTile({ id: "1", merged: false, val: 4, pos: { x: 1, y: 1 } })
     }, 2),
     list{
-      { id: "0", merged: false, new: false, val: 2, pos: { x: 1, y: 0 } },
-      { id: "1", merged: false, new: false, val: 4, pos: { x: 0, y: 1 } }
+      createTestTile({ id: "0", merged: false, val: 2, pos: { x: 1, y: 0 } }),
+      createTestTile({ id: "1", merged: false, val: 4, pos: { x: 0, y: 1 } })
     }
   )
 
@@ -232,12 +151,12 @@ test("#Utils.rotateClockwise: should rotate tiles (to handle all moves at once: 
     ~operator = "rotateClockwise",
     (a, b) => a == b,
     list{
-      { id: "0", merged: false, new: false, val: 2, pos: { x: 0, y: 0 } },
-      { id: "1", merged: false, new: false, val: 4, pos: { x: 1, y: 1 } }
+      createTestTile({ id: "0", merged: false, val: 2, pos: { x: 0, y: 0 } }),
+      createTestTile({ id: "1", merged: false, val: 4, pos: { x: 1, y: 1 } })
     } -> Utils.rotateClockwise(2) -> Utils.rotateClockwise(2) -> Utils.rotateClockwise(2) -> Utils.rotateClockwise(2),
     list{
-      { id: "0", merged: false, new: false, val: 2, pos: { x: 0, y: 0 } },
-      { id: "1", merged: false, new: false, val: 4, pos: { x: 1, y: 1 } }
+      createTestTile({ id: "0", merged: false, val: 2, pos: { x: 0, y: 0 } }),
+      createTestTile({ id: "1", merged: false, val: 4, pos: { x: 1, y: 1 } })
     }
   )
 })
@@ -248,12 +167,12 @@ test("#Utils.rotateAntiClockwise: should rotate tiles anti clockwise (to handle 
     ~operator = "rotateAntiClockwise",
     (a, b) => a == b,
     Utils.rotateAntiClockwise(list{
-      { id: "0", merged: false, new: false, val: 2, pos: { x: 0, y: 0 } },
-      { id: "1", merged: false, new: false, val: 4, pos: { x: 1, y: 1 } }
+      createTestTile({ id: "0", merged: false, val: 2, pos: { x: 0, y: 0 } }),
+      createTestTile({ id: "1", merged: false, val: 4, pos: { x: 1, y: 1 } })
     }, 2),
     list{
-      { id: "0", merged: false, new: false, val: 2, pos: { x: 0, y: 1 } },
-      { id: "1", merged: false, new: false, val: 4, pos: { x: 1, y: 0 } }
+      createTestTile({ id: "0", merged: false, val: 2, pos: { x: 0, y: 1 } }),
+      createTestTile({ id: "1", merged: false, val: 4, pos: { x: 1, y: 0 } })
     }
   )
 
@@ -262,12 +181,12 @@ test("#Utils.rotateAntiClockwise: should rotate tiles anti clockwise (to handle 
     ~operator = "rotateAntiClockwise",
     (a, b) => a == b,
     list{
-      { id: "0", merged: false, new: false, val: 2, pos: { x: 0, y: 0 } },
-      { id: "1", merged: false, new: false, val: 4, pos: { x: 1, y: 1 } }
+      createTestTile({ id: "0", merged: false, val: 2, pos: { x: 0, y: 0 } }),
+      createTestTile({ id: "1", merged: false, val: 4, pos: { x: 1, y: 1 } })
     } -> Utils.rotateAntiClockwise(2) -> Utils.rotateAntiClockwise(2) -> Utils.rotateAntiClockwise(2) -> Utils.rotateAntiClockwise(2),
     list{
-      { id: "0", merged: false, new: false, val: 2, pos: { x: 0, y: 0 } },
-      { id: "1", merged: false, new: false, val: 4, pos: { x: 1, y: 1 } }
+      createTestTile({ id: "0", merged: false, val: 2, pos: { x: 0, y: 0 } }),
+      createTestTile({ id: "1", merged: false, val: 4, pos: { x: 1, y: 1 } })
     }
   )
 })
@@ -277,13 +196,13 @@ test("#Utils.rotateToMoveToRight: should rotate tiles to make each movement as m
     ~message = "Right (nothing changes)",
     ~operator = "rotateToMoveToRight",
     (a, b) => a == b,
-    Utils.rotateToMoveToRight(2, Utils.Right, list{
-      { id: "0", merged: false, new: false, val: 2, pos: { x: 0, y: 0 } },
-      { id: "1", merged: false, new: false, val: 4, pos: { x: 1, y: 1 } }
+    Utils.rotateToMoveToRight(2, Constants.Right, list{
+      createTestTile({ id: "0", merged: false, val: 2, pos: { x: 0, y: 0 } }),
+      createTestTile({ id: "1", merged: false, val: 4, pos: { x: 1, y: 1 } })
     }),
     list{
-      { id: "0", merged: false, new: false, val: 2, pos: { x: 0, y: 0 } },
-      { id: "1", merged: false, new: false, val: 4, pos: { x: 1, y: 1 } }
+      createTestTile({ id: "0", merged: false, val: 2, pos: { x: 0, y: 0 } }),
+      createTestTile({ id: "1", merged: false, val: 4, pos: { x: 1, y: 1 } })
     }
   )
 
@@ -291,13 +210,13 @@ test("#Utils.rotateToMoveToRight: should rotate tiles to make each movement as m
     ~message = "Up",
     ~operator = "rotateToMoveToRight",
     (a, b) => a == b,
-    Utils.rotateToMoveToRight(2, Utils.Up, list{
-      { id: "0", merged: false, new: false, val: 2, pos: { x: 0, y: 0 } },
-      { id: "1", merged: false, new: false, val: 4, pos: { x: 1, y: 1 } }
+    Utils.rotateToMoveToRight(2, Constants.Up, list{
+      createTestTile({ id: "0", merged: false, val: 2, pos: { x: 0, y: 0 } }),
+      createTestTile({ id: "1", merged: false, val: 4, pos: { x: 1, y: 1 } })
     }),
     list{
-      { id: "0", merged: false, new: false, val: 2, pos: { x: 1, y: 0 } },
-      { id: "1", merged: false, new: false, val: 4, pos: { x: 0, y: 1 } }
+      createTestTile({ id: "0", merged: false, val: 2, pos: { x: 1, y: 0 } }),
+      createTestTile({ id: "1", merged: false, val: 4, pos: { x: 0, y: 1 } })
     }
   )
 
@@ -305,13 +224,13 @@ test("#Utils.rotateToMoveToRight: should rotate tiles to make each movement as m
     ~message = "Down",
     ~operator = "rotateToMoveToRight",
     (a, b) => a == b,
-    Utils.rotateToMoveToRight(2, Utils.Down, list{
-      { id: "0", merged: false, new: false, val: 2, pos: { x: 0, y: 0 } },
-      { id: "1", merged: false, new: false, val: 4, pos: { x: 1, y: 1 } }
+    Utils.rotateToMoveToRight(2, Constants.Down, list{
+      createTestTile({ id: "0", merged: false, val: 2, pos: { x: 0, y: 0 } }),
+      createTestTile({ id: "1", merged: false, val: 4, pos: { x: 1, y: 1 } })
     }),
     list{
-      { id: "0", merged: false, new: false, val: 2, pos: { x: 0, y: 1 } },
-      { id: "1", merged: false, new: false, val: 4, pos: { x: 1, y: 0 } }
+      createTestTile({ id: "0", merged: false, val: 2, pos: { x: 0, y: 1 } }),
+      createTestTile({ id: "1", merged: false, val: 4, pos: { x: 1, y: 0 } })
     }
   )
 
@@ -319,13 +238,13 @@ test("#Utils.rotateToMoveToRight: should rotate tiles to make each movement as m
     ~message = "Left",
     ~operator = "rotateToMoveToRight",
     (a, b) => a == b,
-    Utils.rotateToMoveToRight(2, Utils.Left, list{
-      { id: "0", merged: false, new: false, val: 2, pos: { x: 0, y: 0 } },
-      { id: "1", merged: false, new: false, val: 4, pos: { x: 1, y: 1 } }
+    Utils.rotateToMoveToRight(2, Constants.Left, list{
+      createTestTile({ id: "0", merged: false, val: 2, pos: { x: 0, y: 0 } }),
+      createTestTile({ id: "1", merged: false, val: 4, pos: { x: 1, y: 1 } })
     }),
     list{
-      { id: "0", merged: false, new: false, val: 2, pos: { x: 1, y: 1 } },
-      { id: "1", merged: false, new: false, val: 4, pos: { x: 0, y: 0 } }
+      createTestTile({ id: "0", merged: false, val: 2, pos: { x: 1, y: 1 } }),
+      createTestTile({ id: "1", merged: false, val: 4, pos: { x: 0, y: 0 } })
     }
   )
 })
@@ -335,13 +254,13 @@ test("#Utils.rotateBack: should rotate tiles back after rotatement to move them 
     ~message = "Right (nothing changes)",
     ~operator = "rotateBack",
     (a, b) => a == b,
-    Utils.rotateBack(2, Utils.Right, list{
-      { id: "0", merged: false, new: false, val: 2, pos: { x: 0, y: 0 } },
-      { id: "1", merged: false, new: false, val: 4, pos: { x: 1, y: 1 } }
+    Utils.rotateBack(2, Constants.Right, list{
+      createTestTile({ id: "0", merged: false, val: 2, pos: { x: 0, y: 0 } }),
+      createTestTile({ id: "1", merged: false, val: 4, pos: { x: 1, y: 1 } })
     }),
     list{
-      { id: "0", merged: false, new: false, val: 2, pos: { x: 0, y: 0 } },
-      { id: "1", merged: false, new: false, val: 4, pos: { x: 1, y: 1 } }
+      createTestTile({ id: "0", merged: false, val: 2, pos: { x: 0, y: 0 } }),
+      createTestTile({ id: "1", merged: false, val: 4, pos: { x: 1, y: 1 } })
     }
   )
 
@@ -349,13 +268,13 @@ test("#Utils.rotateBack: should rotate tiles back after rotatement to move them 
     ~message = "Up",
     ~operator = "rotateBack",
     (a, b) => a == b,
-    Utils.rotateBack(2, Utils.Up, list{
-      { id: "0", merged: false, new: false, val: 2, pos: { x: 0, y: 0 } },
-      { id: "1", merged: false, new: false, val: 4, pos: { x: 1, y: 1 } }
+    Utils.rotateBack(2, Constants.Up, list{
+      createTestTile({ id: "0", merged: false, val: 2, pos: { x: 0, y: 0 } }),
+      createTestTile({ id: "1", merged: false, val: 4, pos: { x: 1, y: 1 } })
     }),
     list{
-      { id: "0", merged: false, new: false, val: 2, pos: { x: 0, y: 1 } },
-      { id: "1", merged: false, new: false, val: 4, pos: { x: 1, y: 0 } }
+      createTestTile({ id: "0", merged: false, val: 2, pos: { x: 0, y: 1 } }),
+      createTestTile({ id: "1", merged: false, val: 4, pos: { x: 1, y: 0 } })
     }
   )
 
@@ -363,13 +282,13 @@ test("#Utils.rotateBack: should rotate tiles back after rotatement to move them 
     ~message = "Down",
     ~operator = "rotateBack",
     (a, b) => a == b,
-    Utils.rotateBack(2, Utils.Down, list{
-      { id: "0", merged: false, new: false, val: 2, pos: { x: 0, y: 0 } },
-      { id: "1", merged: false, new: false, val: 4, pos: { x: 1, y: 1 } }
+    Utils.rotateBack(2, Constants.Down, list{
+      createTestTile({ id: "0", merged: false, val: 2, pos: { x: 0, y: 0 } }),
+      createTestTile({ id: "1", merged: false, val: 4, pos: { x: 1, y: 1 } })
     }),
     list{
-      { id: "0", merged: false, new: false, val: 2, pos: { x: 1, y: 0 } },
-      { id: "1", merged: false, new: false, val: 4, pos: { x: 0, y: 1 } }
+      createTestTile({ id: "0", merged: false, val: 2, pos: { x: 1, y: 0 } }),
+      createTestTile({ id: "1", merged: false, val: 4, pos: { x: 0, y: 1 } })
     }
   )
 
@@ -377,40 +296,14 @@ test("#Utils.rotateBack: should rotate tiles back after rotatement to move them 
     ~message = "Left",
     ~operator = "rotateBack",
     (a, b) => a == b,
-    Utils.rotateBack(2, Utils.Left, list{
-      { id: "0", merged: false, new: false, val: 2, pos: { x: 0, y: 0 } },
-      { id: "1", merged: false, new: false, val: 4, pos: { x: 1, y: 1 } }
+    Utils.rotateBack(2, Constants.Left, list{
+      createTestTile({ id: "0", merged: false, val: 2, pos: { x: 0, y: 0 } }),
+      createTestTile({ id: "1", merged: false, val: 4, pos: { x: 1, y: 1 } })
     }),
     list{
-      { id: "0", merged: false, new: false, val: 2, pos: { x: 1, y: 1 } },
-      { id: "1", merged: false, new: false, val: 4, pos: { x: 0, y: 0 } }
+      createTestTile({ id: "0", merged: false, val: 2, pos: { x: 1, y: 1 } }),
+      createTestTile({ id: "1", merged: false, val: 4, pos: { x: 0, y: 0 } })
     }
-  )
-})
-
-test("#Utils.positionFilterPred: should verify that pair is valid & there is no such tile", () => {
-  assertion(
-    ~message = "Nothing won't come through me!",
-    ~operator = "positionFilterPred",
-    (a, b) => a == b,
-    Utils.positionFilterPred(list{}, (-1, -1)),
-    false
-  )
-
-  assertion(
-    ~message = "Existing tile won't come through me!",
-    ~operator = "positionFilterPred",
-    (a, b) => a == b,
-    Utils.positionFilterPred(list{{id: "0", merged: false, new: false, val: 2, pos: { x: 0, y: 0 } }}, (0, 0)),
-    false
-  )
-
-  assertion(
-    ~message = "In other cases let's keep it",
-    ~operator = "positionFilterPred",
-    (a, b) => a == b,
-    Utils.positionFilterPred(list{{id: "0", merged: false, new: false, val: 2, pos: { x: 0, y: 0 } }}, (1, 1)),
-    true
   )
 })
 
@@ -445,7 +338,11 @@ test("#Utils.isWin: should check if user won", () => {
     ~message = "Win is when there is one tile with value 2048",
     ~operator = "isWin",
     (a, b) => a == b,
-    Utils.isWin(list{{ id: "0", merged: false, new: false, val: 2048, pos: { x: 0, y: 0 } }}),
+    Utils.isWin(list{
+      createTestTile(
+        { id: "0", merged: false, val: 2048, pos: { x: 0, y: 0 } }
+      )
+    }),
     true
   )
 
@@ -453,7 +350,9 @@ test("#Utils.isWin: should check if user won", () => {
     ~message = "In case there is no 2048 tile the game is either lost or continuing",
     ~operator = "isWin",
     (a, b) => a == b,
-    Utils.isWin(list{{ id: "0", merged: false, new: false, val: 1024, pos: { x: 0, y: 0 } }}),
+    Utils.isWin(list{
+      createTestTile({ id: "0", merged: false, val: 1024, pos: { x: 0, y: 0 } })
+    }),
     false
   )
 })
@@ -472,10 +371,10 @@ test("#Utils.isLoss: should check if user loss", () => {
     ~operator = "isLoss",
     (a, b) => a == b,
     Utils.isLoss(2, list{
-      { id: "0", merged: false, new: false, val: 2, pos: { x: 0, y: 0 } },
-      { id: "1", merged: false, new: false, val: 1024, pos: { x: 1, y: 0 } },
-      { id: "2", merged: false, new: false, val: 1024, pos: { x: 0, y: 1 } },
-      { id: "3", merged: false, new: false, val: 2, pos: { x: 1, y: 1 } }
+      createTestTile({ id: "0", merged: false, val: 2, pos: { x: 0, y: 0 } }),
+      createTestTile({ id: "1", merged: false, val: 1024, pos: { x: 1, y: 0 } }),
+      createTestTile({ id: "2", merged: false, val: 1024, pos: { x: 0, y: 1 } }),
+      createTestTile({ id: "3", merged: false, val: 2, pos: { x: 1, y: 1 } })
     }),
     true
   )
@@ -485,10 +384,10 @@ test("#Utils.isLoss: should check if user loss", () => {
     ~operator = "isLoss",
     (a, b) => a == b,
     Utils.isLoss(2, list{
-      { id: "0", merged: false, new: false, val: 2, pos: { x: 0, y: 0 } },
-      { id: "1", merged: false, new: false, val: 2, pos: { x: 1, y: 0 } },
-      { id: "2", merged: false, new: false, val: 1024, pos: { x: 0, y: 1 } },
-      { id: "3", merged: false, new: false, val: 2, pos: { x: 1, y: 1 } }
+      createTestTile({ id: "0", merged: false, val: 2, pos: { x: 0, y: 0 } }),
+      createTestTile({ id: "1", merged: false, val: 2, pos: { x: 1, y: 0 } }),
+      createTestTile({ id: "2", merged: false, val: 1024, pos: { x: 0, y: 1 } }),
+      createTestTile({ id: "3", merged: false, val: 2, pos: { x: 1, y: 1 } })
     }),
     false
   )
@@ -497,7 +396,10 @@ test("#Utils.isLoss: should check if user loss", () => {
     ~message = "In case there is no 2048 tile the game is either lost or continuing",
     ~operator = "isLoss",
     (a, b) => a == b,
-    Utils.isLoss(2, list{{ id: "0", merged: false, new: false, val: 1024, pos: { x: 0, y: 0 } }}),
+    Utils.isLoss(2, list{
+      createTestTile(
+        { id: "0", merged: false, val: 1024, pos: { x: 0, y: 0 } }
+      )}),
     false
   )
 })
@@ -508,8 +410,8 @@ test("#Utils.isMoveToRightPossible: should check if it's possible to move tiles 
     ~operator = "isMoveToRightPossible",
     (a, b) => a == b,
     Utils.isMoveToRightPossible(list{
-      { id: "0", merged: false, new: false, val: 2, pos: { x: 0, y: 0 } },
-      { id: "1", merged: false, new: false, val: 4, pos: { x: 1, y: 0 } },
+      createTestTile({ id: "0", merged: false, val: 2, pos: { x: 0, y: 0 } }),
+      createTestTile({ id: "1", merged: false, val: 4, pos: { x: 1, y: 0 } }),
     }, 2),
     false
   )
@@ -519,8 +421,8 @@ test("#Utils.isMoveToRightPossible: should check if it's possible to move tiles 
     ~operator = "isMoveToRightPossible",
     (a, b) => a == b,
     Utils.isMoveToRightPossible(list{
-      { id: "0", merged: false, new: false, val: 2, pos: { x: 0, y: 0 } },
-      { id: "1", merged: false, new: false, val: 2, pos: { x: 0, y: 1 } },
+      createTestTile({ id: "0", merged: false, val: 2, pos: { x: 0, y: 0 } }),
+      createTestTile({ id: "1", merged: false, val: 2, pos: { x: 0, y: 1 } }),
     }, 2),
     true
   )
@@ -530,8 +432,8 @@ test("#Utils.isMoveToRightPossible: should check if it's possible to move tiles 
     ~operator = "isMoveToRightPossible",
     (a, b) => a == b,
     Utils.isMoveToRightPossible(list{
-      { id: "0", merged: false, new: false, val: 2, pos: { x: 0, y: 0 } },
-      { id: "1", merged: false, new: false, val: 2, pos: { x: 1, y: 0 } },
+      createTestTile({ id: "0", merged: false, val: 2, pos: { x: 0, y: 0 } }),
+      createTestTile({ id: "1", merged: false, val: 2, pos: { x: 1, y: 0 } }),
     }, 2),
     true
   )
@@ -541,11 +443,11 @@ test("#Utils.isMoveToRightPossible: should check if it's possible to move tiles 
     ~operator = "isMoveToRightPossible",
     (a, b) => a == b,
     Utils.isMoveToRightPossible(list{
-      { id: "0", merged: false, new: false, val: 2, pos: { x: 0, y: 0 } },
-      { id: "1", merged: false, new: false, val: 4, pos: { x: 1, y: 0 } },
-      { id: "2", merged: false, new: false, val: 2, pos: { x: 2, y: 0 } },
-      { id: "3", merged: false, new: false, val: 2, pos: { x: 1, y: 1 } },
-      { id: "4", merged: false, new: false, val: 4, pos: { x: 2, y: 1 } },
+      createTestTile({ id: "0", merged: false, val: 2, pos: { x: 0, y: 0 } }),
+      createTestTile({ id: "1", merged: false, val: 4, pos: { x: 1, y: 0 } }),
+      createTestTile({ id: "2", merged: false, val: 2, pos: { x: 2, y: 0 } }),
+      createTestTile({ id: "3", merged: false, val: 2, pos: { x: 1, y: 1 } }),
+      createTestTile({ id: "4", merged: false, val: 4, pos: { x: 2, y: 1 } }),
     }, 3),
     false
   )
@@ -555,11 +457,11 @@ test("#Utils.isMoveToRightPossible: should check if it's possible to move tiles 
     ~operator = "isMoveToRightPossible",
     (a, b) => a == b,
     Utils.isMoveToRightPossible(list{
-      { id: "0", merged: false, new: false, val: 2, pos: { x: 0, y: 0 } },
-      { id: "1", merged: false, new: false, val: 4, pos: { x: 1, y: 0 } },
-      { id: "2", merged: false, new: false, val: 2, pos: { x: 2, y: 0 } },
-      { id: "3", merged: false, new: false, val: 2, pos: { x: 1, y: 1 } },
-      { id: "4", merged: false, new: false, val: 2, pos: { x: 2, y: 1 } },
+      createTestTile({ id: "0", merged: false, val: 2, pos: { x: 0, y: 0 } }),
+      createTestTile({ id: "1", merged: false, val: 4, pos: { x: 1, y: 0 } }),
+      createTestTile({ id: "2", merged: false, val: 2, pos: { x: 2, y: 0 } }),
+      createTestTile({ id: "3", merged: false, val: 2, pos: { x: 1, y: 1 } }),
+      createTestTile({ id: "4", merged: false, val: 2, pos: { x: 2, y: 1 } }),
     }, 3),
     true
   )
@@ -571,18 +473,18 @@ test("#Utils.sortTilesByColumn: should sort all tiles in one row by column numbe
     ~operator = "sortTilesByColumn",
     (a, b) => a == b,
     Utils.sortTilesByColumn(list{
-      { id: "0", merged: false, new: false, val: 2,  pos: { x: 2, y: 0 } },
-      { id: "1", merged: false, new: false, val: 16, pos: { x: 0, y: 2 } },
-      { id: "2", merged: false, new: false, val: 4,  pos: { x: 1, y: 0 } },
-      { id: "3", merged: false, new: false, val: 32, pos: { x: 1, y: 1 } },
-      { id: "4", merged: false, new: false, val: 8,  pos: { x: 0, y: 0 } },
+      createTestTile({ id: "0", merged: false, val: 2,  pos: { x: 2, y: 0 } }),
+      createTestTile({ id: "1", merged: false, val: 16, pos: { x: 0, y: 2 } }),
+      createTestTile({ id: "2", merged: false, val: 4,  pos: { x: 1, y: 0 } }),
+      createTestTile({ id: "3", merged: false, val: 32, pos: { x: 1, y: 1 } }),
+      createTestTile({ id: "4", merged: false, val: 8,  pos: { x: 0, y: 0 } }),
     }),
     list{
-      { id: "4", merged: false, new: false, val: 8,  pos: { x: 0, y: 0 } },
-      { id: "2", merged: false, new: false, val: 4,  pos: { x: 1, y: 0 } },
-      { id: "0", merged: false, new: false, val: 2,  pos: { x: 2, y: 0 } },
-      { id: "3", merged: false, new: false, val: 32, pos: { x: 1, y: 1 } },
-      { id: "1", merged: false, new: false, val: 16, pos: { x: 0, y: 2 } },
+      createTestTile({ id: "4", merged: false, val: 8,  pos: { x: 0, y: 0 } }),
+      createTestTile({ id: "2", merged: false, val: 4,  pos: { x: 1, y: 0 } }),
+      createTestTile({ id: "0", merged: false, val: 2,  pos: { x: 2, y: 0 } }),
+      createTestTile({ id: "3", merged: false, val: 32, pos: { x: 1, y: 1 } }),
+      createTestTile({ id: "1", merged: false, val: 16, pos: { x: 0, y: 2 } }),
     }
   )
 })
@@ -601,12 +503,12 @@ test("#Utils.moveRight: should move all tiles to right where it's possible", () 
     ~operator = "moveRight",
     compareTiles,
     Utils.moveRight(2, list{
-      { id: "0", merged: false, new: false, val: 2, pos: { x: 0, y: 0 } },
-      { id: "1", merged: false, new: false, val: 4, pos: { x: 1, y: 0 } },
+      createTestTile({ id: "0", merged: false, val: 2, pos: { x: 0, y: 0 } }),
+      createTestTile({ id: "1", merged: false, val: 4, pos: { x: 1, y: 0 } }),
     }),
     list{
-      { id: "0", merged: false, new: false, val: 2, pos: { x: 0, y: 0 } },
-      { id: "1", merged: false, new: false, val: 4, pos: { x: 1, y: 0 } },
+      createTestTile({ id: "0", merged: false, val: 2, pos: { x: 0, y: 0 } }),
+      createTestTile({ id: "1", merged: false, val: 4, pos: { x: 1, y: 0 } }),
     }
   )
 
@@ -615,12 +517,12 @@ test("#Utils.moveRight: should move all tiles to right where it's possible", () 
     ~operator = "moveRight",
     compareTiles,
     Utils.moveRight(2, list{
-      { id: "0", merged: false, new: false, val: 2, pos: { x: 0, y: 0 } },
-      { id: "1", merged: false, new: false, val: 4, pos: { x: 0, y: 1 } },
+      createTestTile({ id: "0", merged: false, val: 2, pos: { x: 0, y: 0 } }),
+      createTestTile({ id: "1", merged: false, val: 4, pos: { x: 0, y: 1 } }),
     }),
     list{
-      { id: "0", merged: false, new: false, val: 2, pos: { x: 1, y: 0 } },
-      { id: "1", merged: false, new: false, val: 4, pos: { x: 1, y: 1 } },
+      createTestTile({ id: "0", merged: false, val: 2, pos: { x: 1, y: 0 } }),
+      createTestTile({ id: "1", merged: false, val: 4, pos: { x: 1, y: 1 } }),
     }
   )
 
@@ -629,18 +531,18 @@ test("#Utils.moveRight: should move all tiles to right where it's possible", () 
     ~operator = "moveRight",
     compareTiles,
     Utils.moveRight(3, list{
-      { id: "0", merged: false, new: false, val: 2,  pos: { x: 1, y: 1 } },
-      { id: "1", merged: false, new: false, val: 4,  pos: { x: 0, y: 0 } },
-      { id: "2", merged: false, new: false, val: 8,  pos: { x: 0, y: 1 } },
-      { id: "3", merged: false, new: false, val: 16, pos: { x: 2, y: 0 } },
-      { id: "4", merged: false, new: false, val: 32, pos: { x: 2, y: 2 } },
+      createTestTile({ id: "0", merged: false, val: 2,  pos: { x: 1, y: 1 } }),
+      createTestTile({ id: "1", merged: false, val: 4,  pos: { x: 0, y: 0 } }),
+      createTestTile({ id: "2", merged: false, val: 8,  pos: { x: 0, y: 1 } }),
+      createTestTile({ id: "3", merged: false, val: 16, pos: { x: 2, y: 0 } }),
+      createTestTile({ id: "4", merged: false, val: 32, pos: { x: 2, y: 2 } }),
     }),
     list{
-      { id: "0", merged: false, new: false, val: 2,  pos: { x: 2, y: 1 } },
-      { id: "1", merged: false, new: false, val: 4,  pos: { x: 1, y: 0 } },
-      { id: "2", merged: false, new: false, val: 8,  pos: { x: 1, y: 1 } },
-      { id: "3", merged: false, new: false, val: 16, pos: { x: 2, y: 0 } },
-      { id: "4", merged: false, new: false, val: 32, pos: { x: 2, y: 2 } },
+      createTestTile({ id: "0", merged: false, val: 2,  pos: { x: 2, y: 1 } }),
+      createTestTile({ id: "1", merged: false, val: 4,  pos: { x: 1, y: 0 } }),
+      createTestTile({ id: "2", merged: false, val: 8,  pos: { x: 1, y: 1 } }),
+      createTestTile({ id: "3", merged: false, val: 16, pos: { x: 2, y: 0 } }),
+      createTestTile({ id: "4", merged: false, val: 32, pos: { x: 2, y: 2 } }),
     }
   )
 
@@ -649,11 +551,11 @@ test("#Utils.moveRight: should move all tiles to right where it's possible", () 
     ~operator = "moveRight",
     compareTiles,
     Utils.moveRight(2, list{
-      { id: "0", merged: false, new: false, val: 2, pos: { x: 0, y: 0 } },
-      { id: "1", merged: false, new: false, val: 2, pos: { x: 1, y: 0 } },
+      createTestTile({ id: "0", merged: false, val: 2, pos: { x: 0, y: 0 } }),
+      createTestTile({ id: "1", merged: false, val: 2, pos: { x: 1, y: 0 } }),
     }),
     list{
-      { id: "0", merged: true,  new: true,  val: 4, pos: { x: 1, y: 0 } },
+      createTestTile({ id: "0", merged: true,  val: 4, pos: { x: 1, y: 0 } }),
     }
   )
 
@@ -662,17 +564,17 @@ test("#Utils.moveRight: should move all tiles to right where it's possible", () 
     ~operator = "moveRight",
     compareTiles,
     Utils.moveRight(3, list{
-      { id: "0", merged: false, new: false, val: 2,  pos: { x: 1, y: 1 } },
-      { id: "1", merged: false, new: false, val: 4,  pos: { x: 0, y: 0 } },
-      { id: "2", merged: false, new: false, val: 8,  pos: { x: 0, y: 1 } },
-      { id: "3", merged: false, new: false, val: 4,  pos: { x: 2, y: 0 } },
-      { id: "4", merged: false, new: false, val: 32, pos: { x: 2, y: 2 } },
+      createTestTile({ id: "0", merged: false, val: 2,  pos: { x: 1, y: 1 } }),
+      createTestTile({ id: "1", merged: false, val: 4,  pos: { x: 0, y: 0 } }),
+      createTestTile({ id: "2", merged: false, val: 8,  pos: { x: 0, y: 1 } }),
+      createTestTile({ id: "3", merged: false, val: 4,  pos: { x: 2, y: 0 } }),
+      createTestTile({ id: "4", merged: false, val: 32, pos: { x: 2, y: 2 } }),
     }),
     list{
-      { id: "0", merged: false, new: false, val: 2,  pos: { x: 2, y: 1 } },
-      { id: "1", merged: true,  new: true,  val: 8,  pos: { x: 2, y: 0 } },
-      { id: "2", merged: false, new: false, val: 8,  pos: { x: 1, y: 1 } },
-      { id: "4", merged: false, new: false, val: 32, pos: { x: 2, y: 2 } },
+      createTestTile({ id: "0", merged: false, val: 2,  pos: { x: 2, y: 1 } }),
+      createTestTile({ id: "1", merged: true,  val: 8,  pos: { x: 2, y: 0 } }),
+      createTestTile({ id: "2", merged: false, val: 8,  pos: { x: 1, y: 1 } }),
+      createTestTile({ id: "4", merged: false, val: 32, pos: { x: 2, y: 2 } }),
     }
   )
 
@@ -681,23 +583,23 @@ test("#Utils.moveRight: should move all tiles to right where it's possible", () 
     ~operator = "moveRight",
     compareTiles,
     Utils.moveRight(4, list{
-      { id: "0", merged: false, new: false, val: 2,  pos: { x: 1, y: 1 } },
-      { id: "1", merged: false, new: false, val: 4,  pos: { x: 0, y: 0 } },
-      { id: "2", merged: false, new: false, val: 8,  pos: { x: 0, y: 1 } },
-      { id: "3", merged: false, new: false, val: 4,  pos: { x: 2, y: 0 } },
-      { id: "4", merged: false, new: false, val: 32, pos: { x: 2, y: 2 } },
-      { id: "5", merged: false, new: false, val: 4,  pos: { x: 0, y: 3 } },
-      { id: "6", merged: false, new: false, val: 4,  pos: { x: 1, y: 3 } },
-      { id: "7", merged: false, new: false, val: 4,  pos: { x: 2, y: 3 } },
-      { id: "8", merged: false, new: false, val: 4,  pos: { x: 3, y: 3 } },
+      createTestTile({ id: "0", merged: false, val: 2,  pos: { x: 1, y: 1 } }),
+      createTestTile({ id: "1", merged: false, val: 4,  pos: { x: 0, y: 0 } }),
+      createTestTile({ id: "2", merged: false, val: 8,  pos: { x: 0, y: 1 } }),
+      createTestTile({ id: "3", merged: false, val: 4,  pos: { x: 2, y: 0 } }),
+      createTestTile({ id: "4", merged: false, val: 32, pos: { x: 2, y: 2 } }),
+      createTestTile({ id: "5", merged: false, val: 4,  pos: { x: 0, y: 3 } }),
+      createTestTile({ id: "6", merged: false, val: 4,  pos: { x: 1, y: 3 } }),
+      createTestTile({ id: "7", merged: false, val: 4,  pos: { x: 2, y: 3 } }),
+      createTestTile({ id: "8", merged: false, val: 4,  pos: { x: 3, y: 3 } }),
     }),
     list{
-      { id: "0", merged: false, new: false, val: 2,  pos: { x: 3, y: 1 } },
-      { id: "1", merged: true,  new: true,  val: 8,  pos: { x: 3, y: 0 } },
-      { id: "2", merged: false, new: false, val: 8,  pos: { x: 2, y: 1 } },
-      { id: "4", merged: false, new: false, val: 32, pos: { x: 3, y: 2 } },
-      { id: "5", merged: true,  new: true,  val: 8,  pos: { x: 2, y: 3 } },
-      { id: "7", merged: true,  new: true,  val: 8,  pos: { x: 3, y: 3 } },
+      createTestTile({ id: "0", merged: false, val: 2,  pos: { x: 3, y: 1 } }),
+      createTestTile({ id: "1", merged: true,  val: 8,  pos: { x: 3, y: 0 } }),
+      createTestTile({ id: "2", merged: false, val: 8,  pos: { x: 2, y: 1 } }),
+      createTestTile({ id: "4", merged: false, val: 32, pos: { x: 3, y: 2 } }),
+      createTestTile({ id: "5", merged: true,  val: 8,  pos: { x: 2, y: 3 } }),
+      createTestTile({ id: "7", merged: true,  val: 8,  pos: { x: 3, y: 3 } }),
     }
   )
 })
