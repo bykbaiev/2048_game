@@ -10,6 +10,7 @@ let make = () => {
   <Recoil.RecoilRoot>
     <div className={getClassName("root")}>
       <Header />
+      <GameIntro />
       <Board />
     </div>
   </Recoil.RecoilRoot>

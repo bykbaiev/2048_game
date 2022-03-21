@@ -5,6 +5,7 @@ import * as Utils from "./Utils.mjs";
 import * as React from "react";
 import * as Header from "./Header.mjs";
 import * as Recoil from "recoil";
+import * as GameIntro from "./GameIntro.mjs";
 import * as AppModuleCss from "./App.module.css";
 
 import './reset.css'
@@ -23,7 +24,7 @@ function App(Props) {
   return React.createElement(Recoil.RecoilRoot, {
               children: React.createElement("div", {
                     className: Utils.getCls(styles, "root")
-                  }, React.createElement(Header.make, {}), React.createElement(Board.make, {}))
+                  }, React.createElement(Header.make, {}), React.createElement(GameIntro.make, {}), React.createElement(Board.make, {}))
             });
 }
 
