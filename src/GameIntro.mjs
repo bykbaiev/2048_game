@@ -13,10 +13,6 @@ function getClassName(param) {
   return Utils.getCls(styles, param);
 }
 
-function prepareCounter(x) {
-  return String(x);
-}
-
 function GameIntro(Props) {
   var setState = Recoil.useSetRecoilState(State.gameState);
   var tryAgain = function (param) {
@@ -41,7 +37,6 @@ var make = GameIntro;
 export {
   styles ,
   getClassName ,
-  prepareCounter ,
   make ,
   
 }

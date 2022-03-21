@@ -2,8 +2,6 @@
 
 let getClassName = Utils.getCls(styles)
 
-let prepareCounter = x => x -> Belt.Int.toString -> React.string
-
 @react.component
 let make = () => {
   let setState = Recoil.useSetRecoilState(State.gameState)
