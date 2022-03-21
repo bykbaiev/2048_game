@@ -9,6 +9,7 @@ import * as Recoil from "recoil";
 import * as Belt_List from "../node_modules/rescript/lib/es6/belt_List.js";
 import * as Constants from "./Constants.mjs";
 import * as Belt_Array from "../node_modules/rescript/lib/es6/belt_Array.js";
+import * as Belt_Option from "../node_modules/rescript/lib/es6/belt_Option.js";
 import * as BoardModuleCss from "./Board.module.css";
 
 var styles = BoardModuleCss;
@@ -60,13 +61,16 @@ function viewTile(tile) {
 }
 
 function Board(Props) {
-  var match = Recoil.useRecoilState(State.tilesState);
-  var setTiles = match[1];
+  var setState = Recoil.useSetRecoilState(State.gameState);
+  var tiles = Recoil.useRecoilValue(State.tilesState);
+  var isWin = Recoil.useRecoilValue(State.winState);
+  var isLoss = Recoil.useRecoilValue(State.lossState);
+  var message = Recoil.useRecoilValue(State.messageState);
   React.useEffect((function () {
           document.addEventListener("keydown", (function ($$event) {
                   var dir = Utils.keyCodeToDirection($$event.keyCode);
                   if (dir !== undefined) {
-                    return Curry._1(setTiles, (function (param) {
+                    return Curry._1(setState, (function (param) {
                                   return Utils.move(dir, param);
                                 }));
                   }
@@ -76,13 +80,38 @@ function Board(Props) {
                     return document.removeEventListener("keydown");
                   });
         }), []);
+  var continueGame = function (param) {
+    return Curry._1(setState, (function (state) {
+                  return {
+                          TAG: /* PlayingAfterWin */3,
+                          _0: State.getInternals(state)
+                        };
+                }));
+  };
+  var tryAgain = function (param) {
+    return Curry._1(setState, (function (param) {
+                  return State.initialize(undefined);
+                }));
+  };
   return React.createElement("div", {
               className: Utils.getCls(styles, "root")
-            }, React.createElement("div", {
+            }, isWin || isLoss ? React.createElement("div", {
+                    className: Utils.getCls(styles, "gameMessage") + " " + (
+                      isWin ? Utils.getCls(styles, "gameWon") : ""
+                    )
+                  }, React.createElement("p", undefined, Belt_Option.getWithDefault(message, "")), React.createElement("div", {
+                        className: Utils.getCls(styles, "lower")
+                      }, isWin ? React.createElement("button", {
+                              className: Utils.getCls(styles, "gameMessageButton"),
+                              onClick: continueGame
+                            }, "Keep going") : null, React.createElement("button", {
+                            className: Utils.getCls(styles, "gameMessageButton"),
+                            onClick: tryAgain
+                          }, "Try again"))) : null, React.createElement("div", {
                   className: Utils.getCls(styles, "gridContainer")
                 }, Belt_Array.map(indexes, viewRow)), React.createElement("div", {
                   className: Utils.getCls(styles, "tileContainer")
-                }, Belt_Array.map(Belt_List.toArray(match[0]), viewTile)));
+                }, Belt_Array.map(Belt_List.toArray(tiles), viewTile)));
 }
 
 var make = Board;

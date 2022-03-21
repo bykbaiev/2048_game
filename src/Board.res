@@ -39,12 +39,16 @@ let viewTile = (tile: GameTile.tile) => {
 
 @react.component
 let make = () => {
-  let (tiles, setTiles) = Recoil.useRecoilState(State.tilesState);
+  let setState = Recoil.useSetRecoilState(State.gameState)
+  let tiles = Recoil.useRecoilValue(State.tilesState)
+  let isWin = Recoil.useRecoilValue(State.winState)
+  let isLoss = Recoil.useRecoilValue(State.lossState)
+  let message = Recoil.useRecoilValue(State.messageState)
 
   React.useEffect0(() => {
     document["addEventListener"](."keydown", event => {
       switch Utils.keyCodeToDirection(event["keyCode"]) {
-      | Some(dir) => setTiles(Utils.move(dir))
+      | Some(dir) => setState(Utils.move(dir))
       | _ => ()
       }
     })
@@ -53,7 +57,36 @@ let make = () => {
     })
   })
 
+  let continueGame = (_) => {
+    setState(state => state -> State.getInternals -> State.PlayingAfterWin)
+  }
+
+  let tryAgain = (_) => {
+    setState(_ => State.initialize())
+  }
+
   <div className={getClassName("root")}>
+    {(isWin || isLoss) ? (
+      <div className={`${getClassName("gameMessage")} ${isWin ? getClassName("gameWon") : ""}`}>
+        <p>{React.string(Belt.Option.getWithDefault(message, ""))}</p>
+        <div className={getClassName("lower")}>
+          {isWin ? (
+            <button
+              className={getClassName("gameMessageButton")}
+              onClick={continueGame}
+            >
+              {React.string("Keep going")}
+            </button>
+          ) : React.null}
+          <button
+            className={getClassName("gameMessageButton")}
+            onClick={tryAgain}
+          >
+            {React.string("Try again")}
+          </button>
+        </div>
+      </div>
+    ) : React.null}
     <div className={getClassName("gridContainer")}>
       {viewRow -> viewGridSizedList}
     </div>

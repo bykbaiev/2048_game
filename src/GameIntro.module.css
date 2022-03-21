@@ -1,0 +1,31 @@
+.root {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.subtitle {
+  font-size: 1em;
+  margin: 0;
+  color: #776e65;
+}
+
+.about {
+  color: #776e65;
+  font-size: 18px;
+}
+
+.restartButton {
+  background: #8f7a66;
+  border-radius: 3px;
+  padding: 0 20px;
+  color: #f9f6f2;
+  height: 40px;
+  line-height: 42px;
+  display: block;
+  text-align: center;
+  border: none;
+  font-size: 18px;
+  font-weight: bold;
+  cursor: pointer;
+}
