@@ -1,0 +1,15 @@
+.root {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.title {
+  font-size: 80px;
+  font-weight: 700;
+  margin: 0;
+  display: block;
+  line-height: 66px;
+  color: #776e65;
+}
