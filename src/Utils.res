@@ -145,7 +145,7 @@ let move = (dir: Constants.direction, state: State.state): State.state => {
     let moved = moveRight(size, rotated)
     let movedInternals = State.setTiles(internals, rotateBack(size, dir, moved))
 
-    if isWin(moved) {
+    if (isWin(moved) && !State.isPlayingAfterWin(state))  {
       State.Win(movedInternals)
     } else if isLoss(size, moved) {
       State.Loss(movedInternals)
@@ -153,7 +153,9 @@ let move = (dir: Constants.direction, state: State.state): State.state => {
       let updated = Belt.List.add(moved, GameTile.createNewTile(moved))
       let updatedInternals = State.setTiles(internals, rotateBack(size, dir, updated))
 
-      if isWin(updated) {
+      if State.isPlayingAfterWin(state) {
+        State.PlayingAfterWin(updatedInternals)
+      } else if isWin(updated) {
         State.Win(updatedInternals)
       } else if isLoss(size, updated) {
         State.Loss(updatedInternals)

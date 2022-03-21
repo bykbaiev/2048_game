@@ -95,6 +95,13 @@ let isLoss = (state: state): bool => {
   }
 }
 
+let isPlayingAfterWin = (state: state): bool => {
+  switch state {
+  | PlayingAfterWin(_) => true
+  | _                  => false
+  }
+}
+
 let winState: Recoil.readOnly<bool> = Recoil.selector({
   key: "winState",
   get: ({ get }) => {

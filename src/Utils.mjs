@@ -153,7 +153,7 @@ function move(dir, state) {
   }
   var moved = moveRight(4, rotated);
   var movedInternals = State.setTiles(internals, rotateBack(4, dir, moved));
-  if (Belt_List.some(moved, Tile.GameTile.isWinningValue)) {
+  if (Belt_List.some(moved, Tile.GameTile.isWinningValue) && !State.isPlayingAfterWin(state)) {
     return {
             TAG: /* Win */1,
             _0: movedInternals
@@ -167,7 +167,12 @@ function move(dir, state) {
   }
   var updated = Belt_List.add(moved, Tile.GameTile.createNewTile(moved));
   var updatedInternals = State.setTiles(internals, rotateBack(4, dir, updated));
-  if (Belt_List.some(updated, Tile.GameTile.isWinningValue)) {
+  if (State.isPlayingAfterWin(state)) {
+    return {
+            TAG: /* PlayingAfterWin */3,
+            _0: updatedInternals
+          };
+  } else if (Belt_List.some(updated, Tile.GameTile.isWinningValue)) {
     return {
             TAG: /* Win */1,
             _0: updatedInternals

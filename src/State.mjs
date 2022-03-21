@@ -93,6 +93,14 @@ function isLoss(state) {
   }
 }
 
+function isPlayingAfterWin(state) {
+  if (state.TAG === /* PlayingAfterWin */3) {
+    return true;
+  } else {
+    return false;
+  }
+}
+
 var winState = Recoil.selector({
       key: "winState",
       get: (function (param) {
@@ -147,6 +155,7 @@ export {
   bestScoreState ,
   isWin ,
   isLoss ,
+  isPlayingAfterWin ,
   winState ,
   lossState ,
   endOfGameState ,
