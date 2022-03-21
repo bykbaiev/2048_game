@@ -11,15 +11,20 @@ type state =
 | Loss(stateInternals)
 | PlayingAfterWin(stateInternals)
 
+// SIDE EFFECT
+let initialize = () => {
+  let fst = GameTile.createNewTile(list{})
+  let snd = GameTile.createNewTile(list{ fst })
+  Playing({
+    best: None,
+    tiles: list{ fst, snd }
+  })
+}
+
 let gameState: Recoil.readWrite<state> = Recoil.atom({
   key: "gameState",
   default: {
-    let fst = GameTile.createNewTile(list{})
-    let snd = GameTile.createNewTile(list{ fst })
-    Playing({
-      best: None,
-      tiles: list{ fst, snd }
-    })
+    initialize()
   }
 })
 
@@ -89,3 +94,41 @@ let isLoss = (state: state): bool => {
   | _       => false
   }
 }
+
+let winState: Recoil.readOnly<bool> = Recoil.selector({
+  key: "winState",
+  get: ({ get }) => {
+    let state = get(gameState)
+
+    isWin(state)
+  }
+})
+
+let lossState: Recoil.readOnly<bool> = Recoil.selector({
+  key: "lossState",
+  get: ({ get }) => {
+    let state = get(gameState)
+
+    isLoss(state)
+  }
+})
+
+let endOfGameState: Recoil.readOnly<bool> = Recoil.selector({
+  key: "endOfGameState",
+  get: ({ get }) => {
+    get(winState) || get(lossState)
+  }
+})
+
+let messageState: Recoil.readOnly<option<string>> = Recoil.selector({
+  key: "messageState",
+  get: ({ get }) => {
+    let state = get(gameState)
+
+    switch state {
+    | Win(_)  => Some("You win!")
+    | Loss(_) => Some("Game over!")
+    | _       => None
+    }
+  }
+})

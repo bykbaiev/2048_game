@@ -6,28 +6,30 @@ import * as Recoil from "recoil";
 import * as Belt_List from "../node_modules/rescript/lib/es6/belt_List.js";
 import * as Belt_Option from "../node_modules/rescript/lib/es6/belt_Option.js";
 
-var fst = Tile.GameTile.createNewTile(/* [] */0);
-
-var snd = Tile.GameTile.createNewTile({
-      hd: fst,
-      tl: /* [] */0
-    });
+function initialize(param) {
+  var fst = Tile.GameTile.createNewTile(/* [] */0);
+  var snd = Tile.GameTile.createNewTile({
+        hd: fst,
+        tl: /* [] */0
+      });
+  return {
+          TAG: /* Playing */0,
+          _0: {
+            best: undefined,
+            tiles: {
+              hd: fst,
+              tl: {
+                hd: snd,
+                tl: /* [] */0
+              }
+            }
+          }
+        };
+}
 
 var gameState = Recoil.atom({
       key: "gameState",
-      default: {
-        TAG: /* Playing */0,
-        _0: {
-          best: undefined,
-          tiles: {
-            hd: fst,
-            tl: {
-              hd: snd,
-              tl: /* [] */0
-            }
-          }
-        }
-      }
+      default: initialize(undefined)
     });
 
 function getInternals(state) {
@@ -91,7 +93,51 @@ function isLoss(state) {
   }
 }
 
+var winState = Recoil.selector({
+      key: "winState",
+      get: (function (param) {
+          return isWin(Curry._1(param.get, gameState));
+        })
+    });
+
+var lossState = Recoil.selector({
+      key: "lossState",
+      get: (function (param) {
+          return isLoss(Curry._1(param.get, gameState));
+        })
+    });
+
+var endOfGameState = Recoil.selector({
+      key: "endOfGameState",
+      get: (function (param) {
+          var get = param.get;
+          if (Curry._1(get, winState)) {
+            return true;
+          } else {
+            return Curry._1(get, lossState);
+          }
+        })
+    });
+
+var messageState = Recoil.selector({
+      key: "messageState",
+      get: (function (param) {
+          var state = Curry._1(param.get, gameState);
+          switch (state.TAG | 0) {
+            case /* Win */1 :
+                return "You win!";
+            case /* Loss */2 :
+                return "Game over!";
+            case /* Playing */0 :
+            case /* PlayingAfterWin */3 :
+                return ;
+            
+          }
+        })
+    });
+
 export {
+  initialize ,
   gameState ,
   getInternals ,
   internalsState ,
@@ -101,6 +147,10 @@ export {
   bestScoreState ,
   isWin ,
   isLoss ,
+  winState ,
+  lossState ,
+  endOfGameState ,
+  messageState ,
   
 }
 /* gameState Not a pure module */
