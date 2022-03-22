@@ -79,7 +79,13 @@ var bestScoreState = Recoil.selector({
           var get = param.get;
           var internals = Curry._1(get, internalsState);
           var score = Curry._1(get, scoreState);
-          return Belt_Option.getWithDefault(internals.best, score);
+          return Belt_Option.mapWithDefault(internals.best, score, (function (x) {
+                        if (x > score) {
+                          return x;
+                        } else {
+                          return score;
+                        }
+                      }));
         })
     });
 

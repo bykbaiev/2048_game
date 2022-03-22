@@ -80,7 +80,7 @@ let bestScoreState: Recoil.readOnly<int> = Recoil.selector({
     let internals = get(internalsState)
     let score = get(scoreState)
 
-    Belt.Option.getWithDefault(internals.best, score)
+    Belt.Option.mapWithDefault(internals.best, score, x => x > score ? x : score)
   }
 })
 
