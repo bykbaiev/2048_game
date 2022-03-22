@@ -51,6 +51,14 @@ function setTiles(internals, tiles) {
         };
 }
 
+function setScore(internals, score) {
+  return {
+          best: internals.best,
+          score: score,
+          tiles: internals.tiles
+        };
+}
+
 var tilesState = Recoil.selector({
       key: "tilesState",
       get: (function (param) {
@@ -148,6 +156,7 @@ export {
   getInternals ,
   internalsState ,
   setTiles ,
+  setScore ,
   tilesState ,
   scoreState ,
   bestScoreState ,

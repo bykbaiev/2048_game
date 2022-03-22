@@ -9,6 +9,8 @@ let make = () => {
   let score = Recoil.useRecoilValue(State.scoreState)
   let best = Recoil.useRecoilValue(State.bestScoreState)
 
+  Js.log2("scores", score)
+
   <div className={getClassName("root")}>
     <div className={getClassName("score")}>
       {prepareCounter(score)}

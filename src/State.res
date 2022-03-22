@@ -52,6 +52,10 @@ let setTiles = (internals: stateInternals, tiles: list<GameTile.tile>): stateInt
   { ...internals, tiles: tiles }
 }
 
+let setScore = (internals: stateInternals, score: int): stateInternals => {
+  { ...internals, score: score }
+}
+
 let tilesState: Recoil.readOnly<list<GameTile.tile>> = Recoil.selector({
   key: "tilesState",
   get: ({ get }) => {

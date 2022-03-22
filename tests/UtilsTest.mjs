@@ -1768,6 +1768,106 @@ Test.test("#Utils.moveRight: should move all tiles to right where it's possible"
                   });
       }));
 
+Test.test("#Utils.recalculateScore: should add values of new merged tiles to previous score", (function (param) {
+        Test.assertion("In case no 2 nodes were merged the score is the same as before", "recalculateScore", (function (a, b) {
+                return a === b;
+              }), Utils.recalculateScore({
+                  hd: createTestTile({
+                        id: "0",
+                        merged: false,
+                        val: 2,
+                        pos: {
+                          x: 1,
+                          y: 1
+                        }
+                      }),
+                  tl: {
+                    hd: createTestTile({
+                          id: "1",
+                          merged: false,
+                          val: 4,
+                          pos: {
+                            x: 0,
+                            y: 0
+                          }
+                        }),
+                    tl: /* [] */0
+                  }
+                }, 20), 20);
+        Test.assertion("if there is a merged tile score should be updated", "recalculateScore", (function (a, b) {
+                return a === b;
+              }), Utils.recalculateScore({
+                  hd: createTestTile({
+                        id: "0",
+                        merged: false,
+                        val: 2,
+                        pos: {
+                          x: 1,
+                          y: 1
+                        }
+                      }),
+                  tl: {
+                    hd: createTestTile({
+                          id: "1",
+                          merged: true,
+                          val: 4,
+                          pos: {
+                            x: 0,
+                            y: 0
+                          }
+                        }),
+                    tl: /* [] */0
+                  }
+                }, 20), 24);
+        return Test.assertion("if there are multiple merged tiles score should be updated", "recalculateScore", (function (a, b) {
+                      return a === b;
+                    }), Utils.recalculateScore({
+                        hd: createTestTile({
+                              id: "0",
+                              merged: false,
+                              val: 2,
+                              pos: {
+                                x: 1,
+                                y: 1
+                              }
+                            }),
+                        tl: {
+                          hd: createTestTile({
+                                id: "1",
+                                merged: true,
+                                val: 4,
+                                pos: {
+                                  x: 0,
+                                  y: 0
+                                }
+                              }),
+                          tl: {
+                            hd: createTestTile({
+                                  id: "2",
+                                  merged: true,
+                                  val: 32,
+                                  pos: {
+                                    x: 0,
+                                    y: 0
+                                  }
+                                }),
+                            tl: {
+                              hd: createTestTile({
+                                    id: "3",
+                                    merged: true,
+                                    val: 16,
+                                    pos: {
+                                      x: 0,
+                                      y: 0
+                                    }
+                                  }),
+                              tl: /* [] */0
+                            }
+                          }
+                        }
+                      }, 20), 72);
+      }));
+
 export {
   styles ,
   checkCls ,

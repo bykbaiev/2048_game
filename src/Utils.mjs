@@ -144,6 +144,20 @@ function moveRight(size, tiles) {
   return reverseRow(Belt_List.reduce(sortTilesByColumn(reverseRow(tiles, size)), /* [] */0, movementReducer), size);
 }
 
+function updateStats(state, tiles, score) {
+  return State.setScore(State.setTiles(state, tiles), score);
+}
+
+function recalculateScore(tiles, score) {
+  return Belt_List.reduce(tiles, score, (function (acc, tile) {
+                if (Curry._1(Tile.GameTile.Getters.merged, tile)) {
+                  return acc + Curry._1(Tile.GameTile.Getters.val, tile) | 0;
+                } else {
+                  return acc;
+                }
+              }));
+}
+
 function move(dir, state) {
   var internals = State.getInternals(state);
   var tiles = internals.tiles;
@@ -152,7 +166,8 @@ function move(dir, state) {
     return state;
   }
   var moved = moveRight(4, rotated);
-  var movedInternals = State.setTiles(internals, rotateBack(4, dir, moved));
+  var updatedScore = recalculateScore(moved, internals.score);
+  var movedInternals = updateStats(internals, rotateBack(4, dir, moved), updatedScore);
   if (Belt_List.some(moved, Tile.GameTile.isWinningValue) && !State.isPlayingAfterWin(state)) {
     return {
             TAG: /* Win */1,
@@ -166,7 +181,7 @@ function move(dir, state) {
           };
   }
   var updated = Belt_List.add(moved, Tile.GameTile.createNewTile(moved));
-  var updatedInternals = State.setTiles(internals, rotateBack(4, dir, updated));
+  var updatedInternals = updateStats(internals, rotateBack(4, dir, updated), updatedScore);
   if (State.isPlayingAfterWin(state)) {
     return {
             TAG: /* PlayingAfterWin */3,
@@ -209,6 +224,8 @@ export {
   sortTilesByColumn ,
   movementReducer ,
   moveRight ,
+  updateStats ,
+  recalculateScore ,
   move ,
   
 }

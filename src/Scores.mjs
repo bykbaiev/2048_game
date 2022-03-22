@@ -19,6 +19,7 @@ function prepareCounter(x) {
 function Scores(Props) {
   var score = Recoil.useRecoilValue(State.scoreState);
   var best = Recoil.useRecoilValue(State.bestScoreState);
+  console.log("scores", score);
   return React.createElement("div", {
               className: Utils.getCls(styles, "root")
             }, React.createElement("div", {

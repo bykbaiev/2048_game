@@ -134,6 +134,18 @@ let moveRight = (size: int, tiles: list<GameTile.tile>): list<GameTile.tile> => 
   -> reverseRow(size)
 }
 
+let updateStats = (state, tiles, score) => state -> State.setTiles(tiles) -> State.setScore(score)
+
+let recalculateScore = (tiles, score) => {
+  Belt.List.reduce(tiles, score, (acc, tile) => {
+    if (GameTile.Getters.merged(tile)) {
+      acc + GameTile.Getters.val(tile)
+    } else {
+      acc
+    }
+  })
+}
+
 let move = (dir: Constants.direction, state: State.state): State.state => {
   let internals = State.getInternals(state)
   let tiles = internals.tiles
@@ -143,7 +155,8 @@ let move = (dir: Constants.direction, state: State.state): State.state => {
 
   if !State.isWin(state) && !State.isLoss(state) && isMoveToRightPossible(rotated, size) {
     let moved = moveRight(size, rotated)
-    let movedInternals = State.setTiles(internals, rotateBack(size, dir, moved))
+    let updatedScore = recalculateScore(moved, internals.score)
+    let movedInternals = updateStats(internals, rotateBack(size, dir, moved), updatedScore)
 
     if (isWin(moved) && !State.isPlayingAfterWin(state))  {
       State.Win(movedInternals)
@@ -151,7 +164,7 @@ let move = (dir: Constants.direction, state: State.state): State.state => {
       State.Loss(movedInternals)
     } else {
       let updated = Belt.List.add(moved, GameTile.createNewTile(moved))
-      let updatedInternals = State.setTiles(internals, rotateBack(size, dir, updated))
+      let updatedInternals = updateStats(internals, rotateBack(size, dir, updated), updatedScore)
 
       if State.isPlayingAfterWin(state) {
         State.PlayingAfterWin(updatedInternals)
