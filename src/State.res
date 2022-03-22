@@ -1,7 +1,8 @@
 open Tile
 
 type stateInternals = {
-  best: option<int>,
+  best:  option<int>,
+  score: int,
   tiles: list<GameTile.tile>
 }
 
@@ -16,7 +17,8 @@ let initialize = () => {
   let fst = GameTile.createNewTile(list{})
   let snd = GameTile.createNewTile(list{ fst })
   Playing({
-    best: None,
+    best:  None,
+    score: 0,
     tiles: list{ fst, snd }
   })
 }
@@ -62,12 +64,9 @@ let tilesState: Recoil.readOnly<list<GameTile.tile>> = Recoil.selector({
 let scoreState: Recoil.readOnly<int> = Recoil.selector({
   key: "scoreState",
   get: ({ get }) => {
-    let tiles = get(tilesState)
-    tiles
-    -> Belt.List.map(GameTile.Getters.val)
-    -> Belt.List.sort((a, b) => b - a)
-    -> Belt.List.head
-    -> Belt.Option.getWithDefault(0)
+    let internals = get(internalsState)
+
+    internals.score
   }
 })
 

@@ -3,7 +3,6 @@
 import * as Tile from "./Tile.mjs";
 import * as Curry from "../node_modules/rescript/lib/es6/curry.js";
 import * as Recoil from "recoil";
-import * as Belt_List from "../node_modules/rescript/lib/es6/belt_List.js";
 import * as Belt_Option from "../node_modules/rescript/lib/es6/belt_Option.js";
 
 function initialize(param) {
@@ -16,6 +15,7 @@ function initialize(param) {
           TAG: /* Playing */0,
           _0: {
             best: undefined,
+            score: 0,
             tiles: {
               hd: fst,
               tl: {
@@ -46,6 +46,7 @@ var internalsState = Recoil.selector({
 function setTiles(internals, tiles) {
   return {
           best: internals.best,
+          score: internals.score,
           tiles: tiles
         };
 }
@@ -60,10 +61,7 @@ var tilesState = Recoil.selector({
 var scoreState = Recoil.selector({
       key: "scoreState",
       get: (function (param) {
-          var tiles = Curry._1(param.get, tilesState);
-          return Belt_Option.getWithDefault(Belt_List.head(Belt_List.sort(Belt_List.map(tiles, Tile.GameTile.Getters.val), (function (a, b) {
-                                return b - a | 0;
-                              }))), 0);
+          return Curry._1(param.get, internalsState).score;
         })
     });
 
