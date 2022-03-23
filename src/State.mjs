@@ -225,7 +225,8 @@ function localStorageEffect(param) {
   var savedBestScore = Dom_storage.getItem(bestScoreKey, localStorage);
   Curry._1(param.onSet, (function (newValue, param, isReset) {
           if (isReset) {
-            return Dom_storage.removeItem(bestScoreKey, localStorage);
+            Dom_storage.removeItem(bestScoreKey, localStorage);
+            return Dom_storage.removeItem(gameStateKey, localStorage);
           } else {
             Dom_storage.setItem(bestScoreKey, JSON.stringify(getBestScore(newValue)), localStorage);
             return Dom_storage.setItem(gameStateKey, JSON.stringify(encodeGameState(newValue)), localStorage);

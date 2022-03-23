@@ -176,6 +176,7 @@ let localStorageEffect = ({ setSelf, onSet }: Recoil.atomEffect<'a>) => {
     isReset
       ? {
         Dom.Storage.removeItem(bestScoreKey, Dom.Storage.localStorage)
+        Dom.Storage.removeItem(gameStateKey, Dom.Storage.localStorage)
       }
       : {
         Dom.Storage.setItem(
