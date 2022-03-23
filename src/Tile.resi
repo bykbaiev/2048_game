@@ -39,6 +39,10 @@ module GameTile: {
 
   let isWinningValue: tile => bool
 
+  let encode: tile => Js.Json.t
+
+  let decode: Js.Json.t => option<tile>
+
   // ONLY FOR TESTING PURPOSES
   let getPair: (int, int) => option<(int, int)>
 
