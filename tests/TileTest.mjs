@@ -5,6 +5,7 @@ import * as Tile from "../src/Tile.mjs";
 import * as Curry from "../node_modules/rescript/lib/es6/curry.js";
 import * as Caml_obj from "../node_modules/rescript/lib/es6/caml_obj.js";
 import * as Caml_array from "../node_modules/rescript/lib/es6/caml_array.js";
+import * as Caml_option from "../node_modules/rescript/lib/es6/caml_option.js";
 
 function createTestTile(param) {
   var pos = param.pos;
@@ -170,6 +171,72 @@ Test.test("#Tile.positionFilterPred: should verify that pair is valid & there is
                         1,
                         1
                       ]), true);
+      }));
+
+Test.test("#Tile.encode: should encode the tile to keep the history", (function (param) {
+        var dict = {};
+        Test.assertion("Average tile", "encode", Caml_obj.caml_equal, Tile.GameTile.encode(createTestTile({
+                      id: "0",
+                      merged: false,
+                      val: 2,
+                      pos: {
+                        x: 0,
+                        y: 1
+                      }
+                    })), (dict["status"] = "average", dict["id"] = "0", dict["val"] = 2, dict["x"] = 0, dict["y"] = 1, dict));
+        var dict$1 = {};
+        Test.assertion("Merged tile", "encode", Caml_obj.caml_equal, Tile.GameTile.encode(createTestTile({
+                      id: "0",
+                      merged: true,
+                      val: 2,
+                      pos: {
+                        x: 0,
+                        y: 1
+                      }
+                    })), (dict$1["status"] = "merged", dict$1["id"] = "0", dict$1["val"] = 2, dict$1["x"] = 0, dict$1["y"] = 1, dict$1));
+        var dict$2 = {};
+        return Test.assertion("New tile", "encode", Caml_obj.caml_equal, Tile.GameTile.encode(Curry._1(Tile.GameTile.Converters.toNew, createTestTile({
+                                id: "0",
+                                merged: false,
+                                val: 2,
+                                pos: {
+                                  x: 0,
+                                  y: 1
+                                }
+                              }))), (dict$2["status"] = "new", dict$2["id"] = "0", dict$2["val"] = 2, dict$2["x"] = 0, dict$2["y"] = 1, dict$2));
+      }));
+
+Test.test("#Tile.decode: should decode the tile JSON representation to actual tile", (function (param) {
+        Test.assertion("Invalid tile", "decode", Caml_obj.caml_equal, Tile.GameTile.decode(JSON.parse("{}")), undefined);
+        Test.assertion("Invalid tile (2)", "decode", Caml_obj.caml_equal, Tile.GameTile.decode(JSON.parse("{\"status\": \"non-existing\"}")), undefined);
+        Test.assertion("Invalid tile (3)", "decode", Caml_obj.caml_equal, Tile.GameTile.decode(JSON.parse("{\"status\": \"merged\"}")), undefined);
+        Test.assertion("Average tile", "decode", Caml_obj.caml_equal, Tile.GameTile.decode(JSON.parse("{\"status\": \"average\", \"id\": \"tile-123\", \"val\": 4, \"x\": 0, \"y\": 1 }")), Caml_option.some(createTestTile({
+                      id: "tile-123",
+                      merged: false,
+                      val: 4,
+                      pos: {
+                        x: 0,
+                        y: 1
+                      }
+                    })));
+        Test.assertion("Merged tile", "decode", Caml_obj.caml_equal, Tile.GameTile.decode(JSON.parse("{\"status\": \"merged\", \"id\": \"tile-123\", \"val\": 4, \"x\": 0, \"y\": 1 }")), Caml_option.some(createTestTile({
+                      id: "tile-123",
+                      merged: true,
+                      val: 4,
+                      pos: {
+                        x: 0,
+                        y: 1
+                      }
+                    })));
+        return Test.assertion("New tile", "decode", Caml_obj.caml_equal, Tile.GameTile.decode(JSON.parse("{\"status\": \"new\", \"id\": \"tile-123\", \"val\": 4, \"x\": 0, \"y\": 1 }")), Caml_option.some(Curry._1(Tile.GameTile.Converters.toNew, createTestTile({
+                                id: "tile-123",
+                                merged: false,
+                                val: 4,
+                                pos: {
+                                  x: 0,
+                                  y: 1
+                                }
+                              }))));
       }));
 
 export {

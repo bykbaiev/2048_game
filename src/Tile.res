@@ -25,6 +25,14 @@ module GameTile = {
     })
 
   module Getters = {
+    let status = tile => {
+      switch tile {
+      | AverageTile(_) => "average"
+      | MergedTile(_)  => "merged"
+      | NewTile(_)     => "new"
+      }
+    }
+
     let internals = tile => switch tile {
     | NewTile(data)     => data
     | MergedTile(data)  => data
@@ -121,4 +129,46 @@ module GameTile = {
   }
 
   let isWinningValue = (tile: tile) => Getters.val(tile) === Constants.winningValue
+
+  let encode = tile => {
+    let dict = Js.Dict.empty()
+
+    Js.Dict.set(dict, "status", tile -> Getters.status -> Js.Json.string)
+    Js.Dict.set(dict, "id", tile -> Getters.id -> Js.Json.string)
+    Js.Dict.set(dict, "val", tile -> Getters.val -> Belt.Int.toFloat -> Js.Json.number)
+    Js.Dict.set(dict, "x", tile -> Getters.x -> Belt.Int.toFloat -> Js.Json.number)
+    Js.Dict.set(dict, "y", tile -> Getters.y -> Belt.Int.toFloat -> Js.Json.number)
+
+    Js.Json.object_(dict)
+  }
+
+  let decode = tile => {
+    switch Js.Json.classify(tile) {
+    | Js.Json.JSONObject(value) => {
+        let status = value -> Js.Dict.get("status") -> Belt.Option.flatMap(Js.Json.decodeString)
+        let id =     value -> Js.Dict.get("id")     -> Belt.Option.flatMap(Js.Json.decodeString)
+        let val =    value -> Js.Dict.get("val")    -> Belt.Option.flatMap(Js.Json.decodeNumber) -> Belt.Option.map(Js.Math.ceil_int)
+        let x =      value -> Js.Dict.get("x")      -> Belt.Option.flatMap(Js.Json.decodeNumber) -> Belt.Option.map(Js.Math.ceil_int)
+        let y =      value -> Js.Dict.get("y")      -> Belt.Option.flatMap(Js.Json.decodeNumber) -> Belt.Option.map(Js.Math.ceil_int)
+
+        let pos = switch (x, y) {
+        | (Some(x), Some(y)) => Some({ x: x, y: y })
+        | _                  => None
+        }
+
+        let internals = switch (id, val, pos) {
+        | (Some(id), Some(val), Some(pos)) => Some({ id: id, val: val, pos: pos })
+        | _                                => None
+        }
+        
+        switch (status, internals) {
+        | (Some("new"), Some(internals))     => internals -> NewTile     -> Some
+        | (Some("average"), Some(internals)) => internals -> AverageTile -> Some
+        | (Some("merged"), Some(internals))  => internals -> MergedTile  -> Some
+        | _                                  => None
+        }
+      }
+    | _                         => None
+    }
+  }
 }

@@ -168,3 +168,119 @@ test("#Tile.positionFilterPred: should verify that pair is valid & there is no s
     true
   )
 })
+
+test("#Tile.encode: should encode the tile to keep the history", () => {
+  assertion(
+    ~message = "Average tile",
+    ~operator = "encode",
+    (a, b) => a == b,
+    Tile.GameTile.encode(
+      createTestTile({id: "0", merged: false, val: 2, pos: { x: 0, y: 1 } })
+    ),
+    {
+      let dict = Js.Dict.empty()
+
+      Js.Dict.set(dict, "status", Js.Json.string("average"))
+      Js.Dict.set(dict, "id", Js.Json.string("0"))
+      Js.Dict.set(dict, "val", Js.Json.number(2.))
+      Js.Dict.set(dict, "x", Js.Json.number(0.))
+      Js.Dict.set(dict, "y", Js.Json.number(1.))
+
+      Js.Json.object_(dict)
+    }
+  )
+
+  assertion(
+    ~message = "Merged tile",
+    ~operator = "encode",
+    (a, b) => a == b,
+    Tile.GameTile.encode(
+      createTestTile({id: "0", merged: true, val: 2, pos: { x: 0, y: 1 } })
+    ),
+    {
+      let dict = Js.Dict.empty()
+
+      Js.Dict.set(dict, "status", Js.Json.string("merged"))
+      Js.Dict.set(dict, "id", Js.Json.string("0"))
+      Js.Dict.set(dict, "val", Js.Json.number(2.))
+      Js.Dict.set(dict, "x", Js.Json.number(0.))
+      Js.Dict.set(dict, "y", Js.Json.number(1.))
+
+      Js.Json.object_(dict)
+    }
+  )
+
+  assertion(
+    ~message = "New tile",
+    ~operator = "encode",
+    (a, b) => a == b,
+    Tile.GameTile.encode(
+      Tile.GameTile.Converters.toNew(createTestTile({id: "0", merged: false, val: 2, pos: { x: 0, y: 1 } }))
+    ),
+    {
+      let dict = Js.Dict.empty()
+
+      Js.Dict.set(dict, "status", Js.Json.string("new"))
+      Js.Dict.set(dict, "id", Js.Json.string("0"))
+      Js.Dict.set(dict, "val", Js.Json.number(2.))
+      Js.Dict.set(dict, "x", Js.Json.number(0.))
+      Js.Dict.set(dict, "y", Js.Json.number(1.))
+
+      Js.Json.object_(dict)
+    }
+  )
+})
+
+test("#Tile.decode: should decode the tile JSON representation to actual tile", () => {
+  assertion(
+    ~message = "Invalid tile",
+    ~operator = "decode",
+    (a, b) => a == b,
+    Tile.GameTile.decode(Js.Json.parseExn("{}")),
+    None
+  )
+
+  assertion(
+    ~message = "Invalid tile (2)",
+    ~operator = "decode",
+    (a, b) => a == b,
+    Tile.GameTile.decode(Js.Json.parseExn("{\"status\": \"non-existing\"}")),
+    None
+  )
+
+  assertion(
+    ~message = "Invalid tile (3)",
+    ~operator = "decode",
+    (a, b) => a == b,
+    Tile.GameTile.decode(Js.Json.parseExn("{\"status\": \"merged\"}")),
+    None
+  )
+
+  assertion(
+    ~message = "Average tile",
+    ~operator = "decode",
+    (a, b) => a == b,
+    Tile.GameTile.decode(Js.Json.parseExn("{\"status\": \"average\", \"id\": \"tile-123\", \"val\": 4, \"x\": 0, \"y\": 1 }")),
+    Some(createTestTile({id: "tile-123", merged: false, val: 4, pos: { x: 0, y: 1 } }))
+  )
+
+  assertion(
+    ~message = "Merged tile",
+    ~operator = "decode",
+    (a, b) => a == b,
+    Tile.GameTile.decode(Js.Json.parseExn("{\"status\": \"merged\", \"id\": \"tile-123\", \"val\": 4, \"x\": 0, \"y\": 1 }")),
+    Some(createTestTile({id: "tile-123", merged: true, val: 4, pos: { x: 0, y: 1 } }))
+  )
+
+  assertion(
+    ~message = "New tile",
+    ~operator = "decode",
+    (a, b) => a == b,
+    Tile.GameTile.decode(Js.Json.parseExn("{\"status\": \"new\", \"id\": \"tile-123\", \"val\": 4, \"x\": 0, \"y\": 1 }")),
+    Some(
+      Tile.GameTile.Converters.toNew(
+        createTestTile({id: "tile-123", merged: false, val: 4, pos: { x: 0, y: 1 } })
+      )
+    )
+  )
+})

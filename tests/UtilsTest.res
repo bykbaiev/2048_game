@@ -603,3 +603,40 @@ test("#Utils.moveRight: should move all tiles to right where it's possible", () 
     }
   )
 })
+
+test("#Utils.recalculateScore: should add values of new merged tiles to previous score", () => {
+  assertion(
+    ~message = "In case no 2 nodes were merged the score is the same as before",
+    ~operator = "recalculateScore",
+    (a, b) => a === b,
+    Utils.recalculateScore(list{
+      createTestTile({ id: "0", merged: false, val: 2,  pos: { x: 1, y: 1 } }),
+      createTestTile({ id: "1", merged: false, val: 4,  pos: { x: 0, y: 0 } }),
+    }, 20),
+    20
+  )
+
+  assertion(
+    ~message = "if there is a merged tile score should be updated",
+    ~operator = "recalculateScore",
+    (a, b) => a === b,
+    Utils.recalculateScore(list{
+      createTestTile({ id: "0", merged: false, val: 2,  pos: { x: 1, y: 1 } }),
+      createTestTile({ id: "1", merged: true, val: 4,  pos: { x: 0, y: 0 } }),
+    }, 20),
+    20 + 4
+  )
+
+  assertion(
+    ~message = "if there are multiple merged tiles score should be updated",
+    ~operator = "recalculateScore",
+    (a, b) => a === b,
+    Utils.recalculateScore(list{
+      createTestTile({ id: "0", merged: false, val: 2,  pos: { x: 1, y: 1 } }),
+      createTestTile({ id: "1", merged: true, val: 4,   pos: { x: 0, y: 0 } }),
+      createTestTile({ id: "2", merged: true, val: 32,  pos: { x: 0, y: 0 } }),
+      createTestTile({ id: "3", merged: true, val: 16,  pos: { x: 0, y: 0 } }),
+    }, 20),
+    20 + 4 + 32 + 16
+  )
+})
