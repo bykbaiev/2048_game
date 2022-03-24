@@ -239,6 +239,66 @@ Test.test("#Tile.decode: should decode the tile JSON representation to actual ti
                               }))));
       }));
 
+Test.test("#Tile.encodeHistorical: dumb tile representation for history", (function (param) {
+        Test.assertion("New tile", "decode", Caml_obj.caml_equal, Tile.GameTile.encodeHistorical(createTestTile({
+                      id: "tile-1",
+                      merged: false,
+                      val: 2,
+                      pos: {
+                        x: 0,
+                        y: 1
+                      }
+                    })), [
+              "tile-1",
+              "2",
+              "0",
+              "1"
+            ]);
+        Test.assertion("Merged tile", "decode", Caml_obj.caml_equal, Tile.GameTile.encodeHistorical(createTestTile({
+                      id: "tile-1",
+                      merged: true,
+                      val: 2,
+                      pos: {
+                        x: 0,
+                        y: 1
+                      }
+                    })), [
+              "tile-1",
+              "2",
+              "0",
+              "1"
+            ]);
+        return Test.assertion("Average tile", "decode", Caml_obj.caml_equal, Tile.GameTile.encodeHistorical(Curry._1(Tile.GameTile.Converters.toAverage, createTestTile({
+                                id: "tile-1",
+                                merged: false,
+                                val: 2,
+                                pos: {
+                                  x: 0,
+                                  y: 1
+                                }
+                              }))), [
+                    "tile-1",
+                    "2",
+                    "0",
+                    "1"
+                  ]);
+      }));
+
+Test.test("#Tile.decodeHistorical: tile from it's dumb representation", (function (param) {
+        Test.assertion("Invalid tile", "decodeHistorical", Caml_obj.caml_equal, Tile.GameTile.decodeHistorical(JSON.parse("[]")), undefined);
+        Test.assertion("Invalid tile (2)", "decodeHistorical", Caml_obj.caml_equal, Tile.GameTile.decodeHistorical(JSON.parse("[0, 2, \"asdf\", 3]")), undefined);
+        Test.assertion("Invalid tile (3)", "decodeHistorical", Caml_obj.caml_equal, Tile.GameTile.decodeHistorical(JSON.parse("[\"0\", 2, 3]")), undefined);
+        return Test.assertion("Valid tile", "decodeHistorical", Caml_obj.caml_equal, Tile.GameTile.decodeHistorical(JSON.parse("[\"tile-123\", 2, 3, 3]")), Caml_option.some(Curry._1(Tile.GameTile.Converters.toAverage, createTestTile({
+                                id: "tile-123",
+                                merged: false,
+                                val: 2,
+                                pos: {
+                                  x: 3,
+                                  y: 3
+                                }
+                              }))));
+      }));
+
 export {
   createTestTile ,
   checkPairs ,

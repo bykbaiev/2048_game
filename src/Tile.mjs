@@ -259,6 +259,15 @@ function encode(tile) {
   return dict;
 }
 
+function encodeHistorical(tile) {
+  return [
+          tile._0.id,
+          String(tile._0.val),
+          String(tile._0.pos.x),
+          String(tile._0.pos.y)
+        ];
+}
+
 function decode(tile) {
   var value = Js_json.classify(tile);
   if (typeof value === "number") {
@@ -318,6 +327,43 @@ function decode(tile) {
   }
 }
 
+function decodeHistorical(tile) {
+  var value = Js_json.classify(tile);
+  if (typeof value === "number") {
+    return ;
+  }
+  if (value.TAG !== /* JSONArray */3) {
+    return ;
+  }
+  var value$1 = value._0;
+  if (value$1.length !== 4) {
+    return ;
+  }
+  var id = value$1[0];
+  var val = value$1[1];
+  var x = value$1[2];
+  var y = value$1[3];
+  var id$1 = Js_json.decodeString(id);
+  var val$1 = Belt_Option.map(Js_json.decodeNumber(val), Js_math.ceil_int);
+  var x$1 = Belt_Option.map(Js_json.decodeNumber(x), Js_math.ceil_int);
+  var y$1 = Belt_Option.map(Js_json.decodeNumber(y), Js_math.ceil_int);
+  var pos = x$1 !== undefined && y$1 !== undefined ? ({
+        x: x$1,
+        y: y$1
+      }) : undefined;
+  if (id$1 !== undefined && val$1 !== undefined && pos !== undefined) {
+    return {
+            TAG: /* AverageTile */2,
+            _0: {
+              id: id$1,
+              val: val$1,
+              pos: pos
+            }
+          };
+  }
+  
+}
+
 var GameTile_Getters = {
   x: x,
   y: y,
@@ -335,7 +381,9 @@ var GameTile = {
   createNewTile: createNewTile,
   isWinningValue: isWinningValue,
   encode: encode,
+  encodeHistorical: encodeHistorical,
   decode: decode,
+  decodeHistorical: decodeHistorical,
   getPair: getPair,
   positionFilterPred: positionFilterPred
 };

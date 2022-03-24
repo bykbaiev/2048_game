@@ -142,6 +142,15 @@ module GameTile = {
     Js.Json.object_(dict)
   }
 
+  let encodeHistorical = tile => {
+    Js.Json.array([
+      tile -> Getters.id  -> Js.Json.string,
+      tile -> Getters.val -> Belt.Int.toString -> Js.Json.string,
+      tile -> Getters.x   -> Belt.Int.toString -> Js.Json.string,
+      tile -> Getters.y   -> Belt.Int.toString -> Js.Json.string
+    ])
+  }
+
   let decode = tile => {
     switch Js.Json.classify(tile) {
     | Js.Json.JSONObject(value) => {
@@ -166,6 +175,33 @@ module GameTile = {
         | (Some("average"), Some(internals)) => internals -> AverageTile -> Some
         | (Some("merged"), Some(internals))  => internals -> MergedTile  -> Some
         | _                                  => None
+        }
+      }
+    | _                         => None
+    }
+  }
+
+  let decodeHistorical = tile => {
+    switch Js.Json.classify(tile) {
+    | Js.Json.JSONArray(value) => {
+        switch value {
+        | [id, val, x, y] => {
+            let id  = id  -> Js.Json.decodeString
+            let val = val -> Js.Json.decodeNumber -> Belt.Option.map(Js.Math.ceil_int)
+            let x   = x   -> Js.Json.decodeNumber -> Belt.Option.map(Js.Math.ceil_int)
+            let y   = y   -> Js.Json.decodeNumber -> Belt.Option.map(Js.Math.ceil_int)
+
+            let pos = switch (x, y) {
+            | (Some(x), Some(y)) => Some({ x: x, y: y })
+            | _                  => None
+            }
+
+            switch (id, val, pos) {
+            | (Some(id), Some(val), Some(pos)) => Some(AverageTile({ id: id, val: val, pos: pos }))
+            | _                                => None
+            }
+          }
+        | _               => None
         }
       }
     | _                         => None
