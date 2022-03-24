@@ -5,6 +5,7 @@ import * as Tile from "../src/Tile.mjs";
 import * as Curry from "../node_modules/rescript/lib/es6/curry.js";
 import * as State from "../src/State.mjs";
 import * as Caml_obj from "../node_modules/rescript/lib/es6/caml_obj.js";
+import * as Belt_Array from "../node_modules/rescript/lib/es6/belt_Array.js";
 
 Test.test("#State.decodeBestScore: should decode best score got from local storage", (function (param) {
         Test.assertion("Missing value", "decodeBestScore", Caml_obj.caml_equal, State.decodeBestScore(undefined), undefined);
@@ -43,6 +44,67 @@ Test.test("#State.decodeGameState: should decode from local storage's JSON strin
                       }
                     }
                   });
+      }));
+
+Test.test("#State.encodeHistoricalGameState: should serialize history (tiles & score)", (function (param) {
+        var fst = [
+          "tile-123",
+          "4",
+          "0",
+          "1"
+        ];
+        var snd = [
+          "tile-456",
+          "2",
+          "2",
+          "2"
+        ];
+        Test.assertion("Valid state (playing)", "encodeHistoricalGameState", Caml_obj.caml_equal, State.encodeHistoricalGameState({
+                  TAG: /* Playing */0,
+                  _0: {
+                    best: 200,
+                    score: 123,
+                    tiles: {
+                      hd: Tile.GameTile.createTile("tile-123", 4, 0, 1),
+                      tl: {
+                        hd: Tile.GameTile.createTile("tile-456", 2, 2, 2),
+                        tl: /* [] */0
+                      }
+                    }
+                  }
+                }), Belt_Array.concat(["123"], [
+                  fst,
+                  snd
+                ]));
+        var fst$1 = [
+          "tile-123",
+          "2048",
+          "0",
+          "1"
+        ];
+        var snd$1 = [
+          "tile-456",
+          "2",
+          "2",
+          "2"
+        ];
+        return Test.assertion("Valid state (win)", "encodeHistoricalGameState", Caml_obj.caml_equal, State.encodeHistoricalGameState({
+                        TAG: /* Win */1,
+                        _0: {
+                          best: 200,
+                          score: 123,
+                          tiles: {
+                            hd: Tile.GameTile.createTile("tile-123", 2048, 0, 1),
+                            tl: {
+                              hd: Tile.GameTile.createTile("tile-456", 2, 2, 2),
+                              tl: /* [] */0
+                            }
+                          }
+                        }
+                      }), Belt_Array.concat(["123"], [
+                        fst$1,
+                        snd$1
+                      ]));
       }));
 
 export {

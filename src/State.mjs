@@ -7,6 +7,7 @@ import * as Js_dict from "../node_modules/rescript/lib/es6/js_dict.js";
 import * as Js_json from "../node_modules/rescript/lib/es6/js_json.js";
 import * as Js_math from "../node_modules/rescript/lib/es6/js_math.js";
 import * as Belt_List from "../node_modules/rescript/lib/es6/belt_List.js";
+import * as Belt_Array from "../node_modules/rescript/lib/es6/belt_Array.js";
 import * as Belt_Option from "../node_modules/rescript/lib/es6/belt_Option.js";
 import * as Dom_storage from "../node_modules/rescript/lib/es6/dom_storage.js";
 
@@ -123,6 +124,16 @@ function encodeGameState(state) {
   gameState["score"] = match.score;
   gameState["tiles"] = Belt_List.toArray(Belt_List.map(match.tiles, Tile.GameTile.encode));
   return gameState;
+}
+
+function arrOf(x) {
+  return [x];
+}
+
+function encodeHistoricalGameState(state) {
+  var match = state._0;
+  var encodedTiles = Belt_List.toArray(Belt_List.map(match.tiles, Tile.GameTile.encodeHistorical));
+  return Belt_Array.concat([String(match.score)], encodedTiles);
 }
 
 function decodeBestScore(best) {
@@ -357,6 +368,8 @@ export {
   encodeBestScore ,
   encodeStatus ,
   encodeGameState ,
+  arrOf ,
+  encodeHistoricalGameState ,
   decodeBestScore ,
   decodeGameState ,
   localStorageEffect ,

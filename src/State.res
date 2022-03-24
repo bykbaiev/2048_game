@@ -104,6 +104,20 @@ let encodeGameState = (state: state) => {
   Js.Json.object_(gameState)
 }
 
+let arrOf = x => [x]
+
+let encodeHistoricalGameState = (state: state) => {
+  let { score, tiles } = getInternals(state)
+  let encodedTiles = tiles -> Belt.List.map(GameTile.encodeHistorical) -> Belt.List.toArray
+
+  score
+    -> Belt.Int.toString
+    -> Js.Json.string
+    -> arrOf
+    -> Belt.Array.concat(encodedTiles)
+    -> Js.Json.array
+}
+
 let decodeBestScore = (best: option<string>): option<int> => {
   switch best {
   | Some(bestScore) => {

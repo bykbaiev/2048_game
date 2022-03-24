@@ -97,3 +97,87 @@ test("#State.decodeGameState: should decode from local storage's JSON string to 
     )
   )
 })
+
+test("#State.encodeHistoricalGameState: should serialize history (tiles & score)", () => {
+  assertion(
+    ~message = "Valid state (playing)",
+    ~operator = "encodeHistoricalGameState",
+    (a, b) => a == b,
+    State.encodeHistoricalGameState(State.Playing({
+      score: 123,
+      best: Some(200),
+      tiles: list{
+        Tile.GameTile.createTile(
+          ~id  = "tile-123",
+          ~val = 4,
+          ~x   = 0,
+          ~y   = 1
+        ),
+        Tile.GameTile.createTile(
+          ~id  = "tile-456",
+          ~val = 2,
+          ~x   = 2,
+          ~y   = 2
+        )
+      }
+    })),
+    {
+      let fst = Js.Json.array([
+        Js.Json.string("tile-123"),
+        Js.Json.string("4"),
+        Js.Json.string("0"),
+        Js.Json.string("1")
+      ])
+
+      let snd = Js.Json.array([
+        Js.Json.string("tile-456"),
+        Js.Json.string("2"),
+        Js.Json.string("2"),
+        Js.Json.string("2")
+      ])
+
+      Js.Json.array(Belt.Array.concat([Js.Json.string("123")], [fst, snd]))
+    }
+  )
+
+  assertion(
+    ~message = "Valid state (win)",
+    ~operator = "encodeHistoricalGameState",
+    (a, b) => a == b,
+    State.encodeHistoricalGameState(State.Win({
+      score: 123,
+      best: Some(200),
+      tiles: list{
+        Tile.GameTile.createTile(
+          ~id  = "tile-123",
+          ~val = 2048,
+          ~x   = 0,
+          ~y   = 1
+        ),
+        Tile.GameTile.createTile(
+          ~id  = "tile-456",
+          ~val = 2,
+          ~x   = 2,
+          ~y   = 2
+        )
+      }
+    })),
+    {
+      let fst = Js.Json.array([
+        Js.Json.string("tile-123"),
+        Js.Json.string("2048"),
+        Js.Json.string("0"),
+        Js.Json.string("1")
+      ])
+
+      let snd = Js.Json.array([
+        Js.Json.string("tile-456"),
+        Js.Json.string("2"),
+        Js.Json.string("2"),
+        Js.Json.string("2")
+      ])
+
+      Js.Json.array(Belt.Array.concat([Js.Json.string("123")], [fst, snd]))
+    }
+  )
+})
