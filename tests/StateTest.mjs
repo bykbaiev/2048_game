@@ -72,7 +72,10 @@ Test.test("#State.encodeHistoricalGameState: should serialize history (tiles & s
                       }
                     }
                   }
-                }), Belt_Array.concat(["123"], [
+                }), Belt_Array.concat([
+                  "123",
+                  "playing"
+                ], [
                   fst,
                   snd
                 ]));
@@ -101,10 +104,61 @@ Test.test("#State.encodeHistoricalGameState: should serialize history (tiles & s
                             }
                           }
                         }
-                      }), Belt_Array.concat(["123"], [
+                      }), Belt_Array.concat([
+                        "123",
+                        "win"
+                      ], [
                         fst$1,
                         snd$1
                       ]));
+      }));
+
+Test.test("#State.decodeHistoricalGameState: should deserialize history", (function (param) {
+        Test.assertion("Invalid state", "decodeHistoricalGameState", Caml_obj.caml_equal, State.decodeHistoricalGameState(undefined), undefined);
+        Test.assertion("Invalid state (2)", "decodeHistoricalGameState", Caml_obj.caml_equal, State.decodeHistoricalGameState("[]"), undefined);
+        Test.assertion("Invalid state (3)", "decodeHistoricalGameState", Caml_obj.caml_equal, State.decodeHistoricalGameState("[\"asdf\"]"), undefined);
+        Test.assertion("Invalid state (4)", "decodeHistoricalGameState", Caml_obj.caml_equal, State.decodeHistoricalGameState("[\"123\", \"asdf\"]"), undefined);
+        Test.assertion("Invalid state (5)", "decodeHistoricalGameState", Caml_obj.caml_equal, State.decodeHistoricalGameState("[\"123\", \"win\", []]"), undefined);
+        Test.assertion("~ Valid state (without tiles)", "decodeHistoricalGameState", Caml_obj.caml_equal, State.decodeHistoricalGameState("[\"123\", \"playing\"]"), {
+              TAG: /* Playing */0,
+              _0: {
+                best: undefined,
+                score: 123,
+                tiles: /* [] */0
+              }
+            });
+        Test.assertion("~ Valid state (with tiles)", "decodeHistoricalGameState", Caml_obj.caml_equal, State.decodeHistoricalGameState("[\"123\", \"playingAfterWin\", [\"tile-123\", \"2048\", \"0\", \"3\"]]"), {
+              TAG: /* PlayingAfterWin */3,
+              _0: {
+                best: undefined,
+                score: 123,
+                tiles: {
+                  hd: Curry._1(Tile.GameTile.Converters.toAverage, Tile.GameTile.createTile("tile-123", 2048, 0, 3)),
+                  tl: /* [] */0
+                }
+              }
+            });
+        return Test.assertion("back and forth", "decodeHistoricalGameState", Caml_obj.caml_equal, State.decodeHistoricalGameState(JSON.stringify(State.encodeHistoricalGameState({
+                                TAG: /* PlayingAfterWin */3,
+                                _0: {
+                                  best: undefined,
+                                  score: 123,
+                                  tiles: {
+                                    hd: Curry._1(Tile.GameTile.Converters.toAverage, Tile.GameTile.createTile("tile-123", 2048, 0, 3)),
+                                    tl: /* [] */0
+                                  }
+                                }
+                              }))), {
+                    TAG: /* PlayingAfterWin */3,
+                    _0: {
+                      best: undefined,
+                      score: 123,
+                      tiles: {
+                        hd: Curry._1(Tile.GameTile.Converters.toAverage, Tile.GameTile.createTile("tile-123", 2048, 0, 3)),
+                        tl: /* [] */0
+                      }
+                    }
+                  });
       }));
 
 export {

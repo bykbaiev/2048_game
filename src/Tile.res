@@ -187,9 +187,9 @@ module GameTile = {
         switch value {
         | [id, val, x, y] => {
             let id  = id  -> Js.Json.decodeString
-            let val = val -> Js.Json.decodeNumber -> Belt.Option.map(Js.Math.ceil_int)
-            let x   = x   -> Js.Json.decodeNumber -> Belt.Option.map(Js.Math.ceil_int)
-            let y   = y   -> Js.Json.decodeNumber -> Belt.Option.map(Js.Math.ceil_int)
+            let val = val -> Js.Json.decodeString -> Belt.Option.flatMap(Belt.Int.fromString)
+            let x   = x   -> Js.Json.decodeString -> Belt.Option.flatMap(Belt.Int.fromString)
+            let y   = y   -> Js.Json.decodeString -> Belt.Option.flatMap(Belt.Int.fromString)
 
             let pos = switch (x, y) {
             | (Some(x), Some(y)) => Some({ x: x, y: y })

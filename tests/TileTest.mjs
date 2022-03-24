@@ -287,8 +287,25 @@ Test.test("#Tile.encodeHistorical: dumb tile representation for history", (funct
 Test.test("#Tile.decodeHistorical: tile from it's dumb representation", (function (param) {
         Test.assertion("Invalid tile", "decodeHistorical", Caml_obj.caml_equal, Tile.GameTile.decodeHistorical(JSON.parse("[]")), undefined);
         Test.assertion("Invalid tile (2)", "decodeHistorical", Caml_obj.caml_equal, Tile.GameTile.decodeHistorical(JSON.parse("[0, 2, \"asdf\", 3]")), undefined);
-        Test.assertion("Invalid tile (3)", "decodeHistorical", Caml_obj.caml_equal, Tile.GameTile.decodeHistorical(JSON.parse("[\"0\", 2, 3]")), undefined);
-        return Test.assertion("Valid tile", "decodeHistorical", Caml_obj.caml_equal, Tile.GameTile.decodeHistorical(JSON.parse("[\"tile-123\", 2, 3, 3]")), Caml_option.some(Curry._1(Tile.GameTile.Converters.toAverage, createTestTile({
+        Test.assertion("Invalid tile (3)", "decodeHistorical", Caml_obj.caml_equal, Tile.GameTile.decodeHistorical(JSON.parse("[\"0\", \"2\", \"3\"]")), undefined);
+        Test.assertion("Valid tile", "decodeHistorical", Caml_obj.caml_equal, Tile.GameTile.decodeHistorical(JSON.parse("[\"tile-123\", \"2\", \"3\", \"3\"]")), Caml_option.some(Curry._1(Tile.GameTile.Converters.toAverage, createTestTile({
+                          id: "tile-123",
+                          merged: false,
+                          val: 2,
+                          pos: {
+                            x: 3,
+                            y: 3
+                          }
+                        }))));
+        return Test.assertion("back and forth", "decodeHistorical", Caml_obj.caml_equal, Tile.GameTile.decodeHistorical(Tile.GameTile.encodeHistorical(createTestTile({
+                                id: "tile-123",
+                                merged: false,
+                                val: 2,
+                                pos: {
+                                  x: 3,
+                                  y: 3
+                                }
+                              }))), Caml_option.some(Curry._1(Tile.GameTile.Converters.toAverage, createTestTile({
                                 id: "tile-123",
                                 merged: false,
                                 val: 2,

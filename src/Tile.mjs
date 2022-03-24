@@ -4,6 +4,7 @@ import * as Curry from "../node_modules/rescript/lib/es6/curry.js";
 import * as Js_dict from "../node_modules/rescript/lib/es6/js_dict.js";
 import * as Js_json from "../node_modules/rescript/lib/es6/js_json.js";
 import * as Js_math from "../node_modules/rescript/lib/es6/js_math.js";
+import * as Belt_Int from "../node_modules/rescript/lib/es6/belt_Int.js";
 import * as Belt_List from "../node_modules/rescript/lib/es6/belt_List.js";
 import * as Constants from "./Constants.mjs";
 import * as Caml_int32 from "../node_modules/rescript/lib/es6/caml_int32.js";
@@ -344,9 +345,9 @@ function decodeHistorical(tile) {
   var x = value$1[2];
   var y = value$1[3];
   var id$1 = Js_json.decodeString(id);
-  var val$1 = Belt_Option.map(Js_json.decodeNumber(val), Js_math.ceil_int);
-  var x$1 = Belt_Option.map(Js_json.decodeNumber(x), Js_math.ceil_int);
-  var y$1 = Belt_Option.map(Js_json.decodeNumber(y), Js_math.ceil_int);
+  var val$1 = Belt_Option.flatMap(Js_json.decodeString(val), Belt_Int.fromString);
+  var x$1 = Belt_Option.flatMap(Js_json.decodeString(x), Belt_Int.fromString);
+  var y$1 = Belt_Option.flatMap(Js_json.decodeString(y), Belt_Int.fromString);
   var pos = x$1 !== undefined && y$1 !== undefined ? ({
         x: x$1,
         y: y$1

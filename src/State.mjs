@@ -6,6 +6,7 @@ import * as Recoil from "recoil";
 import * as Js_dict from "../node_modules/rescript/lib/es6/js_dict.js";
 import * as Js_json from "../node_modules/rescript/lib/es6/js_json.js";
 import * as Js_math from "../node_modules/rescript/lib/es6/js_math.js";
+import * as Belt_Int from "../node_modules/rescript/lib/es6/belt_Int.js";
 import * as Belt_List from "../node_modules/rescript/lib/es6/belt_List.js";
 import * as Belt_Array from "../node_modules/rescript/lib/es6/belt_Array.js";
 import * as Belt_Option from "../node_modules/rescript/lib/es6/belt_Option.js";
@@ -14,6 +15,14 @@ import * as Dom_storage from "../node_modules/rescript/lib/es6/dom_storage.js";
 var gameStateKey = "gameState";
 
 var bestScoreKey = "bestScore";
+
+var playing = "playing";
+
+var win = "win";
+
+var loss = "loss";
+
+var playingAfterWin = "playingAfterWin";
 
 function initialize(param) {
   var fst = Tile.GameTile.createNewTile(/* [] */0);
@@ -105,13 +114,13 @@ function encodeBestScore(prim) {
 function encodeStatus(state) {
   switch (state.TAG | 0) {
     case /* Playing */0 :
-        return "playing";
+        return playing;
     case /* Win */1 :
-        return "win";
+        return win;
     case /* Loss */2 :
-        return "loss";
+        return loss;
     case /* PlayingAfterWin */3 :
-        return "playingAfterWin";
+        return playingAfterWin;
     
   }
 }
@@ -132,8 +141,77 @@ function arrOf(x) {
 
 function encodeHistoricalGameState(state) {
   var match = state._0;
+  var status = encodeStatus(state);
   var encodedTiles = Belt_List.toArray(Belt_List.map(match.tiles, Tile.GameTile.encodeHistorical));
-  return Belt_Array.concat([String(match.score)], encodedTiles);
+  return Belt_Array.concat(Belt_Array.concat([String(match.score)], [status]), encodedTiles);
+}
+
+function decodeHistoricalGameState(state) {
+  if (state === undefined) {
+    return ;
+  }
+  var json;
+  try {
+    json = JSON.parse(state);
+  }
+  catch (exn){
+    json = 0;
+  }
+  var value = Js_json.classify(json);
+  if (typeof value === "number") {
+    return ;
+  }
+  if (value.TAG !== /* JSONArray */3) {
+    return ;
+  }
+  var value$1 = value._0;
+  if (value$1.length <= 1) {
+    return ;
+  }
+  var score = Belt_Option.flatMap(Belt_Option.flatMap(Belt_Array.get(value$1, 0), Js_json.decodeString), Belt_Int.fromString);
+  var status = Belt_Option.flatMap(Belt_Array.get(value$1, 1), Js_json.decodeString);
+  var tiles = Belt_List.map(Belt_List.fromArray(Belt_Array.sliceToEnd(value$1, 2)), Tile.GameTile.decodeHistorical);
+  if (score === undefined) {
+    return ;
+  }
+  if (status === undefined) {
+    return ;
+  }
+  if (!Belt_List.every(tiles, Belt_Option.isSome)) {
+    return ;
+  }
+  var internals_tiles = Belt_List.map(tiles, (function (tile) {
+          return Belt_Option.getWithDefault(tile, Tile.GameTile.createNewTile(/* [] */0));
+        }));
+  var internals = {
+    best: undefined,
+    score: score,
+    tiles: internals_tiles
+  };
+  switch (status) {
+    case "loss" :
+        return {
+                TAG: /* Loss */2,
+                _0: internals
+              };
+    case "playing" :
+        return {
+                TAG: /* Playing */0,
+                _0: internals
+              };
+    case "playingAfterWin" :
+        return {
+                TAG: /* PlayingAfterWin */3,
+                _0: internals
+              };
+    case "win" :
+        return {
+                TAG: /* Win */1,
+                _0: internals
+              };
+    default:
+      return ;
+  }
 }
 
 function decodeBestScore(best) {
@@ -356,6 +434,10 @@ var messageState = Recoil.selector({
 export {
   gameStateKey ,
   bestScoreKey ,
+  playing ,
+  win ,
+  loss ,
+  playingAfterWin ,
   initialize ,
   getInternals ,
   getBestScore ,
@@ -370,6 +452,7 @@ export {
   encodeGameState ,
   arrOf ,
   encodeHistoricalGameState ,
+  decodeHistoricalGameState ,
   decodeBestScore ,
   decodeGameState ,
   localStorageEffect ,

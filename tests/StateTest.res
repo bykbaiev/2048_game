@@ -136,7 +136,7 @@ test("#State.encodeHistoricalGameState: should serialize history (tiles & score)
         Js.Json.string("2")
       ])
 
-      Js.Json.array(Belt.Array.concat([Js.Json.string("123")], [fst, snd]))
+      Js.Json.array(Belt.Array.concat([Js.Json.string("123"), Js.Json.string("playing")], [fst, snd]))
     }
   )
 
@@ -177,7 +177,124 @@ test("#State.encodeHistoricalGameState: should serialize history (tiles & score)
         Js.Json.string("2")
       ])
 
-      Js.Json.array(Belt.Array.concat([Js.Json.string("123")], [fst, snd]))
+      Js.Json.array(Belt.Array.concat([Js.Json.string("123"), Js.Json.string("win")], [fst, snd]))
     }
+  )
+})
+
+test("#State.decodeHistoricalGameState: should deserialize history", () => {
+  assertion(
+    ~message = "Invalid state",
+    ~operator = "decodeHistoricalGameState",
+    (a, b) => a == b,
+    State.decodeHistoricalGameState(None),
+    None
+  )
+
+  assertion(
+    ~message = "Invalid state (2)",
+    ~operator = "decodeHistoricalGameState",
+    (a, b) => a == b,
+    State.decodeHistoricalGameState(Some("[]")),
+    None
+  )
+
+  assertion(
+    ~message = "Invalid state (3)",
+    ~operator = "decodeHistoricalGameState",
+    (a, b) => a == b,
+    State.decodeHistoricalGameState(Some("[\"asdf\"]")),
+    None
+  )
+
+  assertion(
+    ~message = "Invalid state (4)",
+    ~operator = "decodeHistoricalGameState",
+    (a, b) => a == b,
+    State.decodeHistoricalGameState(Some("[\"123\", \"asdf\"]")),
+    None
+  )
+
+  assertion(
+    ~message = "Invalid state (5)",
+    ~operator = "decodeHistoricalGameState",
+    (a, b) => a == b,
+    State.decodeHistoricalGameState(Some("[\"123\", \"win\", []]")),
+    None
+  )
+
+  assertion(
+    ~message = "~ Valid state (without tiles)",
+    ~operator = "decodeHistoricalGameState",
+    (a, b) => a == b,
+    State.decodeHistoricalGameState(Some("[\"123\", \"playing\"]")),
+    Some(State.Playing({
+      best: None,
+      score: 123,
+      tiles: list{}
+    }))
+  )
+
+  assertion(
+    ~message = "~ Valid state (with tiles)",
+    ~operator = "decodeHistoricalGameState",
+    (a, b) => a == b,
+    State.decodeHistoricalGameState(Some("[\"123\", \"playingAfterWin\", [\"tile-123\", \"2048\", \"0\", \"3\"]]")),
+    Some(State.PlayingAfterWin({
+      best: None,
+      score: 123,
+      tiles: list{
+        Tile.GameTile.Converters.toAverage(
+          Tile.GameTile.createTile(
+            ~id  = "tile-123",
+            ~val = 2048,
+            ~x   = 0,
+            ~y   = 3
+          )
+        )
+      }
+    }))
+  )
+
+  assertion(
+    ~message = "back and forth",
+    ~operator = "decodeHistoricalGameState",
+    (a, b) => a == b,
+    State.decodeHistoricalGameState(
+      Some(
+        Js.Json.stringify(
+          State.encodeHistoricalGameState(
+            State.PlayingAfterWin({
+              best: None,
+              score: 123,
+              tiles: list{
+                Tile.GameTile.Converters.toAverage(
+                  Tile.GameTile.createTile(
+                    ~id  = "tile-123",
+                    ~val = 2048,
+                    ~x   = 0,
+                    ~y   = 3
+                  )
+                )
+              }
+            })
+          )
+        )
+      )
+    ),
+    Some(State.PlayingAfterWin({
+      best: None,
+      score: 123,
+      tiles: list{
+        Tile.GameTile.Converters.toAverage(
+          Tile.GameTile.createTile(
+            ~id  = "tile-123",
+            ~val = 2048,
+            ~x   = 0,
+            ~y   = 3
+          )
+        )
+      }
+    }))
   )
 })

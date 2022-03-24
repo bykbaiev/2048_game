@@ -16,6 +16,11 @@ let gameStateKey = "gameState"
 
 let bestScoreKey = "bestScore"
 
+let playing         = "playing"
+let win             = "win"
+let loss            = "loss"
+let playingAfterWin = "playingAfterWin"
+
 // SIDE EFFECT
 let initialize = () => {
   let fst = GameTile.createNewTile(list{})
@@ -81,10 +86,10 @@ let encodeBestScore = Js.Json.number
 
 let encodeStatus = (state: state) => {
   switch state {
-  | Playing(_)         => "playing"
-  | Win(_)             => "win"
-  | Loss(_)            => "loss"
-  | PlayingAfterWin(_) => "playingAfterWin"
+  | Playing(_)         => playing
+  | Win(_)             => win
+  | Loss(_)            => loss
+  | PlayingAfterWin(_) => playingAfterWin
   }
 }
 
@@ -108,14 +113,59 @@ let arrOf = x => [x]
 
 let encodeHistoricalGameState = (state: state) => {
   let { score, tiles } = getInternals(state)
+  let status = encodeStatus(state)
   let encodedTiles = tiles -> Belt.List.map(GameTile.encodeHistorical) -> Belt.List.toArray
 
   score
     -> Belt.Int.toString
     -> Js.Json.string
     -> arrOf
+    -> Belt.Array.concat([Js.Json.string(status)])
     -> Belt.Array.concat(encodedTiles)
     -> Js.Json.array
+}
+
+let decodeHistoricalGameState = (state: option<string>): option<state> => {
+  switch state {
+  | Some(value) => {
+      let json = try Js.Json.parseExn(value) catch {
+      | _ => Js.Json.number(0.)
+      }
+
+      switch Js.Json.classify(json) {
+      | Js.Json.JSONArray(value) => {
+          if (Belt.Array.length(value) > 1) {
+            let score = value -> Belt.Array.get(0) -> Belt.Option.flatMap(Js.Json.decodeString) -> Belt.Option.flatMap(Belt.Int.fromString)
+            let status = value -> Belt.Array.get(1) -> Belt.Option.flatMap(Js.Json.decodeString)
+            let tiles = value -> Belt.Array.sliceToEnd(2) -> Belt.List.fromArray -> Belt.List.map(GameTile.decodeHistorical)
+
+            switch (score, status, tiles) {
+            | (Some(score), Some(status), tiles) when Belt.List.every(tiles, Belt.Option.isSome) => {
+                let internals = {
+                  best: None,
+                  score: score,
+                  tiles: Belt.List.map(tiles, tile => Belt.Option.getWithDefault(tile, GameTile.createNewTile(list{})))
+                }
+
+                switch status {
+                | "playing"         => internals -> Playing         -> Some
+                | "win"             => internals -> Win             -> Some
+                | "loss"            => internals -> Loss            -> Some
+                | "playingAfterWin" => internals -> PlayingAfterWin -> Some
+                | _                 => None
+                }
+              }
+            | _                                                                                  => None
+            }
+          } else {
+            None
+          }
+        }
+      | _                        => None
+      }
+    }
+  | None        => None
+  }
 }
 
 let decodeBestScore = (best: option<string>): option<int> => {
