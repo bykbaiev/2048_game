@@ -16,6 +16,8 @@ var gameStateKey = "gameState";
 
 var bestScoreKey = "bestScore";
 
+var historyKey = "history";
+
 var playing = "playing";
 
 var win = "win";
@@ -105,6 +107,32 @@ function setBestScore(internals, best) {
           score: internals.score,
           tiles: internals.tiles
         };
+}
+
+function setInternals(state, internals) {
+  switch (state.TAG | 0) {
+    case /* Playing */0 :
+        return {
+                TAG: /* Playing */0,
+                _0: internals
+              };
+    case /* Win */1 :
+        return {
+                TAG: /* Win */1,
+                _0: internals
+              };
+    case /* Loss */2 :
+        return {
+                TAG: /* Loss */2,
+                _0: internals
+              };
+    case /* PlayingAfterWin */3 :
+        return {
+                TAG: /* PlayingAfterWin */3,
+                _0: internals
+              };
+    
+  }
 }
 
 function encodeBestScore(prim) {
@@ -312,14 +340,15 @@ function decodeGameState(state) {
 function localStorageEffect(param) {
   var savedGameState = Dom_storage.getItem(gameStateKey, localStorage);
   var savedBestScore = Dom_storage.getItem(bestScoreKey, localStorage);
-  Curry._1(param.onSet, (function (newValue, param, isReset) {
+  Curry._1(param.onSet, (function (newValue, oldValue, isReset) {
           if (isReset) {
             Dom_storage.removeItem(bestScoreKey, localStorage);
             return Dom_storage.removeItem(gameStateKey, localStorage);
-          } else {
-            Dom_storage.setItem(bestScoreKey, JSON.stringify(getBestScore(newValue)), localStorage);
-            return Dom_storage.setItem(gameStateKey, JSON.stringify(encodeGameState(newValue)), localStorage);
           }
+          var prev = getBestScore(oldValue);
+          var curr = getBestScore(newValue);
+          Dom_storage.setItem(bestScoreKey, JSON.stringify(curr > prev ? curr : prev), localStorage);
+          return Dom_storage.setItem(gameStateKey, JSON.stringify(encodeGameState(newValue)), localStorage);
         }));
   var bestScore = decodeBestScore(savedBestScore);
   var gameState = decodeGameState(savedGameState);
@@ -327,30 +356,39 @@ function localStorageEffect(param) {
           var actualState = Belt_Option.getWithDefault(gameState, state);
           var internals = actualState._0;
           var updated = setBestScore(internals, bestScore);
-          switch (actualState.TAG | 0) {
-            case /* Playing */0 :
-                return {
-                        TAG: /* Playing */0,
-                        _0: updated
-                      };
-            case /* Win */1 :
-                return {
-                        TAG: /* Win */1,
-                        _0: updated
-                      };
-            case /* Loss */2 :
-                return {
-                        TAG: /* Loss */2,
-                        _0: updated
-                      };
-            case /* PlayingAfterWin */3 :
-                return {
-                        TAG: /* PlayingAfterWin */3,
-                        _0: updated
-                      };
-            
+          return setInternals(actualState, updated);
+        }));
+  
+}
+
+function historyLocalStorageEffect(param) {
+  var savedHistory = Dom_storage.getItem(historyKey, localStorage);
+  Curry._1(param.onSet, (function (newValue, param, isReset) {
+          if (isReset) {
+            return Dom_storage.removeItem(historyKey, localStorage);
+          } else {
+            return Dom_storage.setItem(historyKey, JSON.stringify(newValue), localStorage);
           }
         }));
+  var history;
+  if (savedHistory !== undefined) {
+    var json;
+    try {
+      json = JSON.parse(savedHistory);
+    }
+    catch (exn){
+      json = 0;
+    }
+    var value = Js_json.classify(json);
+    history = typeof value === "number" || value.TAG !== /* JSONArray */3 ? undefined : value._0;
+  } else {
+    history = undefined;
+  }
+  if (history !== undefined) {
+    Curry._1(param.setSelf, (function (param) {
+            return history;
+          }));
+  }
   
 }
 
@@ -431,9 +469,16 @@ var messageState = Recoil.selector({
         })
     });
 
+var historyState = Recoil.atom({
+      key: "historyState",
+      default: [],
+      effects_UNSTABLE: [historyLocalStorageEffect]
+    });
+
 export {
   gameStateKey ,
   bestScoreKey ,
+  historyKey ,
   playing ,
   win ,
   loss ,
@@ -447,6 +492,7 @@ export {
   setTiles ,
   setScore ,
   setBestScore ,
+  setInternals ,
   encodeBestScore ,
   encodeStatus ,
   encodeGameState ,
@@ -456,6 +502,7 @@ export {
   decodeBestScore ,
   decodeGameState ,
   localStorageEffect ,
+  historyLocalStorageEffect ,
   gameState ,
   internalsState ,
   tilesState ,
@@ -465,6 +512,7 @@ export {
   lossState ,
   endOfGameState ,
   messageState ,
+  historyState ,
   
 }
 /* gameState Not a pure module */

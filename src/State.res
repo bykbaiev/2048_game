@@ -12,9 +12,11 @@ type state =
 | Loss(stateInternals)
 | PlayingAfterWin(stateInternals)
 
-let gameStateKey = "gameState"
+type history = array<Js.Json.t>
 
+let gameStateKey = "gameState"
 let bestScoreKey = "bestScore"
+let historyKey   = "history"
 
 let playing         = "playing"
 let win             = "win"
@@ -80,6 +82,15 @@ let setScore = (internals: stateInternals, score: int): stateInternals => {
 
 let setBestScore = (internals: stateInternals, best: option<int>): stateInternals => {
   { ...internals, best: best }
+}
+
+let setInternals = (state: state, internals: stateInternals): state => {
+  switch state {
+  | Playing(_)         => Playing(internals)
+  | Win(_)             => Win(internals)
+  | Loss(_)            => Loss(internals)
+  | PlayingAfterWin(_) => PlayingAfterWin(internals)  
+  }
 }
 
 let encodeBestScore = Js.Json.number
@@ -236,7 +247,7 @@ let localStorageEffect = ({ setSelf, onSet }: Recoil.atomEffect<'a>) => {
   let savedGameState = Dom.Storage.getItem(gameStateKey, Dom.Storage.localStorage)
   let savedBestScore = Dom.Storage.getItem(bestScoreKey, Dom.Storage.localStorage)
 
-  onSet((~newValue, ~oldValue as _, ~isReset) => {
+  onSet((~newValue, ~oldValue, ~isReset) => {
     isReset
       ? {
         Dom.Storage.removeItem(bestScoreKey, Dom.Storage.localStorage)
@@ -245,7 +256,11 @@ let localStorageEffect = ({ setSelf, onSet }: Recoil.atomEffect<'a>) => {
       : {
         Dom.Storage.setItem(
           bestScoreKey,
-          newValue -> getBestScore -> Belt.Int.toFloat -> encodeBestScore -> Js.Json.stringify,
+          {
+            let prev = oldValue -> getBestScore
+            let curr = newValue -> getBestScore
+            (curr > prev ? curr : prev) -> Belt.Int.toFloat -> encodeBestScore -> Js.Json.stringify
+          },
           Dom.Storage.localStorage
         )
         Dom.Storage.setItem(
@@ -265,13 +280,47 @@ let localStorageEffect = ({ setSelf, onSet }: Recoil.atomEffect<'a>) => {
     let internals = getInternals(actualState)
     let updated = setBestScore(internals, bestScore)
 
-    switch actualState {
-    | Playing(_)         => Playing(updated)
-    | Win(_)             => Win(updated)
-    | Loss(_)            => Loss(updated)
-    | PlayingAfterWin(_) => PlayingAfterWin(updated)  
-    }
+    setInternals(actualState, updated)
   })
+
+  None
+};
+
+let historyLocalStorageEffect = ({ setSelf, onSet }: Recoil.atomEffect<history>) => {
+  let savedHistory = Dom.Storage.getItem(historyKey, Dom.Storage.localStorage)
+
+  onSet((~newValue, ~oldValue as _, ~isReset) => {
+    isReset
+      ? {
+        Dom.Storage.removeItem(historyKey,   Dom.Storage.localStorage)
+      }
+      : {
+        Dom.Storage.setItem(
+          historyKey,
+          newValue -> Js.Json.array -> Js.Json.stringify,
+          Dom.Storage.localStorage
+        )
+      }
+  })
+
+  let history = switch savedHistory {
+  | Some(value) => {
+    let json = try Js.Json.parseExn(value) catch {
+    | _ => Js.Json.number(0.)
+    }
+
+    switch Js.Json.classify(json) {
+    | Js.Json.JSONArray(value) => Some(value)
+    | _                        => None
+    }
+  }
+  | None        => None
+  }
+
+  switch history {
+  | Some(value) => setSelf(_ => value)
+  | None        => ()
+  }
 
   None
 };
@@ -348,4 +397,10 @@ let messageState: Recoil.readOnly<option<string>> = Recoil.selector({
     | _       => None
     }
   }
+})
+
+let historyState: Recoil.readWrite<history> = Recoil.atomWithEffects({
+  key: "historyState",
+  default: [],
+  effects_UNSTABLE: [historyLocalStorageEffect]
 })

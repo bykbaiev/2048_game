@@ -6,6 +6,7 @@ import * as State from "./State.mjs";
 import * as Utils from "./Utils.mjs";
 import * as React from "react";
 import * as Recoil from "recoil";
+import * as Caml_obj from "../node_modules/rescript/lib/es6/caml_obj.js";
 import * as Belt_List from "../node_modules/rescript/lib/es6/belt_List.js";
 import * as Constants from "./Constants.mjs";
 import * as Belt_Array from "../node_modules/rescript/lib/es6/belt_Array.js";
@@ -61,7 +62,10 @@ function viewTile(tile) {
 }
 
 function Board(Props) {
-  var setState = Recoil.useSetRecoilState(State.gameState);
+  var match = Recoil.useRecoilState(State.gameState);
+  var setState = match[1];
+  var state = match[0];
+  var setHistory = Recoil.useSetRecoilState(State.historyState);
   var tiles = Recoil.useRecoilValue(State.tilesState);
   var isWin = Recoil.useRecoilValue(State.winState);
   var isLoss = Recoil.useRecoilValue(State.lossState);
@@ -81,6 +85,22 @@ function Board(Props) {
                     
                   });
         }), []);
+  React.useEffect((function () {
+          Curry._1(setHistory, (function (history) {
+                  var last = Belt_Array.get(history, history.length - 1 | 0);
+                  var isSameAsLast = Belt_Option.isSome(last) && Belt_Option.mapWithDefault(Belt_Option.flatMap(last, (function (x) {
+                              return State.decodeGameState(JSON.stringify(x));
+                            })), false, (function (x) {
+                          return Caml_obj.caml_equal(x, state);
+                        }));
+                  if (isSameAsLast) {
+                    return history;
+                  }
+                  var size = history.length;
+                  return Belt_Array.sliceToEnd(Belt_Array.concat(history, [State.encodeHistoricalGameState(state)]), size - 15 | 0);
+                }));
+          
+        }), [state]);
   var continueGame = function (param) {
     return Curry._1(setState, (function (state) {
                   return {
@@ -90,8 +110,11 @@ function Board(Props) {
                 }));
   };
   var tryAgain = function (param) {
-    return Curry._1(setState, (function (param) {
-                  return State.initialize(undefined);
+    Curry._1(setState, (function (param) {
+            return State.initialize(undefined);
+          }));
+    return Curry._1(setHistory, (function (param) {
+                  return [];
                 }));
   };
   return React.createElement("div", {

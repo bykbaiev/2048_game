@@ -5,6 +5,8 @@ import * as State from "./State.mjs";
 import * as Utils from "./Utils.mjs";
 import * as React from "react";
 import * as Recoil from "recoil";
+import * as Belt_Array from "../node_modules/rescript/lib/es6/belt_Array.js";
+import * as Caml_option from "../node_modules/rescript/lib/es6/caml_option.js";
 import * as GameIntroModuleCss from "./GameIntro.module.css";
 
 var styles = GameIntroModuleCss;
@@ -15,9 +17,32 @@ function getClassName(param) {
 
 function GameIntro(Props) {
   var setState = Recoil.useSetRecoilState(State.gameState);
+  var match = Recoil.useRecoilState(State.historyState);
+  var setHistory = match[1];
+  var history = match[0];
   var tryAgain = function (param) {
-    return Curry._1(setState, (function (param) {
-                  return State.initialize(undefined);
+    Curry._1(setState, (function (param) {
+            return State.initialize(undefined);
+          }));
+    return Curry._1(setHistory, (function (param) {
+                  return [];
+                }));
+  };
+  var undo = function (param) {
+    var previous = Belt_Array.get(history, history.length - 2 | 0);
+    if (previous !== undefined) {
+      var value = Caml_option.valFromOption(previous);
+      Curry._1(setState, (function (state) {
+              var updated = State.decodeHistoricalGameState(JSON.stringify(value));
+              if (updated === undefined) {
+                return state;
+              }
+              var best = Math.max(State.getBestScore(state), State.getBestScore(updated));
+              return State.setInternals(updated, State.setBestScore(State.getInternals(updated), best));
+            }));
+    }
+    return Curry._1(setHistory, (function (history) {
+                  return Belt_Array.slice(history, 0, history.length - 2 | 0);
                 }));
   };
   return React.createElement("div", {
@@ -27,7 +52,10 @@ function GameIntro(Props) {
                     }, "Play 2048 game online"), React.createElement("div", {
                       className: Utils.getCls(styles, "about")
                     }, "Join the numbers and get to the 2048 tile!")), React.createElement("button", {
-                  className: Utils.getCls(styles, "restartButton"),
+                  className: Utils.getCls(styles, "btn") + " " + Utils.getCls(styles, "btnUndo"),
+                  onClick: undo
+                }, "Undo"), React.createElement("button", {
+                  className: Utils.getCls(styles, "btn"),
                   onClick: tryAgain
                 }, "New Game"));
 }
