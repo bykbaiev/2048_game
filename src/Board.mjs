@@ -77,7 +77,8 @@ function Board(Props) {
                   
                 }));
           return (function (param) {
-                    return document.removeEventListener("keydown");
+                    document.removeEventListener("keydown");
+                    
                   });
         }), []);
   var continueGame = function (param) {
