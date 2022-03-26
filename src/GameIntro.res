@@ -15,21 +15,10 @@ let make = () => {
   let undo = (_) => {
     let previous = Belt.Array.get(history, Belt.Array.length(history) - 2)
     switch previous {
-    | Some(value) => setState(state => {
-      let updated = value -> Js.Json.stringify -> Some -> State.decodeHistoricalGameState
-      switch updated {
-      | Some(newState) => {
-        let best = Js.Math.max_int(State.getBestScore(state), State.getBestScore(newState))
-        State.setInternals(newState, State.setBestScore(State.getInternals(newState), Some(best)))
-      }
-      | None           => state
-      }
-    })
+    | Some(value) => setState(State.rollbackState(value))
     | None        => ()
     }
-    setHistory(history => {
-      Belt.Array.slice(history, ~offset = 0, ~len = Belt.Array.length(history) - 2)
-    })
+    setHistory(Utils.removeLastTwo)
   }
 
   <div className={getClassName("root")}>

@@ -378,3 +378,53 @@ test("#State.decodeHistory", () => {
     Some([Js.Json.string("doesn't matter what is inside")])
   )
 })
+
+test("#State.rollbackState", () => {
+  let basicState = State.Playing({
+    best: Some(100),
+    score: 100,
+    tiles: list{
+      Tile.GameTile.createTile(
+        ~id  = "tile-123",
+        ~val = 4,
+        ~x   = 3,
+        ~y   = 1
+      )
+    }
+  })
+
+  let previousState = State.Playing({
+    best: Some(96),
+    score: 96,
+    tiles: list{
+      Tile.GameTile.createTile(
+        ~id  = "tile-456",
+        ~val = 2,
+        ~x   = 0,
+        ~y   = 1
+      ) -> Tile.GameTile.Converters.toAverage,
+      Tile.GameTile.createTile(
+        ~id  = "tile-123",
+        ~val = 2,
+        ~x   = 2,
+        ~y   = 1
+      ) -> Tile.GameTile.Converters.toAverage
+    }
+  })
+
+  assertion(
+    ~message = "No previous historical records",
+    ~operator = "rollbackState",
+    (a, b) => a == b,
+    State.rollbackState(Js.Json.string(""), basicState),
+    basicState
+  )
+
+  assertion(
+    ~message = "There was previous state",
+    ~operator = "rollbackState",
+    (a, b) => a == b,
+    State.rollbackState(State.encodeHistoricalGameState(previousState), basicState),
+    State.setInternals(previousState, State.setBestScore(State.getInternals(previousState), Some(100)))
+  )
+})

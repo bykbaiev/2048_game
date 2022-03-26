@@ -640,3 +640,37 @@ test("#Utils.recalculateScore: should add values of new merged tiles to previous
     20 + 4 + 32 + 16
   )
 })
+
+test("#Utils.removeLastTwo", () => {
+  assertion(
+    ~message = "Empty list",
+    ~operator = "removeLastTwo",
+    (a, b) => a == b,
+    Utils.removeLastTwo([]),
+    []
+  )
+
+  assertion(
+    ~message = "Only one element",
+    ~operator = "removeLastTwo",
+    (a, b) => a == b,
+    Utils.removeLastTwo([1]),
+    []
+  )
+
+  assertion(
+    ~message = "Two elements",
+    ~operator = "removeLastTwo",
+    (a, b) => a == b,
+    Utils.removeLastTwo([1, 2]),
+    []
+  )
+
+  assertion(
+    ~message = "More than two elements",
+    ~operator = "removeLastTwo",
+    (a, b) => a == b,
+    Utils.removeLastTwo([1, 2, 3, 4, 5, 6, 7, 8, 9, 0]),
+    [1, 2, 3, 4, 5, 6, 7, 8]
+  )
+})

@@ -18,6 +18,10 @@ let keyCodeToDirection = (code: int): option<Constants.direction> => {
   }
 }
 
+let removeLastTwo = xs => {
+  Belt.Array.slice(xs, ~offset = 0, ~len = Belt.Array.length(xs) - 2)
+}
+
 let transpose = (tiles: list<GameTile.tile>): list<GameTile.tile> => {
   Belt.List.map(
     tiles,

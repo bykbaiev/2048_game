@@ -265,6 +265,17 @@ let decodeHistory = (history: option<string>): option<history> => {
   }
 }
 
+let rollbackState = (value, state) => {
+  let updated = value -> Js.Json.stringify -> Some -> decodeHistoricalGameState
+  switch updated {
+  | Some(newState) => {
+    let best = Js.Math.max_int(getBestScore(state), getBestScore(newState))
+    setInternals(newState, setBestScore(getInternals(newState), Some(best)))
+  }
+  | None           => state
+  }
+}
+
 let localStorageEffect = ({ setSelf, onSet }: Recoil.atomEffect<'a>) => {
   let savedGameState = Dom.Storage.getItem(gameStateKey, Dom.Storage.localStorage)
   let savedBestScore = Dom.Storage.getItem(bestScoreKey, Dom.Storage.localStorage)
