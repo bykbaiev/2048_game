@@ -136,6 +136,12 @@ let encodeHistoricalGameState = (state: state) => {
     -> Js.Json.array
 }
 
+let getBestScoreOfStates = (old: state, new: state): string => {
+  let prev = old -> getBestScore
+  let curr = new -> getBestScore
+  (curr > prev ? curr : prev) -> Belt.Int.toFloat -> encodeBestScore -> Js.Json.stringify
+}
+
 let decodeHistoricalGameState = (state: option<string>): option<state> => {
   switch state {
   | Some(value) => {
@@ -243,6 +249,22 @@ let decodeGameState = (state: option<string>): option<state> => {
   }
 }
 
+let decodeHistory = (history: option<string>): option<history> => {
+  switch history {
+  | Some(value) => {
+    let json = try Js.Json.parseExn(value) catch {
+    | _ => Js.Json.number(0.)
+    }
+
+    switch Js.Json.classify(json) {
+    | Js.Json.JSONArray(value) => Some(value)
+    | _                        => None
+    }
+  }
+  | None        => None
+  }
+}
+
 let localStorageEffect = ({ setSelf, onSet }: Recoil.atomEffect<'a>) => {
   let savedGameState = Dom.Storage.getItem(gameStateKey, Dom.Storage.localStorage)
   let savedBestScore = Dom.Storage.getItem(bestScoreKey, Dom.Storage.localStorage)
@@ -256,11 +278,7 @@ let localStorageEffect = ({ setSelf, onSet }: Recoil.atomEffect<'a>) => {
       : {
         Dom.Storage.setItem(
           bestScoreKey,
-          {
-            let prev = oldValue -> getBestScore
-            let curr = newValue -> getBestScore
-            (curr > prev ? curr : prev) -> Belt.Int.toFloat -> encodeBestScore -> Js.Json.stringify
-          },
+          getBestScoreOfStates(oldValue, newValue),
           Dom.Storage.localStorage
         )
         Dom.Storage.setItem(
@@ -292,7 +310,7 @@ let historyLocalStorageEffect = ({ setSelf, onSet }: Recoil.atomEffect<history>)
   onSet((~newValue, ~oldValue as _, ~isReset) => {
     isReset
       ? {
-        Dom.Storage.removeItem(historyKey,   Dom.Storage.localStorage)
+        Dom.Storage.removeItem(historyKey, Dom.Storage.localStorage)
       }
       : {
         Dom.Storage.setItem(
@@ -303,19 +321,7 @@ let historyLocalStorageEffect = ({ setSelf, onSet }: Recoil.atomEffect<history>)
       }
   })
 
-  let history = switch savedHistory {
-  | Some(value) => {
-    let json = try Js.Json.parseExn(value) catch {
-    | _ => Js.Json.number(0.)
-    }
-
-    switch Js.Json.classify(json) {
-    | Js.Json.JSONArray(value) => Some(value)
-    | _                        => None
-    }
-  }
-  | None        => None
-  }
+  let history = decodeHistory(savedHistory)
 
   switch history {
   | Some(value) => setSelf(_ => value)

@@ -298,3 +298,83 @@ test("#State.decodeHistoricalGameState: should deserialize history", () => {
     }))
   )
 })
+
+test("#State.getBestScoreOfStates", () => {
+  assertion(
+    ~message = "Both are None",
+    ~operator = "getBestScoreOfStates",
+    (a, b) => a === b,
+    State.getBestScoreOfStates(
+      State.Playing({ best: None, score: 123, tiles: list{} }),
+      State.Playing({ best: None, score: 456, tiles: list{} })
+    ),
+    "456"
+  )
+
+  assertion(
+    ~message = "Old is None",
+    ~operator = "getBestScoreOfStates",
+    (a, b) => a === b,
+    State.getBestScoreOfStates(
+      State.Playing({ best: None,      score: 123, tiles: list{} }),
+      State.Playing({ best: Some(789), score: 456, tiles: list{} })
+    ),
+    "789"
+  )
+
+  assertion(
+    ~message = "New is None",
+    ~operator = "getBestScoreOfStates",
+    (a, b) => a === b,
+    State.getBestScoreOfStates(
+      State.Playing({ best: Some(789), score: 123, tiles: list{} }),
+      State.Playing({ best: None,      score: 456, tiles: list{} })
+    ),
+    "789"
+  )
+
+  assertion(
+    ~message = "Both are Some",
+    ~operator = "getBestScoreOfStates",
+    (a, b) => a === b,
+    State.getBestScoreOfStates(
+      State.Playing({ best: Some(789), score: 123, tiles: list{} }),
+      State.Playing({ best: Some(655),      score: 456, tiles: list{} })
+    ),
+    "789"
+  )
+})
+
+test("#State.decodeHistory", () => {
+  assertion(
+    ~message = "Missing value",
+    ~operator = "decodeHistory",
+    (a, b) => a == b,
+    State.decodeHistory(None),
+    None
+  )
+
+  assertion(
+    ~message = "Missing value (2)",
+    ~operator = "decodeHistory",
+    (a, b) => a == b,
+    State.decodeHistory(Some("")),
+    None
+  )
+
+  assertion(
+    ~message = "Missing history",
+    ~operator = "decodeHistory",
+    (a, b) => a == b,
+    State.decodeHistory(Some("[]")),
+    Some([])
+  )
+
+  assertion(
+    ~message = "Missing history",
+    ~operator = "decodeHistory",
+    (a, b) => a == b,
+    State.decodeHistory(Some("[\"doesn't matter what is inside\"]")),
+    Some([Js.Json.string("doesn't matter what is inside")])
+  )
+})
