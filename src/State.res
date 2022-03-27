@@ -12,9 +12,16 @@ type state =
 | Loss(stateInternals)
 | PlayingAfterWin(stateInternals)
 
-let gameStateKey = "gameState"
+type history = array<Js.Json.t>
 
+let gameStateKey = "gameState"
 let bestScoreKey = "bestScore"
+let historyKey   = "history"
+
+let playing         = "playing"
+let win             = "win"
+let loss            = "loss"
+let playingAfterWin = "playingAfterWin"
 
 // SIDE EFFECT
 let initialize = () => {
@@ -77,14 +84,23 @@ let setBestScore = (internals: stateInternals, best: option<int>): stateInternal
   { ...internals, best: best }
 }
 
+let setInternals = (state: state, internals: stateInternals): state => {
+  switch state {
+  | Playing(_)         => Playing(internals)
+  | Win(_)             => Win(internals)
+  | Loss(_)            => Loss(internals)
+  | PlayingAfterWin(_) => PlayingAfterWin(internals)  
+  }
+}
+
 let encodeBestScore = Js.Json.number
 
 let encodeStatus = (state: state) => {
   switch state {
-  | Playing(_)         => "playing"
-  | Win(_)             => "win"
-  | Loss(_)            => "loss"
-  | PlayingAfterWin(_) => "playingAfterWin"
+  | Playing(_)         => playing
+  | Win(_)             => win
+  | Loss(_)            => loss
+  | PlayingAfterWin(_) => playingAfterWin
   }
 }
 
@@ -102,6 +118,71 @@ let encodeGameState = (state: state) => {
   Js.Dict.set(gameState, "tiles", Js.Json.array(Belt.List.toArray(Belt.List.map(tiles, Tile.GameTile.encode))))
 
   Js.Json.object_(gameState)
+}
+
+let arrOf = x => [x]
+
+let encodeHistoricalGameState = (state: state) => {
+  let { score, tiles } = getInternals(state)
+  let status = encodeStatus(state)
+  let encodedTiles = tiles -> Belt.List.map(GameTile.encodeHistorical) -> Belt.List.toArray
+
+  score
+    -> Belt.Int.toString
+    -> Js.Json.string
+    -> arrOf
+    -> Belt.Array.concat([Js.Json.string(status)])
+    -> Belt.Array.concat(encodedTiles)
+    -> Js.Json.array
+}
+
+let getBestScoreOfStates = (old: state, new: state): string => {
+  let prev = old -> getBestScore
+  let curr = new -> getBestScore
+  (curr > prev ? curr : prev) -> Belt.Int.toFloat -> encodeBestScore -> Js.Json.stringify
+}
+
+let decodeHistoricalGameState = (state: option<string>): option<state> => {
+  switch state {
+  | Some(value) => {
+      let json = try Js.Json.parseExn(value) catch {
+      | _ => Js.Json.number(0.)
+      }
+
+      switch Js.Json.classify(json) {
+      | Js.Json.JSONArray(value) => {
+          if (Belt.Array.length(value) > 1) {
+            let score = value -> Belt.Array.get(0) -> Belt.Option.flatMap(Js.Json.decodeString) -> Belt.Option.flatMap(Belt.Int.fromString)
+            let status = value -> Belt.Array.get(1) -> Belt.Option.flatMap(Js.Json.decodeString)
+            let tiles = value -> Belt.Array.sliceToEnd(2) -> Belt.List.fromArray -> Belt.List.map(GameTile.decodeHistorical)
+
+            switch (score, status, tiles) {
+            | (Some(score), Some(status), tiles) when Belt.List.every(tiles, Belt.Option.isSome) => {
+                let internals = {
+                  best: None,
+                  score: score,
+                  tiles: Belt.List.map(tiles, tile => Belt.Option.getWithDefault(tile, GameTile.createNewTile(list{})))
+                }
+
+                switch status {
+                | "playing"         => internals -> Playing         -> Some
+                | "win"             => internals -> Win             -> Some
+                | "loss"            => internals -> Loss            -> Some
+                | "playingAfterWin" => internals -> PlayingAfterWin -> Some
+                | _                 => None
+                }
+              }
+            | _                                                                                  => None
+            }
+          } else {
+            None
+          }
+        }
+      | _                        => None
+      }
+    }
+  | None        => None
+  }
 }
 
 let decodeBestScore = (best: option<string>): option<int> => {
@@ -168,11 +249,61 @@ let decodeGameState = (state: option<string>): option<state> => {
   }
 }
 
+let decodeHistory = (history: option<string>): option<history> => {
+  switch history {
+  | Some(value) => {
+    let json = try Js.Json.parseExn(value) catch {
+    | _ => Js.Json.number(0.)
+    }
+
+    switch Js.Json.classify(json) {
+    | Js.Json.JSONArray(value) => Some(value)
+    | _                        => None
+    }
+  }
+  | None        => None
+  }
+}
+
+let rollbackState = (value, state) => {
+  let updated = value -> Js.Json.stringify -> Some -> decodeHistoricalGameState
+  switch updated {
+  | Some(newState) => {
+    let best = Js.Math.max_int(getBestScore(state), getBestScore(newState))
+    setInternals(newState, setBestScore(getInternals(newState), Some(best)))
+  }
+  | None           => state
+  }
+}
+
+let updateHistory = (state: state, history: history): history => {
+  let last = Belt.Array.get(history, Belt.Array.length(history) - 1)
+  let isSameAsLast = Belt.Option.isSome(last) &&
+                    (last
+                      -> Belt.Option.flatMap(x => x -> Js.Json.stringify -> Some -> decodeHistoricalGameState)
+                      -> Belt.Option.mapWithDefault(false, x => {
+                        let internals = getInternals(state)
+                        let prevInternals = getInternals(x)
+                        internals.tiles == prevInternals.tiles && internals.score == prevInternals.score
+                      }))
+
+  if isSameAsLast {
+    history
+  } else {
+    let size = Belt.Array.length(history)
+    let count = 15
+
+    history
+      -> Belt.Array.concat([encodeHistoricalGameState(state)])
+      -> Belt.Array.sliceToEnd(size + 1 - count)
+  }
+}
+
 let localStorageEffect = ({ setSelf, onSet }: Recoil.atomEffect<'a>) => {
   let savedGameState = Dom.Storage.getItem(gameStateKey, Dom.Storage.localStorage)
   let savedBestScore = Dom.Storage.getItem(bestScoreKey, Dom.Storage.localStorage)
 
-  onSet((~newValue, ~oldValue as _, ~isReset) => {
+  onSet((~newValue, ~oldValue, ~isReset) => {
     isReset
       ? {
         Dom.Storage.removeItem(bestScoreKey, Dom.Storage.localStorage)
@@ -181,7 +312,7 @@ let localStorageEffect = ({ setSelf, onSet }: Recoil.atomEffect<'a>) => {
       : {
         Dom.Storage.setItem(
           bestScoreKey,
-          newValue -> getBestScore -> Belt.Int.toFloat -> encodeBestScore -> Js.Json.stringify,
+          getBestScoreOfStates(oldValue, newValue),
           Dom.Storage.localStorage
         )
         Dom.Storage.setItem(
@@ -201,13 +332,35 @@ let localStorageEffect = ({ setSelf, onSet }: Recoil.atomEffect<'a>) => {
     let internals = getInternals(actualState)
     let updated = setBestScore(internals, bestScore)
 
-    switch actualState {
-    | Playing(_)         => Playing(updated)
-    | Win(_)             => Win(updated)
-    | Loss(_)            => Loss(updated)
-    | PlayingAfterWin(_) => PlayingAfterWin(updated)  
-    }
+    setInternals(actualState, updated)
   })
+
+  None
+};
+
+let historyLocalStorageEffect = ({ setSelf, onSet }: Recoil.atomEffect<history>) => {
+  let savedHistory = Dom.Storage.getItem(historyKey, Dom.Storage.localStorage)
+
+  onSet((~newValue, ~oldValue as _, ~isReset) => {
+    isReset
+      ? {
+        Dom.Storage.removeItem(historyKey, Dom.Storage.localStorage)
+      }
+      : {
+        Dom.Storage.setItem(
+          historyKey,
+          newValue -> Js.Json.array -> Js.Json.stringify,
+          Dom.Storage.localStorage
+        )
+      }
+  })
+
+  let history = decodeHistory(savedHistory)
+
+  switch history {
+  | Some(value) => setSelf(_ => value)
+  | None        => ()
+  }
 
   None
 };
@@ -284,4 +437,10 @@ let messageState: Recoil.readOnly<option<string>> = Recoil.selector({
     | _       => None
     }
   }
+})
+
+let historyState: Recoil.readWrite<history> = Recoil.atomWithEffects({
+  key: "historyState",
+  default: [],
+  effects_UNSTABLE: [historyLocalStorageEffect]
 })

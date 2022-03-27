@@ -4,10 +4,21 @@ let getClassName = Utils.getCls(styles)
 
 @react.component
 let make = () => {
-  let setState = Recoil.useSetRecoilState(State.gameState)
+  let setState              = Recoil.useSetRecoilState(State.gameState)
+  let (history, setHistory) = Recoil.useRecoilState(State.historyState)
 
   let tryAgain = (_) => {
     setState(_ => State.initialize())
+    setHistory(_ => [])
+  }
+
+  let undo = (_) => {
+    let previous = Belt.Array.get(history, Belt.Array.length(history) - 2)
+    switch previous {
+    | Some(value) => setState(State.rollbackState(value))
+    | None        => ()
+    }
+    setHistory(Utils.removeLastTwo)
   }
 
   <div className={getClassName("root")}>
@@ -20,7 +31,13 @@ let make = () => {
       </div>
     </div>
     <button
-      className={getClassName("restartButton")}
+      className={`${getClassName("btn")} ${getClassName("btnUndo")}`}
+      onClick={undo}
+    >
+      {React.string("Undo")}
+    </button>
+    <button
+      className={getClassName("btn")}
       onClick={tryAgain}
     >
       {React.string("New Game")}

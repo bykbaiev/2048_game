@@ -36,8 +36,20 @@
   color: #eee4da;
 }
 
-.score .score-addition,
-.best .score-addition {
+@keyframes move-up {
+  0% {
+    top: 25px;
+    opacity: 1;
+  }
+
+  100% {
+    top: -50px;
+    opacity: 0;
+  }
+}
+
+.score .scoreAddition,
+.best .scoreAddition {
   position: absolute;
   right: 30px;
   color: red;

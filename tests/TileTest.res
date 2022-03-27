@@ -284,3 +284,125 @@ test("#Tile.decode: should decode the tile JSON representation to actual tile", 
     )
   )
 })
+
+test("#Tile.encodeHistorical: dumb tile representation for history", () => {
+  assertion(
+    ~message = "New tile",
+    ~operator = "decode",
+    (a, b) => a == b,
+    Tile.GameTile.encodeHistorical(
+      createTestTile({id: "tile-1", merged: false, val: 2, pos: { x: 0, y: 1 } })
+    ),
+    {
+      let tile = [
+        Js.Json.string("tile-1"),
+        Js.Json.string("2"),
+        Js.Json.string("0"),
+        Js.Json.string("1")
+      ]
+      Js.Json.array(tile)
+    }
+  )
+
+  assertion(
+    ~message = "Merged tile",
+    ~operator = "decode",
+    (a, b) => a == b,
+    Tile.GameTile.encodeHistorical(
+      createTestTile({id: "tile-1", merged: true, val: 2, pos: { x: 0, y: 1 } })
+    ),
+    {
+      let tile = [
+        Js.Json.string("tile-1"),
+        Js.Json.string("2"),
+        Js.Json.string("0"),
+        Js.Json.string("1")
+      ]
+      Js.Json.array(tile)
+    }
+  )
+
+  assertion(
+    ~message = "Average tile",
+    ~operator = "decode",
+    (a, b) => a == b,
+    Tile.GameTile.encodeHistorical(
+      Tile.GameTile.Converters.toAverage(
+        createTestTile({
+          id: "tile-1",
+          merged: false,
+          val: 2,
+          pos: { x: 0, y: 1 }
+        })
+      )
+    ),
+    {
+      let tile = [
+        Js.Json.string("tile-1"),
+        Js.Json.string("2"),
+        Js.Json.string("0"),
+        Js.Json.string("1")
+      ]
+      Js.Json.array(tile)
+    }
+  )
+})
+
+test("#Tile.decodeHistorical: tile from it's dumb representation", () => {
+  assertion(
+    ~message = "Invalid tile",
+    ~operator = "decodeHistorical",
+    (a, b) => a == b,
+    Tile.GameTile.decodeHistorical(Js.Json.parseExn("[]")),
+    None
+  )
+
+  assertion(
+    ~message = "Invalid tile (2)",
+    ~operator = "decodeHistorical",
+    (a, b) => a == b,
+    Tile.GameTile.decodeHistorical(Js.Json.parseExn("[0, 2, \"asdf\", 3]")),
+    None
+  )
+
+  assertion(
+    ~message = "Invalid tile (3)",
+    ~operator = "decodeHistorical",
+    (a, b) => a == b,
+    Tile.GameTile.decodeHistorical(Js.Json.parseExn("[\"0\", \"2\", \"3\"]")),
+    None
+  )
+
+  assertion(
+    ~message = "Valid tile",
+    ~operator = "decodeHistorical",
+    (a, b) => a == b,
+    Tile.GameTile.decodeHistorical(
+      Js.Json.parseExn(
+        "[\"tile-123\", \"2\", \"3\", \"3\"]"
+      )
+    ),
+    Some(
+      {id: "tile-123", merged: false, val: 2, pos: { x: 3, y: 3 } }
+        -> createTestTile
+        -> Tile.GameTile.Converters.toAverage
+    )
+  )
+
+  assertion(
+    ~message = "back and forth",
+    ~operator = "decodeHistorical",
+    (a, b) => a == b,
+    Tile.GameTile.decodeHistorical(
+      Tile.GameTile.encodeHistorical(
+        {id: "tile-123", merged: false, val: 2, pos: { x: 3, y: 3 } }
+          -> createTestTile
+      )
+    ),
+    Some(
+      {id: "tile-123", merged: false, val: 2, pos: { x: 3, y: 3 } }
+        -> createTestTile
+        -> Tile.GameTile.Converters.toAverage
+    )
+  )
+})

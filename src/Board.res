@@ -1,6 +1,12 @@
 @module external styles: Js.Dict.t<'a> = "./Board.module.css"
 
-@val external document: 'a = "document"
+@val external document: Dom.document = "document"
+
+@send
+external addEventListener: (Dom.document, string, {..} => unit) => unit = "addEventListener"
+
+@send
+external removeEventListener: (Dom.document, string) => unit = "removeEventListener"
 
 open Tile
 
@@ -39,23 +45,30 @@ let viewTile = (tile: GameTile.tile) => {
 
 @react.component
 let make = () => {
-  let setState = Recoil.useSetRecoilState(State.gameState)
-  let tiles = Recoil.useRecoilValue(State.tilesState)
-  let isWin = Recoil.useRecoilValue(State.winState)
-  let isLoss = Recoil.useRecoilValue(State.lossState)
-  let message = Recoil.useRecoilValue(State.messageState)
+  let (state, setState) = Recoil.useRecoilState(State.gameState)
+  let setHistory        = Recoil.useSetRecoilState(State.historyState)
+  let tiles             = Recoil.useRecoilValue(State.tilesState)
+  let isWin             = Recoil.useRecoilValue(State.winState)
+  let isLoss            = Recoil.useRecoilValue(State.lossState)
+  let message           = Recoil.useRecoilValue(State.messageState)
 
   React.useEffect0(() => {
-    document["addEventListener"](."keydown", event => {
+    addEventListener(document, "keydown", event => {
       switch Utils.keyCodeToDirection(event["keyCode"]) {
       | Some(dir) => setState(Utils.move(dir))
       | _ => ()
       }
     })
     Some(() => {
-      document["removeEventListener"](."keydown")
+      removeEventListener(document, "keydown")
     })
   })
+
+  React.useEffect1(() => {
+    setHistory(State.updateHistory(state))
+
+    None
+  }, [state])
 
   let continueGame = (_) => {
     setState(state => state -> State.getInternals -> State.PlayingAfterWin)
@@ -63,6 +76,7 @@ let make = () => {
 
   let tryAgain = (_) => {
     setState(_ => State.initialize())
+    setHistory(_ => [])
   }
 
   <div className={getClassName("root")}>

@@ -15,7 +15,7 @@
   font-size: 18px;
 }
 
-.restartButton {
+.btn {
   background: #8f7a66;
   border-radius: 3px;
   padding: 0 20px;
@@ -28,4 +28,8 @@
   font-size: 18px;
   font-weight: bold;
   cursor: pointer;
+}
+
+.btnUndo {
+  margin-right: 8px;
 }
