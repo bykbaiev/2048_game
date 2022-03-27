@@ -25,7 +25,7 @@ let make = () => {
         ? {
           setTimeoutId(_ => Some(Js.Global.setTimeout(() => {
             setDiff(_ => None)
-          }, 600)))
+          }, Constants.scoreDifferenceAnimationDuration)))
           Some(score - value)
         }
         : None
