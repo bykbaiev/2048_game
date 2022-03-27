@@ -428,3 +428,63 @@ test("#State.rollbackState", () => {
     State.setInternals(previousState, State.setBestScore(State.getInternals(previousState), Some(100)))
   )
 })
+
+test("#State.updateHistory", () => {
+  let state = State.Playing({
+    score: 123,
+    best: Some(123),
+    tiles: list{
+      Tile.GameTile.createTile(
+        ~id  = "tile-456",
+        ~val = 2,
+        ~x   = 0,
+        ~y   = 1
+      ) -> Tile.GameTile.Converters.toAverage,
+      Tile.GameTile.createTile(
+        ~id  = "tile-123",
+        ~val = 2,
+        ~x   = 2,
+        ~y   = 1
+      ) -> Tile.GameTile.Converters.toAverage
+    }
+  })
+
+  let prev = State.Playing({
+    score: 120,
+    best: Some(120),
+    tiles: list{
+      Tile.GameTile.createTile(
+        ~id  = "tile-123",
+        ~val = 2,
+        ~x   = 2,
+        ~y   = 1
+      ) -> Tile.GameTile.Converters.toAverage
+    }
+  })
+
+  assertion(
+    ~message = "Nothing changed => the state has already been added to the history",
+    ~operator = "updateHistory",
+    (a, b) => a == b,
+    State.updateHistory(state, [State.encodeHistoricalGameState(state)]),
+    [State.encodeHistoricalGameState(state)]
+  )
+
+  assertion(
+    ~message = "The state is different from what is in history",
+    ~operator = "updateHistory",
+    (a, b) => a == b,
+    State.updateHistory(state, [State.encodeHistoricalGameState(prev)]),
+    [State.encodeHistoricalGameState(prev), State.encodeHistoricalGameState(state)]
+  )
+
+  let xs = Belt.Array.makeBy(15, idx => idx -> Belt.Int.toString -> Js.Json.string)
+
+  assertion(
+    ~message = "Should keep only 15 last states in history",
+    ~operator = "updateHistory",
+    (a, b) => a == b,
+    State.updateHistory(state, xs),
+    Belt.Array.concat(Belt.Array.sliceToEnd(xs, 1), [State.encodeHistoricalGameState(state)])
+  )
+})

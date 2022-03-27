@@ -276,6 +276,29 @@ let rollbackState = (value, state) => {
   }
 }
 
+let updateHistory = (state: state, history: history): history => {
+  let last = Belt.Array.get(history, Belt.Array.length(history) - 1)
+  let isSameAsLast = Belt.Option.isSome(last) &&
+                    (last
+                      -> Belt.Option.flatMap(x => x -> Js.Json.stringify -> Some -> decodeHistoricalGameState)
+                      -> Belt.Option.mapWithDefault(false, x => {
+                        let internals = getInternals(state)
+                        let prevInternals = getInternals(x)
+                        internals.tiles == prevInternals.tiles && internals.score == prevInternals.score
+                      }))
+
+  if isSameAsLast {
+    history
+  } else {
+    let size = Belt.Array.length(history)
+    let count = 15
+
+    history
+      -> Belt.Array.concat([encodeHistoricalGameState(state)])
+      -> Belt.Array.sliceToEnd(size + 1 - count)
+  }
+}
+
 let localStorageEffect = ({ setSelf, onSet }: Recoil.atomEffect<'a>) => {
   let savedGameState = Dom.Storage.getItem(gameStateKey, Dom.Storage.localStorage)
   let savedBestScore = Dom.Storage.getItem(bestScoreKey, Dom.Storage.localStorage)

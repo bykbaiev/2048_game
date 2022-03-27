@@ -65,23 +65,7 @@ let make = () => {
   })
 
   React.useEffect1(() => {
-    setHistory(history => {
-      let last = Belt.Array.get(history, Belt.Array.length(history) - 1)
-      let isSameAsLast = Belt.Option.isSome(last) &&
-                        (last
-                          -> Belt.Option.flatMap(x => x -> Js.Json.stringify -> Some -> State.decodeGameState)
-                          -> Belt.Option.mapWithDefault(false, x => x == state))
-      if isSameAsLast {
-        history
-      } else {
-        let size = Belt.Array.length(history)
-        let count = 15
-
-        history
-          -> Belt.Array.concat([State.encodeHistoricalGameState(state)])
-          -> Belt.Array.sliceToEnd(size - count)
-      }
-    })
+    setHistory(State.updateHistory(state))
 
     None
   }, [state])
